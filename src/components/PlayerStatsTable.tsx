@@ -70,7 +70,7 @@ export default function PlayerStatsTable({
               <thead className="text-xs uppercase tracking-[0.2em] text-white/50">
               <tr>
                 <th className="py-2 w-4">Rank</th>
-                <th className="px-4 py-2 w-full">Player</th>
+                <th className="px-6 w-full py-2">Player</th>
                 <th className="py-2 text-right w-4">Total</th>
               </tr>
             </thead>
@@ -101,7 +101,10 @@ export default function PlayerStatsTable({
                     </td>
                     <td className={`bg-white/5 ${cellPadding} font-medium w-full`}>
                       <div className="flex items-center gap-2">
-                        <span>{player.name}</span>
+                        <div className="flex flex-col">
+                          <span>{player.name}</span>
+                          <span className="text-xs text-white/50">{player.matchesPlayed} matches</span>
+                        </div>
                         {!isCompact && isPodium && (
                           <span
                             className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] ${
