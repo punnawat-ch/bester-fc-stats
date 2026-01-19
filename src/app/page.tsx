@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import ClubHeader from "../components/ClubHeader";
 import PlayerStatsTable from "../components/PlayerStatsTable";
 import TeamStatsCards from "../components/TeamStatsCards";

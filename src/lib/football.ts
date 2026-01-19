@@ -1,31 +1,27 @@
-import { cache } from "react";
-
 import type { FootballStats } from "../data/football-stats";
 import { fetchFootballStatsFromSheet } from "./google-sheets";
 
 export type TeamStats = FootballStats["teamStats"];
 export type PlayerStats = FootballStats["playerStats"][number];
 
-export const getFootballStats = cache(async () => {
+export async function getFootballStats(): Promise<FootballStats> {
   return fetchFootballStatsFromSheet();
-});
+}
 
 export function getTopPerformers(stats: FootballStats) {
-  const players = stats.playerStats;
-
-  const fallback = players[0] ?? {
+  const fallback = stats.playerStats[0] ?? {
     name: "Unknown",
     goals: 0,
     assists: 0,
     cleanSheets: 0,
   };
 
-  const topScorer = players.reduce(
+  const topScorer = stats.playerStats.reduce(
     (current, player) => (player.goals > current.goals ? player : current),
     fallback,
   );
 
-  const topAssist = players.reduce(
+  const topAssist = stats.playerStats.reduce(
     (current, player) => (player.assists > current.assists ? player : current),
     fallback,
   );
