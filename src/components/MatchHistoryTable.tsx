@@ -1,3 +1,7 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+
 import type { MatchHistory } from "../data/football-stats";
 
 type MatchHistoryTableProps = Readonly<{
@@ -41,14 +45,33 @@ function getScoreLines(result: string, score: string) {
   return { clubScore: first, opponentScore: second };
 }
 
-// Server component: purely presentational, no client state needed.
 export default function MatchHistoryTable({
   matchHistory,
   clubName,
 }: MatchHistoryTableProps) {
+  const reduceMotion = useReducedMotion();
+  const container = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: reduceMotion ? 0 : 0.08,
+      },
+    },
+  };
+  const item = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 10 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+  };
+
   return (
-    <section className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 px-6 py-6 shadow-2xl shadow-black/30">
-      <div className="flex items-center justify-between">
+    <motion.section
+      className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 px-6 py-6 shadow-2xl shadow-black/30"
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.4 }}
+    >
+      <motion.div className="flex items-center justify-between" variants={item}>
         <div>
           <h3 className="text-lg font-semibold text-white">
             Match History
@@ -57,9 +80,12 @@ export default function MatchHistoryTable({
         <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white/70">
           Results
         </span>
-      </div>
+      </motion.div>
 
-      <div className="mt-4 max-h-[420px] min-h-[220px] overflow-x-auto overflow-y-auto">
+      <motion.div
+        className="mt-4 max-h-[420px] min-h-[220px] overflow-x-auto overflow-y-auto"
+        variants={item}
+      >
         <table className="min-w-full border-separate border-spacing-y-2 text-left">
           <thead className="text-xs uppercase tracking-[0.2em] text-white/50">
             <tr>
@@ -108,8 +134,8 @@ export default function MatchHistoryTable({
             })}
           </tbody>
         </table>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
 

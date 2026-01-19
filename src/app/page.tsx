@@ -2,9 +2,11 @@ export const dynamic = "force-dynamic";
 
 import ClubHeader from "../components/ClubHeader";
 import MatchHistoryTable from "../components/MatchHistoryTable";
+import MatchScheduleTimeline from "../components/MatchScheduleTimeline";
 import PlayerStatsTable from "../components/PlayerStatsTable";
 import TopBar from "../components/TopBar";
 import TeamStatsCards from "../components/TeamStatsCards";
+import { matchSchedule } from "../data/match-schedule";
 import { getFootballStats, getGoalSummary } from "../lib/football";
 
 // Server component: all data is read on the server for fast first paint.
@@ -40,6 +42,9 @@ export default async function Home() {
         </section>
         <section id="ranking" className="scroll-mt-24">
           <PlayerStatsTable players={stats.playerStats} />
+        </section>
+        <section className="scroll-mt-24">
+          <MatchScheduleTimeline schedule={matchSchedule} />
         </section>
       </main>
     </div>

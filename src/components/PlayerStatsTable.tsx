@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import { useMemo } from "react";
 
 import type { PlayerStats } from "../lib/football";
@@ -14,8 +15,21 @@ type PlayerStatsTableProps = Readonly<{
 export default function PlayerStatsTable({
   players,
 }: PlayerStatsTableProps) {
+  const reduceMotion = useReducedMotion();
   const { viewMode, setViewMode, highlightLeaders, setHighlightLeaders } =
     useUIState();
+  const container = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: reduceMotion ? 0 : 0.08,
+      },
+    },
+  };
+  const item = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 10 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+  };
 
   const rankedGoals = useMemo(
     () => [...players].sort((a, b) => b.goals - a.goals),
@@ -25,10 +39,10 @@ export default function PlayerStatsTable({
     () => [...players].sort((a, b) => b.assists - a.assists),
     [players],
   );
-  const rankedCleanSheets = useMemo(
-    () => [...players].sort((a, b) => b.cleanSheets - a.cleanSheets),
-    [players],
-  );
+  // const rankedCleanSheets = useMemo(
+  //   () => [...players].sort((a, b) => b.cleanSheets - a.cleanSheets),
+  //   [players],
+  // );
 
   const isCompact = viewMode === "compact";
   const rowText = isCompact ? "text-xs" : "text-base";
@@ -134,8 +148,17 @@ export default function PlayerStatsTable({
   };
 
   return (
-    <section className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 px-6 py-6 shadow-2xl shadow-black/30">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+    <motion.section
+      className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 px-6 py-6 shadow-2xl shadow-black/30"
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.4 }}
+    >
+      <motion.div
+        className="flex flex-wrap items-center justify-between gap-4"
+        variants={item}
+      >
         <div>
           <h2 className="text-xl font-semibold text-white">Ranking Stage</h2>
           <p className="text-sm text-white/60">
@@ -177,9 +200,9 @@ export default function PlayerStatsTable({
             <span>Highlight leaders</span>
           </label>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-3">
+      <motion.div className="mt-6 grid gap-4 lg:grid-cols-2" variants={item}>
         {renderRanking(
           "Goal Ranking",
           "bg-emerald-500/20 text-emerald-100",
@@ -192,14 +215,14 @@ export default function PlayerStatsTable({
           rankedAssists,
           "assists",
         )}
-        {renderRanking(
+        {/* {renderRanking(
           "Clean Sheet Ranking",
           "bg-blue-500/20 text-blue-100",
           rankedCleanSheets,
           "cleanSheets",
-        )}
-      </div>
-    </section>
+        )} */}
+      </motion.div>
+    </motion.section>
   );
 }
 

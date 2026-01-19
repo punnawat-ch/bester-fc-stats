@@ -35,6 +35,27 @@ html {
   }
 }
 
+.fade-in-up {
+  animation: fade-in-up 480ms ease-out both;
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-up {
+    animation: none !important;
+  }
+}
+
 .pitch-bg {
   background-image:
     radial-gradient(circle at top, rgba(37, 99, 235, 0.18), rgba(6, 12, 24, 0.96)),

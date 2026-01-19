@@ -1,3 +1,7 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+
 import type { TeamStats } from "../lib/football";
 import StatBadge from "./StatBadge";
 
@@ -8,21 +12,41 @@ type TeamStatsCardsProps = Readonly<{
   goalDifference: number;
 }>;
 
-// Server component: pulls static team aggregates without client state.
 export default function TeamStatsCards({
   teamStats,
   goalsFor,
   goalsAgainst,
   goalDifference,
 }: TeamStatsCardsProps) {
+  const reduceMotion = useReducedMotion();
+  const container = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: reduceMotion ? 0 : 0.06,
+      },
+    },
+  };
+  const item = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 10 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+  };
+
   return (
-    <section className="grid w-full gap-4 grid-cols-1">
+    <motion.section
+      className="grid w-full gap-4 grid-cols-1"
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.4 }}
+    >
     {/* <section className="grid w-full gap-4 lg:grid-cols-[1.1fr_0.9fr]"> */}
-      <div
+      <motion.div
         id="form"
         className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 p-4 shadow-2xl shadow-black/20 scroll-mt-24"
+        variants={item}
       >
-        <div className="flex items-center justify-between">
+        <motion.div className="flex items-center justify-between" variants={item}>
           <div>
             <h3 className="text-lg font-semibold text-white">
               Competition Form
@@ -31,8 +55,11 @@ export default function TeamStatsCards({
           {/* <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white/70">
             League
           </span> */}
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-7">
+        </motion.div>
+        <motion.div
+          className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-7"
+          variants={item}
+        >
           <StatBadge label="MATCHES" value={teamStats.matchesPlayed} size="sm" />
           <StatBadge label="WINS" value={teamStats.wins} tone="success" size="sm" />
           <StatBadge label="DRAWS" value={teamStats.draws} tone="warning" size="sm" />
@@ -40,8 +67,8 @@ export default function TeamStatsCards({
           <StatBadge label="GF" value={goalsFor} size="sm" />
           <StatBadge label="GA" value={goalsAgainst} tone="warning" size="sm" />
           <StatBadge label="GD" value={goalDifference} tone="success" size="sm" />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 {/* 
       <div
         id="goals"
@@ -63,7 +90,7 @@ export default function TeamStatsCards({
           <StatBadge label="GD" value={goalDifference} tone="success" size="sm" />
         </div>
       </div> */}
-    </section>
+    </motion.section>
   );
 }
 
