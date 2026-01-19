@@ -15,11 +15,18 @@ export interface PlayerStats {
   cleanSheets: number;
 }
 
+export interface MatchHistory {
+  date: string;
+  versus: string;
+  score: string;
+  result: string;
+}
 export interface FootballStats {
   club: string;
   recordedAt: string;
   teamStats: TeamStats;
   playerStats: PlayerStats[];
+  matchHistory: MatchHistory[];
 }
 
 export const footballStats: FootballStats = {
@@ -45,6 +52,9 @@ export const footballStats: FootballStats = {
     { name: "พี่เต้", goals: 0, assists: 2, cleanSheets: 0 },
     { name: "พี่กิต", goals: 0, assists: 1, cleanSheets: 0 },
     { name: "พี่เสือ", goals: 0, assists: 1, cleanSheets: 0 },
+  ],
+  matchHistory: [
+    { date: "10/01/2026", versus: "พี่โต้ง", score: "2-0", result: "Win" },
   ],
 };
 

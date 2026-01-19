@@ -35,6 +35,22 @@ export function getSheetsClient() {
   return google.sheets({ version: "v4", auth });
 }
 
+function parseResult(value: string | undefined) {
+  if (!value) {
+    return "N/A";
+  }
+  if (value === "W") {
+    return "Win";
+  }
+  if (value === "L") {
+    return "Loss";
+  }
+  if (value === "D") {
+    return "Draw";
+  }
+  return "Unknown";
+}
+
 function parseNumber(value: string | undefined) {
   if (!value) {
     return 0;
@@ -50,10 +66,12 @@ function normalizeHeaders(headers: string[]) {
 export async function fetchFootballStatsFromSheet(): Promise<FootballStats> {
   const metaRange = process.env.GOOGLE_SHEETS_META_RANGE ?? "Meta!A1:B9";
   const playersRange =
-    process.env.GOOGLE_SHEETS_PLAYERS_RANGE ?? "Players!A1:D100";
+    process.env.GOOGLE_SHEETS_PLAYERS_RANGE ?? "Players!A1:E100";
+  const matchHistoryRange =
+    process.env.GOOGLE_SHEETS_MATCH_HISTORY_RANGE ?? "MatchHistory!A1:D100";
 
   const sheets = getSheetsClient();
-  const [metaSheet, playersSheet] = await Promise.all([
+  const [metaSheet, playersSheet, matchHistorySheet] = await Promise.all([
     sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
       range: metaRange,
@@ -62,37 +80,55 @@ export async function fetchFootballStatsFromSheet(): Promise<FootballStats> {
       spreadsheetId: SPREADSHEET_ID,
       range: playersRange,
     }),
+    sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: matchHistoryRange,
+    }),
   ]);
 
   return buildStatsFromRows(
     metaSheet.data.values ?? [],
     playersSheet.data.values ?? [],
+    matchHistorySheet.data.values ?? [],
   );
 }
 
 function buildStatsFromRows(
   metaRows: string[][],
   playerRows: string[][],
+  matchHistoryRows: string[][],
 ): FootballStats {
   const meta = Object.fromEntries(
     metaRows.map((row) => [row[0]?.trim(), row[1] ?? ""]),
   );
 
   const [rawHeaders, ...rows] = playerRows;
-  const headers = rawHeaders ? normalizeHeaders(rawHeaders) : [];
+  const [matchHistoryRawHeaders, ...rowsMatchHistory] = matchHistoryRows;
+  const playerHeaders = rawHeaders ? normalizeHeaders(rawHeaders) : [];
+  const matchHistoryHeaders = matchHistoryRawHeaders ? normalizeHeaders(matchHistoryRawHeaders) : [];
 
-  const getCell = (row: string[], key: string) => {
+  const getCell = (headers: string[], row: string[], key: string) => {
     const index = headers.indexOf(key);
     return index >= 0 ? row[index] : undefined;
   };
 
+
+  const matchHistoryStats = rowsMatchHistory
+    .filter((row) => row.some((cell) => cell?.trim()))
+    .map((row) => ({
+      date: getCell(matchHistoryHeaders, row, "matchweek") ?? "Unknown",
+      versus: getCell(matchHistoryHeaders, row, "versus") ?? "Unknown",
+      score: getCell(matchHistoryHeaders, row, "scores") ?? "Unknown",
+      result: parseResult(getCell(matchHistoryHeaders, row, "results")),
+    }));
+
   const playerStats = rows
     .filter((row) => row.some((cell) => cell?.trim()))
     .map((row) => ({
-      name: getCell(row, "name") ?? "Unknown",
-      goals: parseNumber(getCell(row, "goals")),
-      assists: parseNumber(getCell(row, "assists")),
-      cleanSheets: parseNumber(getCell(row, "cleansheets")),
+      name: getCell(playerHeaders, row, "name") ?? "Unknown",
+      goals: parseNumber(getCell(playerHeaders, row, "goals")),
+      assists: parseNumber(getCell(playerHeaders, row, "assists")),
+      cleanSheets: parseNumber(getCell(playerHeaders, row, "cleansheets")),
     }));
 
   return {
@@ -108,5 +144,6 @@ function buildStatsFromRows(
       goalDifference: parseNumber(meta.GD),
     },
     playerStats,
+    matchHistory: matchHistoryStats,
   };
 }

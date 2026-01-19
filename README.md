@@ -45,20 +45,20 @@ Notes:
 ## Google Sheet Format
 
 ### Tab: `Meta`
-| A (Key)        | B (Value)                    |
-|---------------|------------------------------|
-| Club          | Bester Football Club         |
-| RecordedAt    | 2026-01-18T11:29:00+07:00     |
-| MatchesPlayed | 2                            |
-| Wins          | 1                            |
-| Draws         | 1                            |
-| Losses        | 0                            |
+| A (Key)       | B (Value)                 |
+| ------------- | ------------------------- |
+| Club          | Bester Football Club      |
+| RecordedAt    | 2026-01-18T11:29:00+07:00 |
+| MatchesPlayed | 2                         |
+| Wins          | 1                         |
+| Draws         | 1                         |
+| Losses        | 0                         |
 
 ### Tab: `Players`
 | Name | Goals | Assists | CleanSheets |
-|------|-------|---------|-------------|
-| พี่โต้ง | 2 | 0 | 0 |
-| พี่กี้  | 2 | 0 | 0 |
+| ---- | ----- | ------- | ----------- |
+| พี่โต้ง | 2     | 0       | 0           |
+| พี่กี้   | 2     | 0       | 0           |
 
 Headers are case-insensitive; spaces are trimmed.
 
