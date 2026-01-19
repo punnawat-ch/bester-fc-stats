@@ -14,7 +14,7 @@ const toneStyles: Record<StatBadgeTone, string> = {
   success:
     "bg-emerald-500/15 text-emerald-200 ring-emerald-400/30 from-emerald-500/20 to-transparent",
   warning:
-    "bg-amber-500/15 text-amber-200 ring-amber-400/30 from-amber-500/20 to-transparent",
+    "bg-sky-500/15 text-sky-200 ring-sky-400/30 from-sky-500/20 to-transparent",
   danger:
     "bg-rose-500/15 text-rose-200 ring-rose-400/30 from-rose-500/20 to-transparent",
 };

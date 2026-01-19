@@ -85,7 +85,7 @@ export default function PlayerStatsTable({
                     ? "border-emerald-400/40"
                     : index === 1
                       ? "border-sky-400/40"
-                      : "border-amber-400/40";
+                      : "border-teal-300/40";
 
                 return (
                   <HighlightRow
@@ -159,7 +159,7 @@ export default function PlayerStatsTable({
           <label className="flex items-center gap-2 text-xs uppercase tracking-wide text-white/70">
             <input
               type="checkbox"
-              className="h-4 w-4 rounded border-white/20 bg-white/10 text-emerald-400"
+              className="h-4 w-4 rounded border-white/20 bg-white/10 text-sky-300"
               checked={highlightLeaders}
               onChange={(event) => setHighlightLeaders(event.target.checked)}
             />
@@ -183,7 +183,7 @@ export default function PlayerStatsTable({
         )}
         {renderRanking(
           "Clean Sheet Ranking",
-          "bg-amber-500/20 text-amber-100",
+          "bg-teal-500/20 text-teal-100",
           rankedCleanSheets,
           "cleanSheets",
         )}
