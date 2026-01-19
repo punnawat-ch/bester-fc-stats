@@ -127,10 +127,10 @@ function buildStatsFromRows(
     .filter((row) => row.some((cell) => cell?.trim()))
     .map((row) => ({
       name: getCell(playerHeaders, row, "name") ?? "Unknown",
-      matchesPlayed: parseNumber(getCell(playerHeaders, row, "match played")),
+      matchesPlayed: parseNumber(getCell(playerHeaders, row, "matchplayed")),
       goals: parseNumber(getCell(playerHeaders, row, "goals")),
       assists: parseNumber(getCell(playerHeaders, row, "assists")),
-      cleanSheets: parseNumber(getCell(playerHeaders, row, "clean sheets")),
+      cleanSheets: parseNumber(getCell(playerHeaders, row, "cleansheets")),
     }));
 
   return {
