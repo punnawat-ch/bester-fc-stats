@@ -83,7 +83,7 @@ export default function ClubHeader({
           <span className="rounded-full bg-sky-500/15 px-3 py-1">
             {matchSummary}
           </span>
-          <span className="text-white/70">
+          <span className="text-white/70 hidden md:block">
             Visual priority: Goals → Assists → Clean sheets
           </span>
         </div>

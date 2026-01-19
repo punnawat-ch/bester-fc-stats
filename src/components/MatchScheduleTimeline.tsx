@@ -107,7 +107,10 @@ export default function MatchScheduleTimeline({
       whileInView="show"
       viewport={{ once: true, amount: 0.4 }}
     >
-      <motion.div className="flex flex-wrap items-center justify-between gap-4" variants={item}>
+      <motion.div
+        className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between"
+        variants={item}
+      >
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-white/50">
             Upcoming Fixtures
@@ -136,13 +139,13 @@ export default function MatchScheduleTimeline({
               <span className="h-2 w-2 rounded-full bg-emerald-300" />
               {group.month}
             </div>
-            <div className="space-y-3 border-l border-white/10 pl-4">
+            <div className="space-y-3 border-l border-white/10 pl-4 sm:pl-5">
               {group.matches.map((match) => (
                 <div
                   key={`${match.date}-${match.opponent}`}
                   className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <p className="text-xs uppercase tracking-[0.2em] text-white/50">
                         {match.week} · {match.date}
@@ -151,7 +154,7 @@ export default function MatchScheduleTimeline({
                         vs {match.opponent}
                       </p>
                     </div>
-                    <div className="text-right text-sm text-white/70">
+                    <div className="text-left text-sm text-white/70 sm:text-right">
                       <div>
                         {match.venue}
                         {match.field ? ` · ${match.field}` : ""}

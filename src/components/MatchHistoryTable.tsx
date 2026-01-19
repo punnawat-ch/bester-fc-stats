@@ -83,57 +83,97 @@ export default function MatchHistoryTable({
       </motion.div>
 
       <motion.div
-        className="mt-4 max-h-[420px] min-h-[220px] overflow-x-auto overflow-y-auto"
+        className="mt-4 max-h-[420px] min-h-[220px] overflow-y-auto"
         variants={item}
       >
-        <table className="min-w-full border-separate border-spacing-y-2 text-left">
-          <thead className="text-xs uppercase tracking-[0.2em] text-white/50">
-            <tr>
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2">Match</th>
-              <th className="px-4 py-2 text-right">Score</th>
-              <th className="px-4 py-2 text-right">Result</th>
-            </tr>
-          </thead>
-          <tbody className="text-white">
-            {matchHistory.map((match) => {
-              const tone = getResultTone(match.result);
-              const teamTone = getTeamTone(match.result);
-              const scores = getScoreLines(match.result, match.score);
+        <div className="space-y-3 md:hidden">
+          {matchHistory.map((match) => {
+            const tone = getResultTone(match.result);
+            const teamTone = getTeamTone(match.result);
+            const scores = getScoreLines(match.result, match.score);
 
-              return (
-                <tr key={`${match.date}-${match.versus}-${match.score}`}>
-                  <td className="rounded-l-2xl bg-white/5 px-4 py-3 text-sm text-white/70">
-                    {match.date}
-                  </td>
-                  <td className="bg-white/5 px-4 py-3">
-                    <div className="flex flex-col gap-1 text-sm">
-                      <span className={teamTone.club}>{clubName}</span>
-                      <span className={teamTone.opponent}>{match.versus}</span>
-                    </div>
-                  </td>
-                  <td className="bg-white/5 px-4 py-3 text-right">
-                    <div className="flex flex-col gap-1 text-sm font-semibold">
-                      <span className={teamTone.club}>{scores.clubScore}</span>
-                      {scores.opponentScore && (
-                        <span className={teamTone.opponent}>
-                          {scores.opponentScore}
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="rounded-r-2xl bg-white/5 px-4 py-3 text-right">
-                    <span
-                      className={`inline-flex min-w-[80px] justify-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${tone}`}
-                    >
-                      {match.result}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+            return (
+              <div
+                key={`card-${match.date}-${match.versus}-${match.score}`}
+                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4"
+              >
+                <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-white/50">
+                  <span>{match.date}</span>
+                  <span
+                    className={`rounded-full border px-3 py-1 text-[10px] font-semibold ${tone}`}
+                  >
+                    {match.result}
+                  </span>
+                </div>
+                <div className="mt-3 grid grid-cols-[1fr_auto] items-center gap-3">
+                  <div className="flex flex-col gap-1 text-sm">
+                    <span className={teamTone.club}>{clubName}</span>
+                    <span className={teamTone.opponent}>{match.versus}</span>
+                  </div>
+                  <div className="text-right text-sm font-semibold">
+                    <div className={teamTone.club}>{scores.clubScore}</div>
+                    {scores.opponentScore && (
+                      <div className={teamTone.opponent}>
+                        {scores.opponentScore}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="hidden md:block">
+          <table className="min-w-full border-separate border-spacing-y-2 text-left">
+            <thead className="text-xs uppercase tracking-[0.2em] text-white/50">
+              <tr>
+                <th className="px-4 py-2">Date</th>
+                <th className="px-4 py-2">Match</th>
+                <th className="px-4 py-2 text-right">Score</th>
+                <th className="px-4 py-2 text-right">Result</th>
+              </tr>
+            </thead>
+            <tbody className="text-white">
+              {matchHistory.map((match) => {
+                const tone = getResultTone(match.result);
+                const teamTone = getTeamTone(match.result);
+                const scores = getScoreLines(match.result, match.score);
+
+                return (
+                  <tr key={`${match.date}-${match.versus}-${match.score}`}>
+                    <td className="rounded-l-2xl bg-white/5 px-4 py-3 text-sm text-white/70">
+                      {match.date}
+                    </td>
+                    <td className="bg-white/5 px-4 py-3">
+                      <div className="flex flex-col gap-1 text-sm">
+                        <span className={teamTone.club}>{clubName}</span>
+                        <span className={teamTone.opponent}>{match.versus}</span>
+                      </div>
+                    </td>
+                    <td className="bg-white/5 px-4 py-3 text-right">
+                      <div className="flex flex-col gap-1 text-sm font-semibold">
+                        <span className={teamTone.club}>{scores.clubScore}</span>
+                        {scores.opponentScore && (
+                          <span className={teamTone.opponent}>
+                            {scores.opponentScore}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="rounded-r-2xl bg-white/5 px-4 py-3 text-right">
+                      <span
+                        className={`inline-flex min-w-[80px] justify-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${tone}`}
+                      >
+                        {match.result}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </motion.div>
     </motion.section>
   );

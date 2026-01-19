@@ -39,10 +39,6 @@ export default function PlayerStatsTable({
     () => [...players].sort((a, b) => b.assists - a.assists),
     [players],
   );
-  // const rankedCleanSheets = useMemo(
-  //   () => [...players].sort((a, b) => b.cleanSheets - a.cleanSheets),
-  //   [players],
-  // );
 
   const isCompact = viewMode === "compact";
   const rowText = isCompact ? "text-xs" : "text-base";
@@ -57,6 +53,34 @@ export default function PlayerStatsTable({
     metric: "goals" | "assists" | "cleanSheets",
   ) => {
     const leader = playersRanked[0];
+    const getPodiumStyles = (index: number) => {
+      if (index === 0) {
+        return {
+          border: "border-amber-300/60",
+          badge: "bg-amber-500/20 text-amber-100",
+          label: "🏆 Top 1",
+        };
+      }
+      if (index === 1) {
+        return {
+          border: "border-slate-300/60",
+          badge: "bg-slate-400/20 text-slate-100",
+          label: "Top 2",
+        };
+      }
+      if (index === 2) {
+        return {
+          border: "border-orange-300/60",
+          badge: "bg-orange-500/20 text-orange-100",
+          label: "Top 3",
+        };
+      }
+      return {
+        border: "border-white/10",
+        badge: "bg-white/10 text-white/70",
+        label: "",
+      };
+    };
 
     return (
       <div className="glass-panel rounded-2xl border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent p-4 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
@@ -78,7 +102,46 @@ export default function PlayerStatsTable({
             </span>
           )}
         </div>
-        <div className="mt-4 overflow-x-auto">
+        <div className="mt-4 space-y-3 md:hidden">
+          {playersRanked.slice(0, showTop).map((player, index) => {
+            const podium = getPodiumStyles(index);
+
+            return (
+              <div
+                key={`${metric}-card-${player.name}`}
+                className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`flex h-10 w-10 items-center justify-center rounded-full border text-base font-semibold ${podium.border}`}
+                  >
+                    {index + 1}
+                  </span>
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-white">
+                      {player.name}
+                    </span>
+                    {podium.label ? (
+                      <span
+                        className={`mt-1 inline-flex w-fit rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] ${podium.badge}`}
+                      >
+                        {podium.label}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs uppercase tracking-[0.2em] text-white/50">
+                    {title}
+                  </div>
+                  <div className="text-lg font-semibold text-white">{player[metric]}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-4 hidden overflow-x-auto md:block">
           <table className="min-w-full border-separate border-spacing-y-2 text-left table-fixed">
             {!isCompact && (
               <thead className="text-xs uppercase tracking-[0.2em] text-white/50">
@@ -94,12 +157,7 @@ export default function PlayerStatsTable({
                 const isLeader = highlightLeaders && leader?.name === player.name;
                 const total = player[metric];
                 const isPodium = index < 3;
-                const podiumTone =
-                  index === 0
-                    ? "border-amber-300/60"
-                    : index === 1
-                      ? "border-slate-300/60"
-                      : "border-orange-300/60";
+                const podium = getPodiumStyles(index);
 
                 return (
                   <HighlightRow
@@ -108,7 +166,7 @@ export default function PlayerStatsTable({
                   >
                     <td
                       className={`rounded-l-2xl w-4 bg-white/5 ${cellPadding} font-medium text-white/70 ${
-                        isPodium ? `border-l-2 ${podiumTone}` : ""
+                        isPodium ? `border-l-2 ${podium.border}` : ""
                       }`}
                     >
                       {index + 1}
@@ -121,15 +179,9 @@ export default function PlayerStatsTable({
                         </div>
                         {!isCompact && isPodium && (
                           <span
-                            className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] ${
-                              index === 0
-                                ? "bg-amber-500/20 text-amber-100"
-                                : index === 1
-                                  ? "bg-slate-400/20 text-slate-100"
-                                  : "bg-orange-500/20 text-orange-100"
-                            }`}
+                            className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] ${podium.badge}`}
                           >
-                            {index === 0 ? "🏆 Top 1" : `Top ${index + 1}`}
+                            {podium.label}
                           </span>
                         )}
                       </div>
@@ -152,8 +204,7 @@ export default function PlayerStatsTable({
       className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 px-6 py-6 shadow-2xl shadow-black/30"
       variants={container}
       initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.4 }}
+      animate="show"
     >
       <motion.div
         className="flex flex-wrap items-center justify-between gap-4"
@@ -204,23 +255,17 @@ export default function PlayerStatsTable({
 
       <motion.div className="mt-6 grid gap-4 lg:grid-cols-2" variants={item}>
         {renderRanking(
-          "Goal Ranking",
+          "Goals",
           "bg-emerald-500/20 text-emerald-100",
           rankedGoals,
           "goals",
         )}
         {renderRanking(
-          "Assist Ranking",
+          "Assists",
           "bg-blue-500/20 text-blue-100",
           rankedAssists,
           "assists",
         )}
-        {/* {renderRanking(
-          "Clean Sheet Ranking",
-          "bg-blue-500/20 text-blue-100",
-          rankedCleanSheets,
-          "cleanSheets",
-        )} */}
       </motion.div>
     </motion.section>
   );
