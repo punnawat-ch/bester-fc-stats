@@ -123,7 +123,7 @@ export default function PlayerStatsTable({
   };
 
   return (
-    <section className="glass-panel rounded-3xl border border-white/10 bg-black/40 px-6 py-6 shadow-2xl shadow-black/30">
+    <section className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 px-6 py-6 shadow-2xl shadow-black/30">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold text-white">Ranking Stage</h2>
@@ -159,7 +159,7 @@ export default function PlayerStatsTable({
           <label className="flex items-center gap-2 text-xs uppercase tracking-wide text-white/70">
             <input
               type="checkbox"
-              className="h-4 w-4 rounded border-white/20 bg-white/10 text-sky-300"
+              className="h-4 w-4 rounded border-white/20 bg-white/10 text-emerald-300"
               checked={highlightLeaders}
               onChange={(event) => setHighlightLeaders(event.target.checked)}
             />
@@ -177,13 +177,13 @@ export default function PlayerStatsTable({
         )}
         {renderRanking(
           "Assist Ranking",
-          "bg-sky-500/20 text-sky-100",
+          "bg-blue-500/20 text-blue-100",
           rankedAssists,
           "assists",
         )}
         {renderRanking(
           "Clean Sheet Ranking",
-          "bg-teal-500/20 text-teal-100",
+          "bg-blue-500/20 text-blue-100",
           rankedCleanSheets,
           "cleanSheets",
         )}

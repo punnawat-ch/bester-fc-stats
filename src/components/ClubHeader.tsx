@@ -1,5 +1,5 @@
+import Image from "next/image";
 import type { TeamStats } from "../lib/football";
-
 type ClubHeaderProps = {
   clubName: string;
   recordedAt: string;
@@ -22,7 +22,7 @@ export default function ClubHeader({
     <header className="relative overflow-hidden rounded-3xl border border-sky-400/20 bg-gradient-to-br from-[#0b1424] via-[#0c2430] to-[#0d2038] px-6 py-8 text-white shadow-2xl shadow-sky-500/10 glow-ring">
       <div className="absolute inset-0 shimmer bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.25),_transparent_60%)]" />
       <div className="relative flex flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em] text-white/70">
+        <div className="flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em] text-white/70 hidden md:flex">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-1">
             <span className="h-2 w-2 rounded-full bg-sky-300 pulse-dot" />
             Live Ranking
@@ -31,15 +31,26 @@ export default function ClubHeader({
             Matchday Board
           </span>
         </div>
+        <div className="flex md:flex-row justify-center md:justify-start flex-col items-center gap-2">
+          <Image
+              src="/logo.png"
+              alt="Bester FC crest"
+              width={200}
+              height={200}
+              className="h-28 w-28 rounded-xl bg-white p-1"
+              priority
+            />
+            <div className="flex flex-col gap-2">
+
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 className="text-3xl font-semibold text-center md:text-left tracking-tight sm:text-4xl">
             {clubName}
           </h1>
-          <p className="mt-2 text-sm text-white/70">
+          <p className="mt-2 text-sm text-white/70 text-center md:text-left">
             Recorded {formattedDate}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-sky-100">
+        <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-sky-100 justify-center md:justify-start">
           <span className="rounded-full bg-sky-500/15 px-3 py-1">
             {matchSummary}
           </span>
@@ -47,6 +58,9 @@ export default function ClubHeader({
             Visual priority: Goals → Assists → Clean sheets
           </span>
         </div>
+            </div>
+        </div>
+        
       </div>
     </header>
   );
