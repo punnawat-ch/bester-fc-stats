@@ -1,4 +1,25 @@
-export const footballStats = {
+export interface TeamStats {
+  matchesPlayed: number;
+  wins: number;
+  draws: number;
+  losses: number;
+}
+
+export interface PlayerStats {
+  name: string;
+  goals: number;
+  assists: number;
+  cleanSheets: number;
+}
+
+export interface FootballStats {
+  club: string;
+  recordedAt: string;
+  teamStats: TeamStats;
+  playerStats: PlayerStats[];
+}
+
+export const footballStats: FootballStats = {
   club: "Bester Football Club",
   recordedAt: "2026-01-18T11:29:00+07:00",
   teamStats: {

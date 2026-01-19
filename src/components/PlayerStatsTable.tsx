@@ -46,7 +46,7 @@ export default function PlayerStatsTable({
 
     return (
       <div className="glass-panel rounded-2xl border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent p-4 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col  gap-3">
           <div>
           <h3 className={`${titleSize} font-semibold text-white`}>{title}</h3>
           {!isCompact && (
@@ -55,9 +55,10 @@ export default function PlayerStatsTable({
             </p>
           )}
           </div>
-          {leader && (
+         
+         {leader && (
             <span
-              className={`rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.3em] ${accent}`}
+              className={`rounded-full w-max px-3 py-1 text-[10px] uppercase tracking-[0.3em] ${accent}`}
             >
               Leader: {leader.name}
             </span>

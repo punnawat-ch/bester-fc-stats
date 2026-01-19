@@ -1,31 +1,43 @@
 import { cache } from "react";
 
-import { footballStats } from "../data/football-stats";
+import type { FootballStats } from "../data/football-stats";
+import { fetchFootballStatsFromSheet } from "./google-sheets";
 
-export type TeamStats = typeof footballStats.teamStats;
-export type PlayerStats = (typeof footballStats.playerStats)[number];
+export type TeamStats = FootballStats["teamStats"];
+export type PlayerStats = FootballStats["playerStats"][number];
 
-export const getFootballStats = cache(() => footballStats);
+export const getFootballStats = cache(async () => {
+  return fetchFootballStatsFromSheet();
+});
 
-export const getTopPerformers = cache(() => {
-  const players = footballStats.playerStats;
+export function getTopPerformers(stats: FootballStats) {
+  const players = stats.playerStats;
 
-  const topScorer = players.reduce((current, player) =>
-    player.goals > current.goals ? player : current,
+  const fallback = players[0] ?? {
+    name: "Unknown",
+    goals: 0,
+    assists: 0,
+    cleanSheets: 0,
+  };
+
+  const topScorer = players.reduce(
+    (current, player) => (player.goals > current.goals ? player : current),
+    fallback,
   );
 
-  const topAssist = players.reduce((current, player) =>
-    player.assists > current.assists ? player : current,
+  const topAssist = players.reduce(
+    (current, player) => (player.assists > current.assists ? player : current),
+    fallback,
   );
 
   return {
     topScorer,
     topAssist,
   };
-});
+}
 
-export const getGoalSummary = cache(() => {
-  const goalsFor = footballStats.playerStats.reduce(
+export function getGoalSummary(stats: FootballStats) {
+  const goalsFor = stats.playerStats.reduce(
     (total, player) => total + player.goals,
     0,
   );
@@ -37,5 +49,5 @@ export const getGoalSummary = cache(() => {
     goalsAgainst,
     goalDifference,
   };
-});
+}
 
