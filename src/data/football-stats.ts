@@ -3,6 +3,9 @@ export interface TeamStats {
   wins: number;
   draws: number;
   losses: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalDifference: number;
 }
 
 export interface PlayerStats {
@@ -27,6 +30,9 @@ export const footballStats: FootballStats = {
     wins: 1,
     draws: 1,
     losses: 0,
+    goalsFor: 8,
+    goalsAgainst: 0,
+    goalDifference: 8,
   },
   playerStats: [
     { name: "พี่โต้ง", goals: 2, assists: 0, cleanSheets: 0 },

@@ -33,12 +33,9 @@ export function getTopPerformers(stats: FootballStats) {
 }
 
 export function getGoalSummary(stats: FootballStats) {
-  const goalsFor = stats.playerStats.reduce(
-    (total, player) => total + player.goals,
-    0,
-  );
-  const goalsAgainst = 0;
-  const goalDifference = goalsFor - goalsAgainst;
+  const goalsFor = stats.teamStats.goalsFor ?? 0;
+  const goalsAgainst = stats.teamStats.goalsAgainst ?? 0;
+  const goalDifference = stats.teamStats.goalDifference ?? goalsFor - goalsAgainst;
 
   return {
     goalsFor,

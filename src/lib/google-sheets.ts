@@ -48,7 +48,7 @@ function normalizeHeaders(headers: string[]) {
 }
 
 export async function fetchFootballStatsFromSheet(): Promise<FootballStats> {
-  const metaRange = process.env.GOOGLE_SHEETS_META_RANGE ?? "Meta!A1:B6";
+  const metaRange = process.env.GOOGLE_SHEETS_META_RANGE ?? "Meta!A1:B9";
   const playersRange =
     process.env.GOOGLE_SHEETS_PLAYERS_RANGE ?? "Players!A1:D100";
 
@@ -103,6 +103,9 @@ function buildStatsFromRows(
       wins: parseNumber(meta.Wins),
       draws: parseNumber(meta.Draws),
       losses: parseNumber(meta.Losses),
+      goalsFor: parseNumber(meta.GF),
+      goalsAgainst: parseNumber(meta.GA),
+      goalDifference: parseNumber(meta.GD),
     },
     playerStats,
   };

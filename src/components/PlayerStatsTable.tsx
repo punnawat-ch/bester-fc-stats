@@ -65,13 +65,13 @@ export default function PlayerStatsTable({
           )}
         </div>
         <div className="mt-4 overflow-x-auto">
-          <table className="min-w-full border-separate border-spacing-y-2 text-left">
+          <table className="min-w-full border-separate border-spacing-y-2 text-left table-fixed">
             {!isCompact && (
               <thead className="text-xs uppercase tracking-[0.2em] text-white/50">
               <tr>
-                <th className="px-4 py-2">Rank</th>
-                <th className="px-4 py-2">Player</th>
-                <th className="px-4 py-2 text-right">Total</th>
+                <th className="py-2 w-4">Rank</th>
+                <th className="px-4 py-2 w-full">Player</th>
+                <th className="py-2 text-right w-4">Total</th>
               </tr>
             </thead>
             )}
@@ -82,10 +82,10 @@ export default function PlayerStatsTable({
                 const isPodium = index < 3;
                 const podiumTone =
                   index === 0
-                    ? "border-emerald-400/40"
+                    ? "border-amber-300/60"
                     : index === 1
-                      ? "border-sky-400/40"
-                      : "border-teal-300/40";
+                      ? "border-slate-300/60"
+                      : "border-orange-300/60";
 
                 return (
                   <HighlightRow
@@ -93,23 +93,31 @@ export default function PlayerStatsTable({
                     isHighlighted={isLeader}
                   >
                     <td
-                      className={`rounded-l-2xl bg-white/5 ${cellPadding} font-medium text-white/70 ${
+                      className={`rounded-l-2xl w-4 bg-white/5 ${cellPadding} font-medium text-white/70 ${
                         isPodium ? `border-l-2 ${podiumTone}` : ""
                       }`}
                     >
                       {index + 1}
                     </td>
-                    <td className={`bg-white/5 ${cellPadding} font-medium`}>
+                    <td className={`bg-white/5 ${cellPadding} font-medium w-full`}>
                       <div className="flex items-center gap-2">
                         <span>{player.name}</span>
                         {!isCompact && isPodium && (
-                          <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-white/70">
-                            Top {index + 1}
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] ${
+                              index === 0
+                                ? "bg-amber-500/20 text-amber-100"
+                                : index === 1
+                                  ? "bg-slate-400/20 text-slate-100"
+                                  : "bg-orange-500/20 text-orange-100"
+                            }`}
+                          >
+                            {index === 0 ? "🏆 Top 1" : `Top ${index + 1}`}
                           </span>
                         )}
                       </div>
                     </td>
-                    <td className={`rounded-r-2xl bg-white/5 ${cellPadding} text-right ${isCompact ? "text-sm" : "text-lg"} font-semibold`}>
+                    <td className={`rounded-r-2xl bg-white/5 ${cellPadding} text-right w-4 ${isCompact ? "text-sm" : "text-lg"} font-semibold`}>
                       {total}
                     </td>
                   </HighlightRow>
