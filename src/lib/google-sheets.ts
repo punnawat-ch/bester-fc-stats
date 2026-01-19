@@ -60,7 +60,8 @@ function parseNumber(value: string | undefined) {
 }
 
 function normalizeHeaders(headers: string[]) {
-  return headers.map((header) => header?.trim().toLowerCase());
+  const normalized = headers.map((header) => header?.trim().toLowerCase());
+  return normalized;
 }
 
 export async function fetchFootballStatsFromSheet(): Promise<FootballStats> {
@@ -85,7 +86,6 @@ export async function fetchFootballStatsFromSheet(): Promise<FootballStats> {
       range: matchHistoryRange,
     }),
   ]);
-  console.log("🚀 ~ fetchFootballStatsFromSheet ~ playersSheet:", playersSheet.data.values)
 
   return buildStatsFromRows(
     metaSheet.data.values ?? [],
@@ -109,8 +109,8 @@ function buildStatsFromRows(
   const matchHistoryHeaders = matchHistoryRawHeaders ? normalizeHeaders(matchHistoryRawHeaders) : [];
 
   const getCell = (headers: string[], row: string[], key: string) => {
-    const index = headers.indexOf(key);
-    return index >= 0 ? row[index]?.trim() : undefined;
+    const index = headers.indexOf(key.toLowerCase());
+    return index >= 0 ? row[index] : undefined;
   };
 
 
@@ -127,12 +127,11 @@ function buildStatsFromRows(
     .filter((row) => row.some((cell) => cell?.trim()))
     .map((row) => ({
       name: getCell(playerHeaders, row, "name") ?? "Unknown",
-      matchesPlayed: parseNumber(getCell(playerHeaders, row, "matchplayed")),
+      matchesPlayed: parseNumber(getCell(playerHeaders, row, "match played")),
       goals: parseNumber(getCell(playerHeaders, row, "goals")),
       assists: parseNumber(getCell(playerHeaders, row, "assists")),
-      cleanSheets: parseNumber(getCell(playerHeaders, row, "cleansheets")),
+      cleanSheets: parseNumber(getCell(playerHeaders, row, "clean sheets")),
     }));
-  console.log("🚀 ~ buildStatsFromRows ~ playerStats:", playerStats)
 
   return {
     club: meta.Club ?? "Bester Football Club",
