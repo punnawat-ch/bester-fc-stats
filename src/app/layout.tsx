@@ -20,39 +20,39 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Bester FC",
+    default: "Bester FC Match Results & Rankings",
     template: "%s · Bester FC",
   },
   description:
-    "Football competition dashboard featuring match results, rankings, and player performance for Bester Football Club.",
+    "Official Bester FC football dashboard showing match results, league rankings, and player performance statistics.",
   applicationName: "Bester FC",
   keywords: [
     "Bester FC",
-    "football stats",
+    "bester fc match results",
+    "bester fc rankings",
+    "football results",
     "league table",
-    "match results",
-    "player ranking",
-    "club dashboard",
+    "player statistics",
   ],
   authors: [{ name: "Bester Football Club" }],
   creator: "Bester Football Club",
   publisher: "Bester Football Club",
   category: "sports",
   alternates: {
-    canonical: "/",
+    canonical: siteUrl,
   },
   openGraph: {
-    title: "Bester FC",
+    title: "Bester FC Match Results & Rankings",
     description:
-      "Football competition dashboard featuring match results, rankings, and player performance for Bester Football Club.",
-    url: "/",
+      "Match results, rankings, and player performance for Bester Football Club.",
+    url: siteUrl,
     siteName: "Bester FC",
     images: [
       {
-        url: "/logo.png",
-        width: 1024,
-        height: 1024,
-        alt: "Bester FC crest",
+        url: "/og-match-results.png",
+        width: 1200,
+        height: 630,
+        alt: "Bester FC match results and rankings",
       },
     ],
     locale: "en_US",
@@ -60,21 +60,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bester FC",
+    title: "Bester FC Match Results & Rankings",
     description:
-      "Football competition dashboard featuring match results, rankings, and player performance for Bester Football Club.",
-    images: ["/logo.png"],
+      "Live football match results and rankings for Bester FC.",
+    images: ["/og-match-results.png"],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
   },
   themeColor: "#0b1124",
 };
