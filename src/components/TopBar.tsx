@@ -15,27 +15,25 @@ export default function TopBar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0b1124]/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-10">
+    <header className="relative w-full rounded-2xl border border-white/10 bg-[#0b1224]/60 px-4 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.45)] ring-1 ring-white/10 backdrop-blur-2xl sm:px-6">
+      <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-3">
           <Image
             src="/logo.png"
             alt="Bester FC"
             width={36}
             height={36}
-            className="h-9 w-9 rounded-lg bg-white p-1"
+            className="h-9 w-9 rounded-lg bg-white/90 p-1"
           />
-          <div className="text-sm font-semibold text-white">
-            Bester FC
-          </div>
+          <div className="text-sm font-semibold text-white">Bester FC</div>
         </div>
 
-        <nav className="hidden items-center gap-5 text-sm text-white/70 md:flex">
+        <nav className="hidden items-center gap-2 text-sm text-white/70 md:flex">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="transition hover:text-white"
+              className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-[0.24em] transition hover:border-white/30 hover:text-white"
             >
               {item.label}
             </a>
@@ -45,7 +43,7 @@ export default function TopBar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Bester FC on Facebook"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:border-white/30 hover:text-white"
           >
             <svg
               viewBox="0 0 24 24"
@@ -60,7 +58,7 @@ export default function TopBar() {
 
         <button
           type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/80 transition hover:text-white md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/80 transition hover:border-white/30 hover:text-white md:hidden"
           onClick={() => setIsOpen((open) => !open)}
           aria-label="Toggle menu"
           aria-expanded={isOpen}
@@ -70,13 +68,13 @@ export default function TopBar() {
       </div>
 
       {isOpen && (
-        <div className="border-t border-white/10 bg-[#0b1124]/95 md:hidden">
-          <nav className="flex flex-col gap-2 px-4 py-3 text-sm text-white/70">
+        <div className="mt-3 border-t border-white/10 pt-3 md:hidden">
+          <nav className="flex flex-col gap-2 text-sm text-white/70">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 transition hover:text-white"
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs uppercase tracking-[0.24em] transition hover:border-white/30 hover:text-white"
                 onClick={() => setIsOpen(false)}
               >
                 {item.label}
@@ -86,7 +84,7 @@ export default function TopBar() {
               href="https://www.facebook.com/people/Bester-Footballclub/61569445073979/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white/80 transition hover:text-white"
+              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs uppercase tracking-[0.24em] text-white/80 transition hover:border-white/30 hover:text-white"
               onClick={() => setIsOpen(false)}
             >
               <svg

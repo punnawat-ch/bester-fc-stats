@@ -83,18 +83,18 @@ export default function PlayerStatsTable({
     };
 
     return (
-      <div className="glass-panel rounded-2xl border border-white/15 bg-linear-to-br from-white/12 via-white/6 to-transparent p-4 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
-        <div className="flex flex-col  gap-3">
+      <div className="glass-panel rounded-2xl border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent p-4 shadow-[0_20px_50px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
+        <div className="flex flex-col gap-3">
           <div>
-          <h3 className={`${titleSize} font-semibold text-white`}>{title}</h3>
-          {!isCompact && (
-            <p className="text-xs uppercase tracking-[0.3em] text-white/50">
-              Competition Ranking
-            </p>
-          )}
+            <h3 className={`${titleSize} font-semibold text-white`}>{title}</h3>
+            {!isCompact && (
+              <p className="text-[10px] uppercase tracking-[0.3em] text-white/50">
+                Competition Ranking
+              </p>
+            )}
           </div>
-         
-         {leader && (
+
+          {leader && (
             <span
               className={`rounded-full w-max px-3 py-1 text-[10px] uppercase tracking-[0.3em] ${accent}`}
             >
@@ -109,7 +109,7 @@ export default function PlayerStatsTable({
             return (
               <div
                 key={`${metric}-card-${player.name}`}
-                className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-linear-to-br from-white/10 via-white/5 to-transparent px-4 py-3 shadow-[0_16px_35px_rgba(0,0,0,0.4)] ring-1 ring-white/10"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-linear-to-br from-white/8 via-white/4 to-transparent px-4 py-3 shadow-[0_16px_35px_rgba(0,0,0,0.4)] ring-1 ring-white/10"
               >
                 <div className="flex items-center gap-3">
                   <span
@@ -131,7 +131,7 @@ export default function PlayerStatsTable({
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs uppercase tracking-[0.2em] text-white/50">
+                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/50">
                     {title}
                   </div>
                   <div className="text-lg font-semibold text-white">{player[metric]}</div>
@@ -144,7 +144,7 @@ export default function PlayerStatsTable({
         <div className="mt-4 hidden overflow-x-auto md:block">
           <table className="min-w-full border-separate border-spacing-y-2 text-left table-fixed">
             {!isCompact && (
-              <thead className="text-xs uppercase tracking-[0.2em] text-white/50">
+              <thead className="text-[10px] uppercase tracking-[0.28em] text-white/50">
               <tr>
                 <th className="py-2 w-4">Rank</th>
                 <th className="px-6 w-full py-2">Player</th>
@@ -175,7 +175,9 @@ export default function PlayerStatsTable({
                       <div className="flex items-center gap-2">
                         <div className="flex flex-col">
                           <span>{player.name}</span>
-                          <span className="text-xs text-white/50">{player.matchesPlayed} matches</span>
+                          <span className="text-xs text-white/50">
+                            {player.matchesPlayed} matches
+                          </span>
                         </div>
                         {!isCompact && isPodium && (
                           <span
@@ -201,7 +203,7 @@ export default function PlayerStatsTable({
 
   return (
     <motion.section
-      className="glass-panel rounded-3xl border border-white/15 bg-[#0b1124]/85 px-6 py-6 shadow-[0_26px_70px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
+      className="glass-panel rounded-3xl border border-white/10 bg-[#0a1222]/80 px-5 py-5 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
       variants={container}
       initial="hidden"
       animate="show"
@@ -211,9 +213,14 @@ export default function PlayerStatsTable({
         variants={item}
       >
         <div>
-          <h2 className="text-xl font-semibold text-white">Ranking Stage</h2>
-          <p className="text-sm text-white/60">
-            Separate rankings for Goals, Assists, and Clean Sheets
+          <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">
+            Ranking Stage
+          </p>
+          <h2 className="text-xl font-semibold text-white">
+            Competition Rankings
+          </h2>
+          <p className="text-xs text-white/60">
+            Goals, Assists, and Clean Sheets leaders
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3 text-sm">

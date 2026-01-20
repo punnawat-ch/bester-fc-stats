@@ -37,20 +37,20 @@ export default function ClubHeader({
 
   return (
     <motion.header
-      className="relative overflow-hidden rounded-3xl border border-sky-400/20 bg-linear-to-br from-[#0b1424] via-[#0c2430] to-[#0d2038] px-6 py-8 text-white shadow-2xl shadow-sky-500/10 glow-ring"
+      className="relative overflow-hidden rounded-3xl px-6 py-6 text-white "
       variants={container}
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.6 }}
     >
-      <div className="absolute inset-0 shimmer bg-[radial-gradient(circle_at_top,rgba(14,165,233,0.25),transparent_60%)]" />
-      <div className="relative flex flex-col gap-3">
+      <div className="pointer-events-none absolute inset-0 " />
+      <div className="relative flex flex-col gap-4">
         <motion.div
-          className="flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em] text-white/70 hidden md:flex"
+          className="hidden flex-wrap items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-white/60 md:flex"
           variants={item}
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-1">
-            <span className="h-2 w-2 rounded-full bg-sky-300 pulse-dot" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1">
+            <span className="h-2 w-2 rounded-full bg-sky-300" />
             Live Ranking
           </span>
           <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1">
@@ -58,7 +58,7 @@ export default function ClubHeader({
           </span>
         </motion.div>
         <motion.div
-          className="flex md:flex-row justify-center md:justify-start flex-col items-center gap-2"
+          className="flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-start"
           variants={item}
         >
           <Image
@@ -66,24 +66,24 @@ export default function ClubHeader({
               alt="Bester FC crest"
               width={200}
               height={200}
-              className="h-28 w-28 rounded-xl bg-white p-1"
+              className="h-28 w-28 rounded-2xl border border-white/60 bg-white/5 p-1 shadow-[0_26px_32px_rgba(0,0,0,0.35)]"
               priority
             />
             <div className="flex flex-col gap-2">
 
         <div>
-          <h1 className="text-3xl font-semibold text-center md:text-left tracking-tight sm:text-4xl">
+          <h1 className="text-2xl font-semibold text-center tracking-tight text-white sm:text-3xl md:text-left">
             {clubName}
           </h1>
-          <p className="mt-2 text-sm text-white/70 text-center md:text-left">
-            Recorded {formattedDate}
+          <p className="mt-1 text-xs text-white/60 text-center md:text-left">
+            Recorded on {formattedDate}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-sky-100 justify-center md:justify-start">
-          <span className="rounded-full bg-sky-500/15 px-3 py-1">
+        <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-medium text-white/80 md:justify-start">
+          <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1">
             {matchSummary}
           </span>
-          <span className="text-white/70 hidden md:block">
+          <span className="hidden text-white/60 md:block">
             Visual priority: Goals → Assists → Clean sheets
           </span>
         </div>

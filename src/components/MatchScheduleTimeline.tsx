@@ -165,7 +165,7 @@ export default function MatchScheduleTimeline({
   return (
     <motion.section
       id="schedule"
-      className="glass-panel rounded-3xl border border-white/15 bg-[#0b1124]/85 px-6 py-6 shadow-[0_26px_70px_rgba(0,0,0,0.45)] ring-1 ring-white/10 scroll-mt-24"
+      className="glass-panel rounded-3xl border border-white/10 bg-[#0a1222]/80 px-5 py-5 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10 scroll-mt-24"
       variants={container}
       initial="hidden"
       whileInView="show"
@@ -176,14 +176,14 @@ export default function MatchScheduleTimeline({
         variants={item}
       >
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-white/50">
+          <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">
             Upcoming Fixtures
           </p>
           <h3 className="text-lg font-semibold text-white">
             Match Schedule Timeline
           </h3>
         </div>
-        <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/60">
+        <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.24em] text-white/60">
           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
             {summary.totalMatches} matches
           </span>
@@ -200,7 +200,7 @@ export default function MatchScheduleTimeline({
         {grouped.map((group) => (
           <motion.div key={group.month} className="space-y-3" variants={item}>
             <div className="flex items-center gap-3 text-sm font-semibold text-white">
-              <span className="h-2 w-2 rounded-full bg-emerald-300" />
+              <span className="h-2 w-2 rounded-full bg-sky-300" />
               {group.month}
             </div>
             <div className="space-y-3 border-l border-white/10 pl-4 sm:pl-5">
@@ -217,13 +217,13 @@ export default function MatchScheduleTimeline({
                     key={matchKey}
                     className={`rounded-2xl border px-4 py-3 shadow-[0_16px_35px_rgba(0,0,0,0.4)] ring-1 ${
                       isNext
-                        ? "border-emerald-400/40 bg-linear-to-br from-emerald-500/15 via-white/10 to-transparent ring-emerald-400/30"
-                        : "border-white/15 bg-linear-to-br from-white/10 via-white/5 to-transparent ring-white/10"
+                        ? "border-emerald-400/40 bg-linear-to-br from-emerald-500/12 via-white/8 to-transparent ring-emerald-400/30"
+                        : "border-white/10 bg-linear-to-br from-white/8 via-white/4 to-transparent ring-white/10"
                     }`}
                   >
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+                        <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
                           {match.week} · {match.date}
                         </p>
                         <p className="mt-1 text-base font-semibold text-white">
@@ -244,7 +244,7 @@ export default function MatchScheduleTimeline({
                       </div>
                     </div>
                     {countdown && !countdown.isStarted && (
-                      <div className="mt-3 grid grid-cols-4 gap-2 text-center text-xs uppercase tracking-[0.2em] text-white/70">
+                      <div className="mt-3 grid grid-cols-4 gap-2 text-center text-[10px] uppercase tracking-[0.2em] text-white/70">
                         {[
                           { label: "Days", value: countdown.days },
                           { label: "Hours", value: countdown.hours },
