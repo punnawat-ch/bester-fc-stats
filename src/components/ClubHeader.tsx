@@ -66,7 +66,7 @@ export default function ClubHeader({
               alt="Bester FC crest"
               width={200}
               height={200}
-              className="h-28 w-28 rounded-2xl border border-white/60 bg-white/5 p-1 shadow-[0_26px_32px_rgba(0,0,0,0.35)]"
+              className="h-28 w-28 rounded-2xl border border-white/60 bg-white/5 p-1 shadow-[0_12px_24px_rgba(0,0,0,0.35)]"
               priority
             />
             <div className="flex flex-col gap-2">
