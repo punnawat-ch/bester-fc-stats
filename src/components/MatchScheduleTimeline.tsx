@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { ScheduleMatch } from "../data/match-schedule";
 
@@ -50,6 +50,28 @@ function parseEndDateTime(date: string, time: string) {
   return new Date(fullYear, month - 1, day, hours, minutes);
 }
 
+function parseStartDateTime(date: string, time: string) {
+  const [day, month, year] = date.split("/").map(Number);
+  if (!day || !month || !year) {
+    return null;
+  }
+
+  const matches = [...time.matchAll(/(\d{1,2})[:.](\d{2})/g)];
+  const firstMatch = matches[0];
+  if (!firstMatch) {
+    return null;
+  }
+
+  const hours = Number(firstMatch[1]);
+  const minutes = Number(firstMatch[2]);
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return null;
+  }
+
+  const fullYear = year < 100 ? 2000 + year : year;
+  return new Date(fullYear, month - 1, day, hours, minutes);
+}
+
 function isPastMatch(match: ScheduleMatch, now: Date) {
   if (!match.date || !match.time) {
     return false;
@@ -61,6 +83,23 @@ function isPastMatch(match: ScheduleMatch, now: Date) {
   return now.getTime() > endDate.getTime();
 }
 
+function getCountdown(target: Date, now: Date) {
+  const totalSeconds = Math.max(
+    0,
+    Math.floor((target.getTime() - now.getTime()) / 1000),
+  );
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return {
+    days,
+    hours,
+    minutes,
+    seconds,
+    isStarted: totalSeconds <= 0,
+  };
+}
 function getSummary(schedule: ScheduleMatch[]) {
   const venues = new Set(schedule.map((match) => match.venue).filter(Boolean));
   const opponents = new Set(
@@ -77,13 +116,38 @@ function getSummary(schedule: ScheduleMatch[]) {
 export default function MatchScheduleTimeline({
   schedule,
 }: MatchScheduleTimelineProps) {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
   const filteredSchedule = useMemo(() => {
-    const now = new Date();
     return schedule.filter((match) => !isPastMatch(match, now));
-  }, [schedule]);
+  }, [schedule, now]);
 
   const grouped = groupByMonth(filteredSchedule);
   const summary = getSummary(filteredSchedule);
+  const nextMatch = useMemo(() => {
+    const upcoming = filteredSchedule
+      .map((match) => ({
+        match,
+        startDate:
+          match.date && match.time
+            ? parseStartDateTime(match.date, match.time)
+            : null,
+      }))
+      .filter(
+        (item) => item.startDate && item.startDate.getTime() >= now.getTime(),
+      )
+      .sort((a, b) => a.startDate!.getTime() - b.startDate!.getTime());
+    return upcoming[0] ?? null;
+  }, [filteredSchedule, now]);
+  const nextMatchKey = nextMatch
+    ? `${nextMatch.match.date}-${nextMatch.match.opponent}-${nextMatch.match.time}`
+    : null;
   const reduceMotion = useReducedMotion();
   const container = {
     hidden: {},
@@ -101,7 +165,7 @@ export default function MatchScheduleTimeline({
   return (
     <motion.section
       id="schedule"
-      className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 px-6 py-6 shadow-2xl shadow-black/30 scroll-mt-24"
+      className="glass-panel rounded-3xl border border-white/15 bg-[#0b1124]/85 px-6 py-6 shadow-[0_26px_70px_rgba(0,0,0,0.45)] ring-1 ring-white/10 scroll-mt-24"
       variants={container}
       initial="hidden"
       whileInView="show"
@@ -140,35 +204,75 @@ export default function MatchScheduleTimeline({
               {group.month}
             </div>
             <div className="space-y-3 border-l border-white/10 pl-4 sm:pl-5">
-              {group.matches.map((match) => (
-                <div
-                  key={`${match.date}-${match.opponent}`}
-                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
-                >
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-white/50">
-                        {match.week} · {match.date}
-                      </p>
-                      <p className="mt-1 text-base font-semibold text-white">
-                        vs {match.opponent}
-                      </p>
-                    </div>
-                    <div className="text-left text-sm text-white/70 sm:text-right">
+              {group.matches.map((match) => {
+                const matchKey = `${match.date}-${match.opponent}-${match.time}`;
+                const isNext = nextMatchKey === matchKey;
+                const countdown =
+                  isNext && nextMatch?.startDate
+                    ? getCountdown(nextMatch.startDate, now)
+                    : null;
+
+                return (
+                  <div
+                    key={matchKey}
+                    className={`rounded-2xl border px-4 py-3 shadow-[0_16px_35px_rgba(0,0,0,0.4)] ring-1 ${
+                      isNext
+                        ? "border-emerald-400/40 bg-linear-to-br from-emerald-500/15 via-white/10 to-transparent ring-emerald-400/30"
+                        : "border-white/15 bg-linear-to-br from-white/10 via-white/5 to-transparent ring-white/10"
+                    }`}
+                  >
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        {match.venue}
-                        {match.field ? ` · ${match.field}` : ""}
+                        <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+                          {match.week} · {match.date}
+                        </p>
+                        <p className="mt-1 text-base font-semibold text-white">
+                          vs {match.opponent}
+                        </p>
                       </div>
-                      <div className="text-xs">{match.time}</div>
+                      <div className="text-left text-sm text-white/70 sm:text-right">
+                        <div>
+                          {match.venue}
+                          {match.field ? ` · ${match.field}` : ""}
+                        </div>
+                        <div className="text-xs">{match.time}</div>
+                        {isNext && (
+                          <span className="mt-2 inline-flex rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-emerald-100">
+                            Next Match
+                          </span>
+                        )}
+                      </div>
                     </div>
+                    {countdown && !countdown.isStarted && (
+                      <div className="mt-3 grid grid-cols-4 gap-2 text-center text-xs uppercase tracking-[0.2em] text-white/70">
+                        {[
+                          { label: "Days", value: countdown.days },
+                          { label: "Hours", value: countdown.hours },
+                          { label: "Min", value: countdown.minutes },
+                          { label: "Sec", value: countdown.seconds },
+                        ].map((item) => (
+                          <div
+                            key={item.label}
+                            className="rounded-xl border border-white/10 bg-white/5 px-2 py-2"
+                          >
+                            <div className="text-base font-semibold text-white">
+                              {String(item.value).padStart(2, "0")}
+                            </div>
+                            <div className="text-[10px] text-white/50">
+                              {item.label}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {match.notes && (
+                      <div className="mt-2 text-xs text-emerald-100/80">
+                        {match.notes}
+                      </div>
+                    )}
                   </div>
-                  {match.notes && (
-                    <div className="mt-2 text-xs text-emerald-100/80">
-                      {match.notes}
-                    </div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
         ))}

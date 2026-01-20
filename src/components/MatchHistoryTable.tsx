@@ -65,7 +65,7 @@ export default function MatchHistoryTable({
 
   return (
     <motion.section
-      className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 px-6 py-6 shadow-2xl shadow-black/30"
+      className="glass-panel rounded-3xl border border-white/15 bg-[#0b1124]/85 px-6 py-6 shadow-[0_26px_70px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
       variants={container}
       initial="hidden"
       whileInView="show"
@@ -95,7 +95,7 @@ export default function MatchHistoryTable({
             return (
               <div
                 key={`card-${match.date}-${match.versus}-${match.score}`}
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4"
+                className="rounded-2xl border border-white/15 bg-linear-to-br from-white/10 via-white/5 to-transparent px-4 py-4 shadow-[0_16px_35px_rgba(0,0,0,0.4)] ring-1 ring-white/10"
               >
                 <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-white/50">
                   <span>{match.date}</span>

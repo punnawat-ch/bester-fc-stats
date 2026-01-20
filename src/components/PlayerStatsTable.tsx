@@ -83,7 +83,7 @@ export default function PlayerStatsTable({
     };
 
     return (
-      <div className="glass-panel rounded-2xl border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent p-4 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
+      <div className="glass-panel rounded-2xl border border-white/15 bg-linear-to-br from-white/12 via-white/6 to-transparent p-4 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
         <div className="flex flex-col  gap-3">
           <div>
           <h3 className={`${titleSize} font-semibold text-white`}>{title}</h3>
@@ -109,7 +109,7 @@ export default function PlayerStatsTable({
             return (
               <div
                 key={`${metric}-card-${player.name}`}
-                className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-linear-to-br from-white/10 via-white/5 to-transparent px-4 py-3 shadow-[0_16px_35px_rgba(0,0,0,0.4)] ring-1 ring-white/10"
               >
                 <div className="flex items-center gap-3">
                   <span
@@ -201,7 +201,7 @@ export default function PlayerStatsTable({
 
   return (
     <motion.section
-      className="glass-panel rounded-3xl border border-white/10 bg-[#0b1124]/85 px-6 py-6 shadow-2xl shadow-black/30"
+      className="glass-panel rounded-3xl border border-white/15 bg-[#0b1124]/85 px-6 py-6 shadow-[0_26px_70px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
       variants={container}
       initial="hidden"
       animate="show"
