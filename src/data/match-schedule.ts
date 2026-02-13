@@ -55,21 +55,21 @@ export const matchSchedule: ScheduleMatch[] = [
     field: "Field 3",
     time: "18:00–20:00",
   },
-//   {
-//     month: "Feb 2026",
-//     week: "Week 2",
-//     date: "14/02/26",
-//     opponent: "-",
-//     venue: "-",
-//     time: "-",
-//   },
+  //   {
+  //     month: "Feb 2026",
+  //     week: "Week 2",
+  //     date: "14/02/26",
+  //     opponent: "-",
+  //     venue: "-",
+  //     time: "-",
+  //   },
   {
     month: "Feb 2026",
     week: "Week 3",
     date: "21/02/26",
     opponent: "Uncle",
-    venue: "สนามบุญจินดา",
-    time: "18:00–20:00",
+    venue: "Alpine Football Camp Training Bangkok",
+    time: "19.00-21.00",
   },
   {
     month: "Feb 2026",
@@ -116,4 +116,3 @@ export const matchSchedule: ScheduleMatch[] = [
     time: "18:00–20:00",
   },
 ];
-
