@@ -371,6 +371,7 @@ export function ClubForm({ initialValues }: ClubFormProps) {
         </FormSection>
 
         <SubmitBar
+          variant="page"
           pending={isSubmitting}
           disabled={!isDirty}
           saveLabel="Save changes"
