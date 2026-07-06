@@ -257,7 +257,7 @@ export function PlayerFormSheet({
 
             <div className="flex flex-col gap-3">
               <SectionLabel>Match stats</SectionLabel>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3" data-tour="player-stat-tiles">
                 {STAT_TILES.map((tile) => (
                   <StatTileField
                     key={tile.name}

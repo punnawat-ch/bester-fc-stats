@@ -237,16 +237,19 @@ export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
         eyebrow="Schedule"
         title="Matches"
         count={matches.length}
+        helpKey="matches"
         actions={
-          <Tabs
-            value={view}
-            onValueChange={(value) => setView(value as CalendarView)}
-          >
-            <TabsList>
-              <TabsTrigger value="agenda">Agenda</TabsTrigger>
-              <TabsTrigger value="month">Month</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div data-tour="matches-view-toggle">
+            <Tabs
+              value={view}
+              onValueChange={(value) => setView(value as CalendarView)}
+            >
+              <TabsList>
+                <TabsTrigger value="agenda">Agenda</TabsTrigger>
+                <TabsTrigger value="month">Month</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         }
       />
 
@@ -289,6 +292,7 @@ export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
           type="button"
           size="icon"
           aria-label="New fixture"
+          data-tour="matches-fab"
           onClick={() => openCreate(toDateInputValue(new Date()))}
           className="fixed right-4 bottom-[84px] z-40 size-14 shadow-[0_20px_50px_rgba(0,0,0,0.45)] md:right-8 md:bottom-8"
         >

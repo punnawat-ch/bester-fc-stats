@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth-guard";
 import { getClub } from "@/lib/football";
 import { prisma } from "@/lib/prisma";
 import { can } from "@/lib/rbac";
+import { FeatureTour } from "@/components/admin/help/FeatureTour";
 import { PlayersManager } from "./players-manager";
 import type { PlayerDTO } from "./types";
 
@@ -46,5 +47,10 @@ export default async function PlayersPage() {
 
   const canWrite = can(session.user.role, "player:write");
 
-  return <PlayersManager players={items} canWrite={canWrite} />;
+  return (
+    <>
+      <PlayersManager players={items} canWrite={canWrite} />
+      <FeatureTour featureKey="players" />
+    </>
+  );
 }

@@ -63,7 +63,7 @@ export function PlayersManager({ players, canWrite }: PlayersManagerProps) {
   }
 
   const addButton = canWrite ? (
-    <Button type="button" onClick={openCreate}>
+    <Button type="button" onClick={openCreate} data-tour="players-add">
       <Plus />
       Player
     </Button>
@@ -76,6 +76,7 @@ export function PlayersManager({ players, canWrite }: PlayersManagerProps) {
         title="Players"
         count={players.length}
         actions={addButton}
+        helpKey="players"
       />
 
       <ResponsiveList

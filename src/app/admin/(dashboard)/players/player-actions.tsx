@@ -29,6 +29,7 @@ export function PlayerActions({ player, onEdit, onDelete }: PlayerActionsProps) 
           type="button"
           variant="ghost"
           size="icon"
+          data-tour="player-actions"
           aria-label={`Actions for ${player.name}`}
         >
           <MoreHorizontal />

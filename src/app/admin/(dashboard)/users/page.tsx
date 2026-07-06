@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { ResponsiveList } from "@/components/admin/ResponsiveList";
+import { FeatureTour } from "@/components/admin/help/FeatureTour";
 import { CreateUserSheet } from "./create-user-sheet";
 import { UserCard, UserRowCells } from "./user-list-items";
 import type { UserListItem } from "./types";
@@ -54,7 +55,9 @@ export default async function AdminUsersPage() {
         count={items.length}
         description="Invite teammates and control their access to the admin."
         actions={<CreateUserSheet />}
+        helpKey="users"
       />
+      <FeatureTour featureKey="users" />
 
       <ResponsiveList
         items={items}

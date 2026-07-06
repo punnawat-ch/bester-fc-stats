@@ -2,6 +2,7 @@ import type { Role } from "@prisma/client";
 import {
   CalendarDays,
   LayoutDashboard,
+  LifeBuoy,
   Settings,
   UserCog,
   Users,
@@ -27,17 +28,32 @@ export type AdminNavItem = Readonly<{
   icon: LucideIcon;
   permission?: Permission;
   primary?: boolean;
+  /** `data-tour` id for the welcome/shell tour (spec §8). */
+  tourId?: string;
 }>;
 
 export const ADMIN_NAV_ITEMS: readonly AdminNavItem[] = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, primary: true },
+  {
+    href: "/admin",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    primary: true,
+    tourId: "nav-dashboard",
+  },
   {
     href: "/admin/matches",
     label: "Matches",
     icon: CalendarDays,
     primary: true,
+    tourId: "nav-matches",
   },
-  { href: "/admin/players", label: "Players", icon: Users, primary: true },
+  {
+    href: "/admin/players",
+    label: "Players",
+    icon: Users,
+    primary: true,
+    tourId: "nav-players",
+  },
   {
     href: "/admin/club",
     label: "Club",
@@ -49,6 +65,12 @@ export const ADMIN_NAV_ITEMS: readonly AdminNavItem[] = [
     label: "Users",
     icon: UserCog,
     permission: "user:manage",
+  },
+  {
+    href: "/admin/help",
+    label: "คู่มือ",
+    icon: LifeBuoy,
+    permission: "dashboard:view",
   },
 ];
 

@@ -30,6 +30,7 @@ export function FixtureCard({ match, onSelect }: FixtureCardProps) {
   return (
     <button
       type="button"
+      data-tour="match-item"
       onClick={() => onSelect(match)}
       className="flex w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-linear-to-br from-white/8 via-white/4 to-transparent p-4 text-left shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition hover:border-white/25 focus-visible:ring-2 focus-visible:ring-sky-400/70 focus-visible:outline-none"
     >

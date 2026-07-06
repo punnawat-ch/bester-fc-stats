@@ -35,6 +35,7 @@ export function AdminSidebar({ role }: AdminSidebarProps) {
             <Link
               key={item.href}
               href={item.href}
+              data-tour={item.tourId}
               aria-current={active ? "page" : undefined}
               className={cn(
                 "flex min-h-11 items-center gap-3 rounded-2xl px-3 text-sm transition outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70",

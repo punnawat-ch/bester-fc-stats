@@ -32,6 +32,7 @@ export function AdminBottomNav({ role }: AdminBottomNavProps) {
           <Link
             key={item.href}
             href={item.href}
+            data-tour={item.tourId}
             aria-current={active ? "page" : undefined}
             className={cn(
               "relative flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70",

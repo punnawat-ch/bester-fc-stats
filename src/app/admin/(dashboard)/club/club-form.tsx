@@ -49,11 +49,18 @@ type SectionProps = Readonly<{
   title: string;
   description: string;
   children: ReactNode;
+  tourId?: string;
 }>;
 
-function FormSection({ eyebrow, title, description, children }: SectionProps) {
+function FormSection({
+  eyebrow,
+  title,
+  description,
+  children,
+  tourId,
+}: SectionProps) {
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4" data-tour={tourId}>
       <div className="flex flex-col gap-1">
         <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
           {eyebrow}
@@ -153,6 +160,7 @@ export function ClubForm({ initialValues }: ClubFormProps) {
           eyebrow="Identity"
           title="Branding"
           description="Name, crest, and theme color used across the public site."
+          tourId="club-branding"
         >
           <FormField
             control={form.control}
@@ -262,6 +270,7 @@ export function ClubForm({ initialValues }: ClubFormProps) {
           eyebrow="SEO / Metadata"
           title="Search &amp; sharing"
           description="Controls the page title, description, keywords, and share card."
+          tourId="club-seo"
         >
           <FormField
             control={form.control}
@@ -370,13 +379,15 @@ export function ClubForm({ initialValues }: ClubFormProps) {
           />
         </FormSection>
 
-        <SubmitBar
-          variant="page"
-          pending={isSubmitting}
-          disabled={!isDirty}
-          saveLabel="Save changes"
-          pendingLabel="Saving…"
-        />
+        <div data-tour="club-save">
+          <SubmitBar
+            variant="page"
+            pending={isSubmitting}
+            disabled={!isDirty}
+            saveLabel="Save changes"
+            pendingLabel="Saving…"
+          />
+        </div>
       </form>
     </Form>
   );

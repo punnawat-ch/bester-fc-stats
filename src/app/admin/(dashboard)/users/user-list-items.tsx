@@ -19,7 +19,11 @@ function roleVariant(role: Role): RoleBadgeVariant {
 
 function RoleBadge({ role }: Readonly<{ role: Role }>) {
   return (
-    <Badge variant={roleVariant(role)} aria-label={`Role: ${role}`}>
+    <Badge
+      variant={roleVariant(role)}
+      data-tour="user-role"
+      aria-label={`Role: ${role}`}
+    >
       {role}
     </Badge>
   );

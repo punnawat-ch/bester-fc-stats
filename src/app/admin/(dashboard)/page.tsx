@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { FeatureTour } from "@/components/admin/help/FeatureTour";
 import { UpcomingFixtureCard } from "./upcoming-fixture-card";
 
 export const metadata: Metadata = {
@@ -57,7 +58,9 @@ export default async function AdminDashboardPage() {
         title={`Hello, ${club.shortName}`}
         description="Season snapshot and quick actions."
         actions={<Badge variant="info">{role}</Badge>}
+        helpKey="dashboard"
       />
+      <FeatureTour featureKey="welcome" />
 
       <section aria-label="Form" className="flex flex-col gap-3">
         <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">

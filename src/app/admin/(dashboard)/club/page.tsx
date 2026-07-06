@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { requireUser } from "@/lib/auth-guard";
 import { getClub } from "@/lib/football";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { FeatureTour } from "@/components/admin/help/FeatureTour";
 
 import { ClubForm } from "./club-form";
 import { DEFAULT_THEME_COLOR, type ClubFormValues } from "./schema";
@@ -41,8 +42,10 @@ export default async function AdminClubPage() {
         eyebrow="Settings"
         title="Club"
         description="Branding, social links, and SEO metadata for the public site."
+        helpKey="club"
       />
       <ClubForm initialValues={initialValues} />
+      <FeatureTour featureKey="club" />
     </div>
   );
 }

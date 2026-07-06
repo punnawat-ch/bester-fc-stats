@@ -78,7 +78,7 @@ export function CreateUserSheet() {
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
-        <Button>
+        <Button data-tour="users-invite">
           <UserPlus />
           Invite
         </Button>

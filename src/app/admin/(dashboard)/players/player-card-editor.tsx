@@ -233,6 +233,7 @@ export function PlayerCardEditor({
   return (
     <div className="flex flex-col gap-3">
       <div
+        data-tour="player-card-preview"
         className={`relative mx-auto aspect-[3/4] w-44 overflow-hidden rounded-2xl border border-white/10 shadow-[0_22px_60px_rgba(0,0,0,0.5)] ${
           celebrate ? "squad-celebrate" : ""
         }`}
@@ -346,6 +347,7 @@ type EditPhotoButtonProps = Readonly<{
 function EditPhotoButton({ disabled, onFile }: EditPhotoButtonProps) {
   return (
     <label
+      data-tour="player-photo"
       className={`absolute right-2.5 top-2.5 grid size-11 place-items-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur transition hover:bg-black/65 focus-within:ring-2 focus-within:ring-sky-400/70 ${
         disabled ? "pointer-events-none opacity-50" : "cursor-pointer"
       }`}

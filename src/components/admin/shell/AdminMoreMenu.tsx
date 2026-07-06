@@ -31,6 +31,7 @@ export function AdminMoreMenu({ role }: AdminMoreMenuProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
+        data-tour="nav-more"
         className={cn(
           "flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70",
           active ? "text-sky-300" : "text-white/50",

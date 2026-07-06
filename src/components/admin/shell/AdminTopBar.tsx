@@ -64,6 +64,7 @@ export function AdminTopBar({
 
       <DropdownMenu>
         <DropdownMenuTrigger
+          data-tour="topbar-signout"
           className="flex h-11 items-center gap-2 rounded-full border border-white/10 bg-white/5 pr-3 pl-1.5 text-white outline-none transition hover:border-white/30 focus-visible:ring-2 focus-visible:ring-sky-400/70"
           aria-label="Account menu"
         >

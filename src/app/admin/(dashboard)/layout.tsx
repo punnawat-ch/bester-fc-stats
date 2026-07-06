@@ -2,9 +2,11 @@ import type { ReactNode } from "react";
 
 import { requireUser } from "@/lib/auth-guard";
 import { getClub } from "@/lib/football";
+import { prisma } from "@/lib/prisma";
 import { AdminBottomNav } from "@/components/admin/shell/AdminBottomNav";
 import { AdminSidebar } from "@/components/admin/shell/AdminSidebar";
 import { AdminTopBar } from "@/components/admin/shell/AdminTopBar";
+import { TutorialPrefsProvider } from "@/components/admin/help/tutorial-prefs";
 import { Toaster } from "@/components/ui/sonner";
 
 export const dynamic = "force-dynamic";
@@ -25,25 +27,37 @@ export default async function AdminDashboardLayout({
   const club = await getClub();
   const { role, name, email } = session.user;
 
+  const prefs = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { tutorialEnabled: true, toursSeen: true },
+  });
+  const tutorialEnabled = prefs?.tutorialEnabled ?? true;
+  const toursSeen = prefs?.toursSeen ?? [];
+
   return (
-    <div className="admin-ambient min-h-dvh text-white">
-      <AdminSidebar role={role} />
+    <TutorialPrefsProvider
+      tutorialEnabled={tutorialEnabled}
+      toursSeen={toursSeen}
+    >
+      <div className="admin-ambient min-h-dvh text-white">
+        <AdminSidebar role={role} />
 
-      <div className="flex min-h-dvh flex-col md:ml-64">
-        <AdminTopBar
-          shortName={club.shortName}
-          crestUrl={club.crestUrl}
-          userName={name ?? null}
-          userEmail={email ?? null}
-          role={role}
-        />
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-5 pb-28 md:px-6 md:pb-10">
-          {children}
-        </main>
+        <div className="flex min-h-dvh flex-col md:ml-64">
+          <AdminTopBar
+            shortName={club.shortName}
+            crestUrl={club.crestUrl}
+            userName={name ?? null}
+            userEmail={email ?? null}
+            role={role}
+          />
+          <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-5 pb-28 md:px-6 md:pb-10">
+            {children}
+          </main>
+        </div>
+
+        <AdminBottomNav role={role} />
+        <Toaster />
       </div>
-
-      <AdminBottomNav role={role} />
-      <Toaster />
-    </div>
+    </TutorialPrefsProvider>
   );
 }
