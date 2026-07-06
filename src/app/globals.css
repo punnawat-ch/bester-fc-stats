@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
   --background: #ffffff;
@@ -10,6 +11,42 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+/*
+ * shadcn/ui design tokens — re-themed to the dark stadium / glassmorphism
+ * language used across the admin area (see docs/admin-ux-spec.md §3).
+ * Admin is dark-only; these tokens map shadcn primitives (Button, Sheet,
+ * Dialog, Input, Select, Card, Badge, Sonner, …) onto the same palette as the
+ * hand-written public components. Public site components do not consume these
+ * utilities, so they stay visually untouched.
+ */
+@theme inline {
+  --color-background: #08110c;
+  --color-foreground: rgb(255 255 255);
+  --color-card: #0a1222;
+  --color-card-foreground: rgb(255 255 255);
+  --color-popover: #0b1224;
+  --color-popover-foreground: rgb(255 255 255);
+  /* primary = sky accent, on near-black ink so labels read on the fill */
+  --color-primary: rgb(56 189 248);
+  --color-primary-foreground: #08110c;
+  --color-secondary: rgb(255 255 255 / 0.05);
+  --color-secondary-foreground: rgb(255 255 255);
+  --color-muted: rgb(255 255 255 / 0.05);
+  --color-muted-foreground: rgb(255 255 255 / 0.6);
+  --color-accent: rgb(255 255 255 / 0.08);
+  --color-accent-foreground: rgb(255 255 255);
+  --color-destructive: rgb(244 63 94);
+  --color-destructive-foreground: rgb(255 255 255);
+  --color-border: rgb(255 255 255 / 0.1);
+  --color-input: rgb(255 255 255 / 0.1);
+  --color-ring: rgb(56 189 248 / 0.6);
+
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
 }
 
 body {
@@ -71,6 +108,26 @@ html {
 
 .glass-panel {
   backdrop-filter: blur(10px);
+}
+
+/* Admin shell ambient background — dark stadium + sky glow (admin-ux-spec §3.1). */
+.admin-ambient {
+  background-color: #08110c;
+  background-image: radial-gradient(
+    circle at 20% 10%,
+    rgba(56, 189, 248, 0.22),
+    transparent 60%
+  );
+  background-attachment: fixed;
+}
+
+/* iOS safe-area helpers for the fixed bottom tab bar / sticky save bars. */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.h-safe-nav {
+  height: calc(4rem + env(safe-area-inset-bottom));
 }
 
 .glow-ring {
