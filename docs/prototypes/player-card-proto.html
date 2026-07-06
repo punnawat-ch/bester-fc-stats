@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bester FC — Player Card Prototype</title>
+<style>
+  html, body { min-height: 100%; }
+  :root {
+    --ink: #08110c;
+    --ink-2: #0a1712;
+    --grass-1: #124e2f;
+    --grass-2: #0c3520;
+    --grass-3: #08170f;
+    --line: rgba(255, 255, 255, 0.18);
+    --sky: #38bdf8;
+    --sky-deep: #2563eb;
+    --emerald: #34d399;
+    --rose: #fb7185;
+    --amber: #fbbf24;
+    --text: #ffffff;
+    --muted: rgba(255, 255, 255, 0.62);
+    --faint: rgba(255, 255, 255, 0.4);
+    --hair: rgba(255, 255, 255, 0.1);
+    --panel: rgba(10, 18, 34, 0.72);
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: var(--font);
+    color: var(--text);
+    background:
+      radial-gradient(1100px 520px at 18% -8%, rgba(56, 189, 248, 0.16), transparent 60%),
+      radial-gradient(900px 500px at 88% -12%, rgba(37, 99, 235, 0.14), transparent 62%),
+      var(--ink);
+    -webkit-font-smoothing: antialiased;
+    padding: clamp(20px, 5vw, 56px) clamp(16px, 5vw, 48px) 72px;
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; }
+
+  header { max-width: 720px; }
+  .eyebrow {
+    font-size: 11px; letter-spacing: 0.34em; text-transform: uppercase;
+    color: var(--sky); font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(26px, 4.4vw, 40px); line-height: 1.05; margin: 12px 0 0;
+    letter-spacing: -0.02em; text-wrap: balance; font-weight: 800;
+  }
+  .lede { color: var(--muted); font-size: 15px; line-height: 1.6; margin-top: 12px; }
+  .hint {
+    margin-top: 16px; display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; color: var(--faint);
+    border: 1px solid var(--hair); border-radius: 999px; padding: 7px 14px;
+  }
+  .hint b { color: var(--text); font-weight: 600; }
+
+  .section-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin: 44px 0 18px; padding-bottom: 12px; border-bottom: 1px solid var(--hair);
+  }
+  .section-head .tag {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700;
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .tag.a { color: #061018; background: var(--sky); }
+  .tag.b { color: #fff; background: rgba(56, 189, 248, 0.14); border: 1px solid rgba(56,189,248,0.4); }
+  .section-head h2 { font-size: 17px; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+  .section-head p { margin: 0; color: var(--faint); font-size: 13px; }
+
+  .grid {
+    display: grid; gap: clamp(12px, 2.2vw, 20px);
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 640px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 940px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+  /* ---------- card ---------- */
+  .card {
+    all: unset;
+    display: block; position: relative; cursor: pointer;
+    aspect-ratio: 3 / 4; border-radius: 20px;
+    perspective: 1200px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .card:focus-visible { outline: 2px solid var(--sky); outline-offset: 3px; border-radius: 22px; }
+
+  .inner {
+    position: absolute; inset: 0; border-radius: 20px;
+    transform-style: preserve-3d;
+    transition: transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.5);
+  }
+  .card[aria-pressed="true"] .inner { transform: rotateY(180deg); }
+  .card:hover .inner { box-shadow: 0 0 0 1px rgba(56,189,248,0.3), 0 30px 80px rgba(0,0,0,0.6); }
+
+  .face {
+    position: absolute; inset: 0; border-radius: 20px; overflow: hidden;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border: 1px solid var(--hair);
+  }
+  .back { transform: rotateY(180deg); }
+
+  /* ---------- pitch background ---------- */
+  .pitch {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 70% at 50% -10%, rgba(56,189,248,0.22), transparent 55%),
+      linear-gradient(180deg, var(--ink-2) 0%, rgba(8,23,15,0.65) 46%, var(--grass-2) 78%, var(--grass-1) 100%);
+  }
+  /* mowing stripes on the lower grass */
+  .pitch::before {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 46%;
+    background: repeating-linear-gradient(90deg,
+      rgba(255,255,255,0.045) 0 14px, rgba(255,255,255,0) 14px 28px);
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 40%);
+            mask-image: linear-gradient(180deg, transparent, #000 40%);
+  }
+  /* curved penalty-arc pitch line near the feet */
+  .arc {
+    position: absolute; left: 50%; bottom: -46%; width: 190%; aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%; border: 2px solid var(--line);
+    -webkit-mask-image: linear-gradient(180deg, #000 0 22%, transparent 34%);
+            mask-image: linear-gradient(180deg, #000 0 22%, transparent 34%);
+  }
+  .halo { /* stadium spotlight behind head */
+    position: absolute; left: 50%; top: 14%; width: 78%; aspect-ratio: 1;
+    transform: translateX(-50%); border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 62%);
+    filter: blur(2px);
+  }
+
+  /* ---------- player figure (placeholder for the uploaded photo) ---------- */
+  .figure { position: absolute; inset: 0; display: grid; place-items: end center; }
+  .silhouette {
+    width: 74%; height: 84%; align-self: end;
+    filter: drop-shadow(0 18px 18px rgba(0,0,0,0.45));
+  }
+  .silhouette svg { width: 100%; height: 100%; display: block; }
+  .ground-shadow {
+    position: absolute; left: 50%; bottom: 12%; width: 58%; height: 26px;
+    transform: translateX(-50%); border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0,0,0,0.55), transparent);
+  }
+
+  /* full-bleed photo simulation (Treatment A) */
+  .photo-fill {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(90% 60% at 50% 22%, rgba(120,140,170,0.5), transparent 60%),
+      linear-gradient(180deg, #26333f 0%, #171f27 55%, #0c1a12 100%);
+  }
+  .photo-fill .silhouette { width: 92%; height: 96%; opacity: 0.9; }
+  .photo-fill .silhouette svg path { fill: #0d141b; }
+
+  /* front overlay text */
+  .scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(3,8,6,0.15) 62%, rgba(3,8,6,0.82) 100%);
+  }
+  .meta { position: absolute; left: 14px; right: 14px; bottom: 14px; }
+  .name-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+  .pname { font-size: clamp(16px, 2.4vw, 21px); font-weight: 800; letter-spacing: -0.01em; line-height: 1; }
+  .pnick { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
+  .num {
+    font-size: clamp(30px, 5.4vw, 46px); font-weight: 800; line-height: 0.8;
+    color: rgba(255,255,255,0.92); font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 18px rgba(56,189,248,0.5);
+  }
+  .pos {
+    position: absolute; top: 12px; left: 12px;
+    font-size: 10.5px; letter-spacing: 0.16em; font-weight: 700; text-transform: uppercase;
+    padding: 5px 9px; border-radius: 8px; color: #061018;
+  }
+  .pos.FW { background: var(--emerald); }
+  .pos.MF { background: var(--sky); }
+  .pos.DF { background: #a78bfa; }
+  .pos.GK { background: var(--amber); }
+  .flip-hint {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 10px; letter-spacing: 0.1em; color: var(--faint);
+    border: 1px solid var(--hair); border-radius: 999px; padding: 4px 8px;
+    background: rgba(0,0,0,0.25);
+  }
+
+  /* ---------- back / stats ---------- */
+  .back { background:
+      radial-gradient(120% 80% at 50% -20%, rgba(56,189,248,0.16), transparent 55%),
+      linear-gradient(180deg, #0a1712 0%, #08130d 60%, #071b11 100%); }
+  .back .arc { opacity: 0.5; }
+  .back-inner { position: absolute; inset: 0; padding: 16px 15px; display: flex; flex-direction: column; }
+  .back-head { display: flex; align-items: baseline; justify-content: space-between; }
+  .back-head .pname { font-size: 16px; }
+  .back-head .num { font-size: 20px; color: var(--sky); text-shadow: none; }
+  .season { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--faint); margin-top: 2px; }
+  .stats {
+    margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .stat {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--hair);
+    border-radius: 12px; padding: 9px 10px; backdrop-filter: blur(6px);
+  }
+  .stat .k { font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+  .stat .v { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; margin-top: 2px; }
+  .stat.g .v { color: var(--emerald); }
+  .stat.a .v { color: var(--sky); }
+  .stat.d .v { color: var(--rose); }
+  .stat.full { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; }
+  .stat.full .v { font-size: 18px; }
+
+  footer {
+    margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--hair);
+    color: var(--muted); font-size: 13px; line-height: 1.65; max-width: 760px;
+  }
+  footer b { color: var(--text); }
+  footer .row { display: flex; gap: 10px; margin-top: 10px; }
+  footer .dot { color: var(--sky); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .inner { transition: opacity 240ms ease; }
+    .card[aria-pressed="true"] .inner { transform: none; }
+    .card[aria-pressed="true"] .front { opacity: 0; }
+    .front { transition: opacity 240ms ease; }
+    .back { transform: none; opacity: 0; transition: opacity 240ms ease; backface-visibility: visible; }
+    .card[aria-pressed="true"] .back { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Bester FC · Squad section</div>
+    <h1>Player cards — pitch background &amp; flip-for-stats</h1>
+    <p class="lede">แนว <b style="color:#fff">Editorial</b> ที่เลือกไว้ วางบน background สนามบอลกลางคืน. คลิก/แตะการ์ดเพื่อพลิกดูสถิติ. ด้านล่างเทียบ 2 วิธีวางรูปผู้เล่น — เลือกวิธีที่ชอบ (รูปตอนนี้เป็น placeholder เพราะยังไม่อัปโหลดจริง).</p>
+    <div class="hint">👆 <b>คลิกการ์ด</b> เพื่อพลิก · กด Enter/Space ก็ได้</div>
+  </header>
+
+  <div class="section-head">
+    <span class="tag b">Treatment B</span>
+    <h2>Cut-out บนสนาม — "in-game look"</h2>
+    <p>รูปตัดพื้นหลัง ยืนอยู่บนสนาม เห็นเส้นสนาม+ไฟสเตเดียม (ดูเหมือนการ์ดในเกม)</p>
+  </div>
+  <div class="grid" id="gridB"></div>
+
+  <div class="section-head">
+    <span class="tag a">Treatment A</span>
+    <h2>Full-bleed photo</h2>
+    <p>รูปเต็มใบเหมือนปกนิตยสาร สนามเป็นแค่ overlay จาง — กลืนได้กับรูปถ่ายทุกแบบ</p>
+  </div>
+  <div class="grid" id="gridA"></div>
+
+  <footer>
+    <b>ต้องตัดสินใจ:</b> Treatment B (cut-out) ดู “เหมือนในเกม” ที่สุด แต่ต้อง <b>ลบพื้นหลังรูปทุกใบ</b> (รูปสนามจริงของทีมสมัครเล่นอาจตัดยาก) — Treatment A รับรูปถ่ายแบบไหนก็ได้ทันที.
+    <div class="row"><span class="dot">●</span> รูปอัปโหลดผ่านหน้า admin players → เก็บบน Supabase Storage</div>
+    <div class="row"><span class="dot">●</span> ไม่มีรูป = ใช้ silhouette + monogram บนสนาม (ยังดูดี)</div>
+    <div class="row"><span class="dot">●</span> ธีม dark-only โดยตั้งใจ (สนามกลางคืน) เข้าชุดกับ dashboard เดิม</div>
+  </footer>
+</div>
+
+<script>
+  const PLAYERS = [
+    { name: "Gie", nick: "The Finisher", num: 9, pos: "FW", goals: 18, assists: 5, mp: 22, cs: 0, yel: 2, motm: 5, photo: true },
+    { name: "Tao", nick: "Engine", num: 8, pos: "MF", goals: 10, assists: 6, mp: 19, cs: 0, yel: 3, motm: 2, photo: true },
+    { name: "Toeng", nick: "Poacher", num: 11, pos: "FW", goals: 7, assists: 2, mp: 16, cs: 0, yel: 1, motm: 1, photo: true },
+    { name: "Boom", nick: "Playmaker", num: 6, pos: "MF", goals: 0, assists: 4, mp: 20, cs: 0, yel: 1, motm: 0, photo: false },
+  ];
+
+  const SIL = '<svg viewBox="0 0 100 130" preserveAspectRatio="xMidYMax meet"><path fill="#0b1a12" d="M50 8c8 0 14 6 14 14s-6 15-14 15-14-7-14-15S42 8 50 8zm-20 40c4-4 12-6 20-6s16 2 20 6c6 5 8 14 9 24 1 7 2 14 2 22 0 4-3 6-7 6-3 0-6-2-6-6l-2-24h-2l-1 40c0 5-3 8-7 8s-7-3-7-8l-1-40h-2l-2 24c0 4-3 6-6 6-4 0-7-2-7-6 0-8 1-15 2-22 1-10 3-19 9-24z"/></svg>';
+
+  function statTiles(p) {
+    return `
+      <div class="stat g"><div class="k">Goals</div><div class="v">${p.goals}</div></div>
+      <div class="stat a"><div class="k">Assists</div><div class="v">${p.assists}</div></div>
+      <div class="stat"><div class="k">Apps</div><div class="v">${p.mp}</div></div>
+      <div class="stat"><div class="k">${p.pos === "GK" ? "Clean sheets" : "MOTM"}</div><div class="v">${p.pos === "GK" ? p.cs : p.motm}</div></div>
+      <div class="stat full"><div class="k">Yellow cards</div><div class="v" style="color:var(--amber)">${p.yel}</div></div>`;
+  }
+
+  function monogram(p) {
+    return `<div class="silhouette" style="display:grid;place-items:center;height:70%"><span style="font-size:52px;font-weight:800;color:rgba(255,255,255,0.16);letter-spacing:-0.03em">${p.name.slice(0,2).toUpperCase()}</span></div>`;
+  }
+
+  function card(p, treatment) {
+    const front = treatment === "A"
+      ? `<div class="face front"><div class="photo-fill">${p.photo ? `<div class="figure"><div class="silhouette">${SIL}</div></div>` : monogram(p)}</div>
+           <div class="scrim"></div>
+           <span class="pos ${p.pos}">${p.pos}</span>
+           <span class="flip-hint">stats ›</span>
+           <div class="meta"><div class="name-row"><div><div class="pname">${p.name}</div><div class="pnick">${p.nick}</div></div><div class="num">${p.num}</div></div></div>
+         </div>`
+      : `<div class="face front"><div class="pitch"><div class="halo"></div><div class="arc"></div></div>
+           <div class="figure">${p.photo ? `<div class="ground-shadow"></div><div class="silhouette">${SIL}</div>` : monogram(p)}</div>
+           <div class="scrim"></div>
+           <span class="pos ${p.pos}">${p.pos}</span>
+           <span class="flip-hint">stats ›</span>
+           <div class="meta"><div class="name-row"><div><div class="pname">${p.name}</div><div class="pnick">${p.nick}</div></div><div class="num">${p.num}</div></div></div>
+         </div>`;
+
+    const back = `<div class="face back"><div class="pitch"><div class="arc"></div></div>
+      <div class="back-inner">
+        <div class="back-head"><div><div class="pname">${p.name}</div><div class="season">Season 2026 · ${p.pos}</div></div><div class="num">${p.num}</div></div>
+        <div class="stats">${statTiles(p)}</div>
+      </div></div>`;
+
+    return `<button class="card" aria-pressed="false" aria-label="${p.name}, tap to see stats"><div class="inner">${front}${back}</div></button>`;
+  }
+
+  document.getElementById("gridB").innerHTML = PLAYERS.map(p => card(p, "B")).join("");
+  document.getElementById("gridA").innerHTML = PLAYERS.map(p => card(p, "A")).join("");
+
+  document.querySelectorAll(".card").forEach(c => {
+    c.addEventListener("click", () => {
+      c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") === "true" ? "false" : "true");
+    });
+  });
+</script>
+
+</body>
+</html>
