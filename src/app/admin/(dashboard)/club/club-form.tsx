@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { SubmitBar } from "@/components/admin/SubmitBar";
 
 import { updateClub, type UpdateClubResult } from "./action";
+import { ClubAssetField } from "./club-asset-field";
 import { KeywordsInput } from "./keywords-input";
 import {
   DEFAULT_THEME_COLOR,
@@ -110,22 +111,6 @@ function ThemeColorField({ field }: ThemeColorFieldProps) {
   );
 }
 
-type PreviewProps = Readonly<{ url: string; label: string }>;
-
-function ImagePreview({ url, label }: PreviewProps) {
-  if (url.trim() === "") {
-    return null;
-  }
-  return (
-    <div
-      role="img"
-      aria-label={label}
-      className="mt-1 h-40 w-full rounded-2xl border border-white/10 bg-white/5 bg-contain bg-center bg-no-repeat ring-1 ring-white/10"
-      style={{ backgroundImage: `url("${url}")` }}
-    />
-  );
-}
-
 export function ClubForm({ initialValues }: ClubFormProps) {
   const form = useForm<ClubFormValues>({
     resolver: zodResolver(clubSchema),
@@ -203,16 +188,13 @@ export function ClubForm({ initialValues }: ClubFormProps) {
             name="crestUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Crest URL</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="url"
-                    inputMode="url"
-                    placeholder="https://…/crest.png"
-                  />
-                </FormControl>
-                <ImagePreview url={field.value} label="Crest preview" />
+                <FormLabel>Crest</FormLabel>
+                <ClubAssetField
+                  kind="crest"
+                  field={field}
+                  label="Crest"
+                  uploadDescription="Club logo / crest. Resized and compressed on upload."
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -375,19 +357,13 @@ export function ClubForm({ initialValues }: ClubFormProps) {
             name="ogImageUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Open Graph image URL</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="url"
-                    inputMode="url"
-                    placeholder="https://…/og.png"
-                  />
-                </FormControl>
-                <FormDescription>
-                  Shown when the site is shared (1200×630).
-                </FormDescription>
-                <ImagePreview url={field.value} label="Open Graph image preview" />
+                <FormLabel>Open Graph image</FormLabel>
+                <ClubAssetField
+                  kind="og"
+                  field={field}
+                  label="Open Graph image"
+                  uploadDescription="Shown when the site is shared (1200×630)."
+                />
                 <FormMessage />
               </FormItem>
             )}

@@ -17,6 +17,10 @@ type NumericFieldName =
   | "goals"
   | "assists"
   | "cleanSheets"
+  | "yellowCards"
+  | "redCards"
+  | "motm"
+  | "saves"
   | "sortOrder";
 
 type NumberFieldProps = Readonly<{
@@ -52,6 +56,47 @@ export function NumberField({ control, name, label }: NumberFieldProps) {
               onChange={(event) => {
                 const next = event.target.valueAsNumber;
                 field.onChange(Number.isNaN(next) ? 0 : next);
+              }}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+type JerseyFieldProps = Readonly<{
+  control: Control<PlayerFormValues>;
+  label: string;
+}>;
+
+/**
+ * Nullable numeric field for the (optional) jersey number: an empty input
+ * coerces to `null` (unset) rather than 0, so "no number" is representable.
+ */
+export function JerseyNumberField({ control, label }: JerseyFieldProps) {
+  return (
+    <FormField
+      control={control}
+      name="jerseyNumber"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <Input
+              type="number"
+              inputMode="numeric"
+              min={0}
+              step={1}
+              placeholder="—"
+              name={field.name}
+              ref={field.ref}
+              value={field.value ?? ""}
+              onBlur={field.onBlur}
+              onChange={(event) => {
+                const next = event.target.valueAsNumber;
+                field.onChange(Number.isNaN(next) ? null : next);
               }}
             />
           </FormControl>

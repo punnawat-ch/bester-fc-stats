@@ -29,10 +29,18 @@ export default async function PlayersPage() {
   const items: readonly PlayerDTO[] = players.map((player) => ({
     id: player.id,
     name: player.name,
+    nickname: player.nickname,
+    position: player.position,
+    jerseyNumber: player.jerseyNumber,
+    imageUrl: player.imageUrl,
     matchesPlayed: player.matchesPlayed,
     goals: player.goals,
     assists: player.assists,
     cleanSheets: player.cleanSheets,
+    yellowCards: player.yellowCards,
+    redCards: player.redCards,
+    motm: player.motm,
+    saves: player.saves,
     sortOrder: player.sortOrder,
   }));
 

@@ -4,7 +4,7 @@ import type { MatchResult, Match as PrismaMatch } from "@prisma/client";
 
 import type { FootballStats } from "../data/football-stats";
 import { prisma } from "./prisma";
-import type { ScheduleMatch } from "./types";
+import type { ScheduleMatch, SquadPlayer } from "./types";
 
 export type TeamStats = FootballStats["teamStats"];
 export type PlayerStats = FootballStats["playerStats"][number];
@@ -55,6 +55,36 @@ export async function getFootballStats(): Promise<FootballStats> {
       result: m.result ? RESULT_LABEL[m.result] : "N/A",
     })),
   };
+}
+
+/**
+ * Richer per-player card data for the public Squad flip cards (Wave 5.3).
+ * Additive to getFootballStats — does not change the FootballStats DTO.
+ * Players ordered goals desc → sortOrder asc.
+ */
+export async function getSquad(): Promise<SquadPlayer[]> {
+  const club = await prisma.club.findFirstOrThrow({
+    include: {
+      players: { orderBy: [{ goals: "desc" }, { sortOrder: "asc" }] },
+    },
+  });
+
+  return club.players.map((p) => ({
+    id: p.id,
+    name: p.name,
+    nickname: p.nickname,
+    position: p.position,
+    jerseyNumber: p.jerseyNumber,
+    imageUrl: p.imageUrl,
+    goals: p.goals,
+    assists: p.assists,
+    matchesPlayed: p.matchesPlayed,
+    cleanSheets: p.cleanSheets,
+    yellowCards: p.yellowCards,
+    redCards: p.redCards,
+    motm: p.motm,
+    saves: p.saves,
+  }));
 }
 
 function toScheduleMonth(date: Date): string {

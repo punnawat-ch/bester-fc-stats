@@ -43,11 +43,30 @@ model Player {
   assists       Int      @default(0)
   cleanSheets   Int      @default(0)
   sortOrder     Int      @default(0) // จัดลำดับแสดงผลใน admin
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  // --- รูป (Supabase Storage) ---
+  imagePath     String? // object path บน storage เช่น "players/<id>/<uuid>.png" (ไว้ลบ/แทนที่)
+  imageUrl      String? // public URL (derive จาก path; cache ไว้เพื่อ render ตรง)
+  // --- ข้อมูลการ์ด ---
+  nickname      String?
+  position      Position?
+  jerseyNumber  Int?
+  // --- stat เพิ่ม ---
+  yellowCards   Int       @default(0)
+  redCards      Int       @default(0)
+  motm          Int       @default(0) // man of the match
+  saves         Int       @default(0) // สำหรับ GK
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@unique([clubId, name])
   @@index([clubId])
+}
+
+enum Position {
+  GK
+  DF
+  MF
+  FW
 }
 
 enum MatchStatus {

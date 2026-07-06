@@ -1,12 +1,26 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 
 import { requireUser } from "@/lib/auth-guard";
 import { getClub } from "@/lib/football";
 import { prisma } from "@/lib/prisma";
+import {
+  BUCKETS,
+  getPublicUrl,
+  removeObject,
+  uploadObject,
+} from "@/lib/supabase-storage";
 import { upsertPlayerSchema } from "./schema";
+
+const MAX_UPLOAD_BYTES = 6 * 1024 * 1024;
+
+function revalidatePlayers() {
+  revalidatePath("/");
+  revalidatePath("/admin/players");
+}
 
 /**
  * Typed result returned by every Players mutation. `error` is a stable machine
@@ -31,8 +45,13 @@ export async function upsertPlayer(input: unknown): Promise<ActionResult> {
     return { ok: false, error: "INVALID_INPUT" };
   }
 
-  const { id, ...data } = parsed.data;
+  const { id, nickname, position, ...rest } = parsed.data;
   const club = await getClub();
+  const data = {
+    ...rest,
+    nickname: nickname.trim() === "" ? null : nickname.trim(),
+    position: position === "" ? null : position,
+  };
 
   try {
     if (id) {
@@ -54,9 +73,91 @@ export async function upsertPlayer(input: unknown): Promise<ActionResult> {
     return { ok: false, error: "UNKNOWN" };
   }
 
-  revalidatePath("/");
-  revalidatePath("/admin/players");
+  revalidatePlayers();
   return { ok: true };
+}
+
+/** Result of a photo upload / delete: on success `url` is the new public URL. */
+export type PhotoResult = Readonly<{
+  ok: boolean;
+  url?: string | null;
+  error?: string;
+}>;
+
+/**
+ * Uploads a processed (cut-out, compressed) player photo through this Server
+ * Action — the client never touches the Supabase service key. Stores it at
+ * `players/{playerId}/{uuid}.png`, swaps `imagePath`/`imageUrl`, and best-effort
+ * removes the previous object. Guarded by `player:write`.
+ */
+export async function savePlayerPhoto(
+  playerId: string,
+  formData: FormData,
+): Promise<PhotoResult> {
+  await requireUser("player:write");
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "INVALID_INPUT" };
+  }
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return { ok: false, error: "FILE_TOO_LARGE" };
+  }
+
+  const club = await getClub();
+  const player = await prisma.player.findFirst({
+    where: { id: playerId, clubId: club.id },
+    select: { id: true, imagePath: true },
+  });
+  if (!player) {
+    return { ok: false, error: "NOT_FOUND" };
+  }
+
+  const path = `players/${playerId}/${randomUUID()}.png`;
+  try {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    await uploadObject(BUCKETS.players, path, bytes, "image/png");
+  } catch {
+    return { ok: false, error: "UPLOAD_FAILED" };
+  }
+
+  const url = getPublicUrl(BUCKETS.players, path);
+  await prisma.player.update({
+    where: { id: playerId },
+    data: { imagePath: path, imageUrl: url },
+  });
+
+  if (player.imagePath && player.imagePath !== path) {
+    await removeObject(BUCKETS.players, player.imagePath).catch(() => {});
+  }
+
+  revalidatePlayers();
+  return { ok: true, url };
+}
+
+/** Removes a player's photo (storage object + DB fields). Guarded. */
+export async function deletePlayerPhoto(playerId: string): Promise<PhotoResult> {
+  await requireUser("player:write");
+
+  const club = await getClub();
+  const player = await prisma.player.findFirst({
+    where: { id: playerId, clubId: club.id },
+    select: { imagePath: true },
+  });
+  if (!player) {
+    return { ok: false, error: "NOT_FOUND" };
+  }
+
+  if (player.imagePath) {
+    await removeObject(BUCKETS.players, player.imagePath).catch(() => {});
+  }
+  await prisma.player.update({
+    where: { id: playerId },
+    data: { imagePath: null, imageUrl: null },
+  });
+
+  revalidatePlayers();
+  return { ok: true, url: null };
 }
 
 export async function deletePlayer(id: string): Promise<ActionResult> {

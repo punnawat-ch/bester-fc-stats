@@ -175,3 +175,211 @@ html {
     opacity: 0.6;
   }
 }
+
+/*
+ * Squad flip cards (Wave 5.3 — Treatment B: cut-out player on night pitch).
+ * Namespaced `.squad-*` so they never collide with existing utilities.
+ * 3D flip needs preserve-3d / backface-visibility that pure Tailwind can't do;
+ * pitch visuals rely on pseudo-elements + masks, so they live here too.
+ * Ported from docs/prototypes/player-card-proto.html (Treatment B).
+ */
+.squad-card {
+  all: unset;
+  display: block;
+  position: relative;
+  cursor: pointer;
+  aspect-ratio: 3 / 4;
+  border-radius: 20px;
+  perspective: 1200px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.squad-card:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 3px;
+  border-radius: 22px;
+}
+
+.squad-card-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  transform-style: preserve-3d;
+  transition: transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.5);
+}
+
+.squad-card[aria-pressed="true"] .squad-card-inner {
+  transform: rotateY(180deg);
+}
+
+.squad-card:hover .squad-card-inner {
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.3),
+    0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.squad-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.squad-card-back {
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(120% 80% at 50% -20%, rgba(56, 189, 248, 0.16), transparent 55%),
+    linear-gradient(180deg, #0a1712 0%, #08130d 60%, #071b11 100%);
+}
+
+/* Night-pitch: grass gradient + sky glow. */
+.squad-pitch {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(56, 189, 248, 0.22), transparent 55%),
+    linear-gradient(
+      180deg,
+      #0a1712 0%,
+      rgba(8, 23, 15, 0.65) 46%,
+      #0c3520 78%,
+      #124e2f 100%
+    );
+}
+
+/* Mowing stripes on the lower grass. */
+.squad-pitch::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46%;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.045) 0 14px,
+    rgba(255, 255, 255, 0) 14px 28px
+  );
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 40%);
+  mask-image: linear-gradient(180deg, transparent, #000 40%);
+}
+
+/* Curved penalty-arc pitch line near the feet. */
+.squad-arc {
+  position: absolute;
+  left: 50%;
+  bottom: -46%;
+  width: 190%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  -webkit-mask-image: linear-gradient(180deg, #000 0 22%, transparent 34%);
+  mask-image: linear-gradient(180deg, #000 0 22%, transparent 34%);
+}
+
+.squad-card-back .squad-arc {
+  opacity: 0.5;
+}
+
+/* Stadium spotlight behind the head. */
+.squad-halo {
+  position: absolute;
+  left: 50%;
+  top: 14%;
+  width: 78%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 62%);
+  filter: blur(2px);
+}
+
+.squad-ground-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  width: 58%;
+  height: 26px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), transparent);
+}
+
+/* Bottom scrim so the name/number stay legible over the photo. */
+.squad-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 40%,
+    rgba(3, 8, 6, 0.15) 62%,
+    rgba(3, 8, 6, 0.82) 100%
+  );
+}
+
+/*
+ * Live editor preview celebration — a one-shot sky glow pulse when a player
+ * save succeeds (player-form-sheet). New selectors only; the public card is
+ * untouched. Honors reduced-motion below.
+ */
+.squad-celebrate {
+  animation: squad-celebrate 900ms ease-out;
+}
+
+@keyframes squad-celebrate {
+  0% {
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  30% {
+    box-shadow:
+      0 0 0 3px rgba(56, 189, 248, 0.55),
+      0 0 42px rgba(56, 189, 248, 0.45),
+      0 22px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  100% {
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .squad-celebrate {
+    animation: none;
+  }
+}
+
+/* Reduced motion: swap the 3D flip for a crossfade. */
+@media (prefers-reduced-motion: reduce) {
+  .squad-card-inner {
+    transition: opacity 240ms ease;
+  }
+
+  .squad-card[aria-pressed="true"] .squad-card-inner {
+    transform: none;
+  }
+
+  .squad-card-face {
+    transition: opacity 240ms ease;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+  }
+
+  .squad-card-back {
+    transform: none;
+    opacity: 0;
+  }
+
+  .squad-card[aria-pressed="true"] .squad-card-front {
+    opacity: 0;
+  }
+
+  .squad-card[aria-pressed="true"] .squad-card-back {
+    opacity: 1;
+  }
+}

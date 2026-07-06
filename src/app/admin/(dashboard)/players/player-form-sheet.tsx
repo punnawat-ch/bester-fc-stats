@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -23,16 +23,27 @@ import {
 } from "@/components/ui/sheet";
 import { SubmitBar } from "@/components/admin/SubmitBar";
 import { upsertPlayer } from "./action";
-import { NumberField } from "./number-field";
+import { JerseyNumberField, NumberField } from "./number-field";
+import { PlayerCardPreview } from "./player-card-preview";
+import { PlayerPhotoField } from "./player-photo-field";
+import { PositionPills } from "./position-pills";
+import { StatTileField, type StatFieldName, type StatTone } from "./stat-tile-field";
 import { playerFormSchema, type PlayerFormValues } from "./schema";
 import type { PlayerDTO } from "./types";
 
 const EMPTY_VALUES: PlayerFormValues = {
   name: "",
+  nickname: "",
+  position: "",
+  jerseyNumber: null,
   matchesPlayed: 0,
   goals: 0,
   assists: 0,
   cleanSheets: 0,
+  yellowCards: 0,
+  redCards: 0,
+  motm: 0,
+  saves: 0,
   sortOrder: 0,
 };
 
@@ -42,15 +53,51 @@ const ERROR_MESSAGES: Readonly<Record<string, string>> = {
   NOT_FOUND: "That player no longer exists.",
 };
 
+type StatTileConfig = Readonly<{
+  name: StatFieldName;
+  label: string;
+  tone: StatTone;
+}>;
+
+const STAT_TILES: readonly StatTileConfig[] = [
+  { name: "goals", label: "Goals", tone: "emerald" },
+  { name: "assists", label: "Assists", tone: "sky" },
+  { name: "matchesPlayed", label: "Apps", tone: "neutral" },
+  { name: "cleanSheets", label: "Clean sheets", tone: "emerald" },
+  { name: "saves", label: "Saves", tone: "sky" },
+  { name: "motm", label: "MOTM", tone: "amber" },
+  { name: "yellowCards", label: "Yellow", tone: "amber" },
+  { name: "redCards", label: "Red", tone: "rose" },
+];
+
+const CELEBRATE_CLOSE_MS = 700;
+
 function toFormValues(player: PlayerDTO): PlayerFormValues {
   return {
     name: player.name,
+    nickname: player.nickname ?? "",
+    position: player.position ?? "",
+    jerseyNumber: player.jerseyNumber,
     matchesPlayed: player.matchesPlayed,
     goals: player.goals,
     assists: player.assists,
     cleanSheets: player.cleanSheets,
+    yellowCards: player.yellowCards,
+    redCards: player.redCards,
+    motm: player.motm,
+    saves: player.saves,
     sortOrder: player.sortOrder,
   };
+}
+
+type SectionLabelProps = Readonly<{ children: string }>;
+
+function SectionLabel({ children }: SectionLabelProps) {
+  return (
+    <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/50">
+      {children}
+    </span>
+  );
 }
 
 type PlayerFormSheetProps = Readonly<{
@@ -61,8 +108,11 @@ type PlayerFormSheetProps = Readonly<{
 }>;
 
 /**
- * Create / edit form as a mobile bottom-sheet (admin-ux-spec §4.4). RHF + Zod,
- * single column, sticky SubmitBar. Server errors surface as a toast; NAME_TAKEN
+ * Game-like "Player Card Editor" as a mobile bottom-sheet (admin-ux-spec §4.4):
+ * a live front-card preview on top, colour pill position selector, and stat
+ * stepper tiles, all RHF + Zod. Save is enabled whenever the form is valid (never
+ * gated on `isDirty` — the photo persists via its own action, outside RHF), so a
+ * photo change never leaves Save stuck. Field errors render inline; NAME_TAKEN
  * also sets an inline error on the name field.
  */
 export function PlayerFormSheet({
@@ -71,26 +121,56 @@ export function PlayerFormSheet({
   player,
 }: PlayerFormSheetProps) {
   const [isPending, startTransition] = useTransition();
+  const [photoUrl, setPhotoUrl] = useState<string | null>(
+    player?.imageUrl ?? null,
+  );
+  const [photoChanged, setPhotoChanged] = useState(false);
+  const [celebrate, setCelebrate] = useState(false);
   const form = useForm<PlayerFormValues>({
     resolver: zodResolver(playerFormSchema),
     defaultValues: EMPTY_VALUES,
-    mode: "onBlur",
+    mode: "onChange",
   });
 
+  // Reset the RHF values (external store) whenever the sheet opens for a player.
   useEffect(() => {
-    if (open) {
-      form.reset(player ? toFormValues(player) : EMPTY_VALUES);
+    if (!open) {
+      return;
+    }
+    form.reset(player ? toFormValues(player) : EMPTY_VALUES);
+    if (player) {
+      // Existing values are valid — validate now so Save enables immediately.
+      form.trigger().catch(() => {});
     }
   }, [open, player, form]);
 
+  // Reset local editor UI state when the open target changes (render-phase sync,
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes).
+  const instanceKey = open ? (player?.id ?? "new") : "closed";
+  const [syncedKey, setSyncedKey] = useState(instanceKey);
+  if (instanceKey !== syncedKey) {
+    setSyncedKey(instanceKey);
+    setPhotoUrl(player?.imageUrl ?? null);
+    setPhotoChanged(false);
+    setCelebrate(false);
+  }
+
   const isEditing = player !== null;
+  const { isValid, isDirty } = form.formState;
+  const hasChanges = isDirty || photoChanged;
+
+  function handlePhotoChange(url: string | null) {
+    setPhotoUrl(url);
+    setPhotoChanged(true);
+  }
 
   function onSubmit(values: PlayerFormValues) {
     startTransition(async () => {
       const result = await upsertPlayer({ ...values, id: player?.id });
       if (result.ok) {
         toast.success(isEditing ? "Player updated" : "Player added");
-        onOpenChange(false);
+        setCelebrate(true);
+        globalThis.setTimeout(() => onOpenChange(false), CELEBRATE_CLOSE_MS);
         return;
       }
 
@@ -105,69 +185,111 @@ export function PlayerFormSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="max-h-[92dvh] overflow-y-auto">
+      <SheetContent side="bottom" className="max-h-[94dvh] overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{isEditing ? "Edit player" : "Add player"}</SheetTitle>
+          <SheetTitle>{isEditing ? "Edit player card" : "New player card"}</SheetTitle>
           <SheetDescription>
-            Squad stats are entered manually.
+            Customise the card — stats are entered manually.
           </SheetDescription>
         </SheetHeader>
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-5"
             noValidate
           >
-            <FormField
+            <PlayerCardPreview
               control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Somchai P."
-                      autoComplete="off"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              imageUrl={photoUrl}
+              celebrate={celebrate}
             />
 
-            <div className="grid grid-cols-2 gap-4">
-              <NumberField
+            {isEditing && player ? (
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <PlayerPhotoField
+                  playerId={player.id}
+                  initialUrl={player.imageUrl}
+                  onUrlChange={handlePhotoChange}
+                />
+              </div>
+            ) : (
+              <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/50">
+                Save the player first, then reopen to add a photo.
+              </p>
+            )}
+
+            <div className="flex flex-col gap-4">
+              <SectionLabel>Identity</SectionLabel>
+              <FormField
                 control={form.control}
-                name="matchesPlayed"
-                label="Matches played"
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Somchai P."
+                        autoComplete="off"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <NumberField
+
+              <FormField
                 control={form.control}
-                name="goals"
-                label="Goals"
+                name="nickname"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nickname</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Chai" autoComplete="off" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <NumberField
-                control={form.control}
-                name="assists"
-                label="Assists"
-              />
-              <NumberField
-                control={form.control}
-                name="cleanSheets"
-                label="Clean sheets"
-              />
-              <NumberField
-                control={form.control}
-                name="sortOrder"
-                label="Sort order"
-              />
+
+              <PositionPills control={form.control} />
+
+              <div className="grid grid-cols-2 gap-4">
+                <JerseyNumberField
+                  control={form.control}
+                  label="Jersey number"
+                />
+                <NumberField
+                  control={form.control}
+                  name="sortOrder"
+                  label="Sort order"
+                />
+              </div>
             </div>
+
+            <div className="flex flex-col gap-3">
+              <SectionLabel>Match stats</SectionLabel>
+              <div className="grid grid-cols-2 gap-3">
+                {STAT_TILES.map((tile) => (
+                  <StatTileField
+                    key={tile.name}
+                    control={form.control}
+                    name={tile.name}
+                    label={tile.label}
+                    tone={tile.tone}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {hasChanges ? (
+              <p className="text-center text-xs text-white/50">Unsaved changes</p>
+            ) : null}
 
             <SubmitBar
               pending={isPending}
-              disabled={!form.formState.isDirty}
+              disabled={!isValid}
               saveLabel={isEditing ? "Save changes" : "Add player"}
               onCancel={() => onOpenChange(false)}
             />

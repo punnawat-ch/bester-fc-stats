@@ -4,6 +4,7 @@ import ClubHeader from "../components/ClubHeader";
 import MatchHistoryTable from "../components/MatchHistoryTable";
 import MatchScheduleTimeline from "../components/MatchScheduleTimeline";
 import PlayerStatsTable from "../components/PlayerStatsTable";
+import SquadGrid from "../components/SquadGrid";
 import TopBar from "../components/TopBar";
 import TeamStatsCards from "../components/TeamStatsCards";
 import {
@@ -11,14 +12,16 @@ import {
   getFootballStats,
   getGoalSummary,
   getMatchSchedule,
+  getSquad,
 } from "../lib/football";
 
 // Server component: all data is read on the server for fast first paint.
 export default async function Home() {
   const club = await getClub();
-  const [stats, matchSchedule] = await Promise.all([
+  const [stats, matchSchedule, squad] = await Promise.all([
     getFootballStats(),
     getMatchSchedule(club.id),
+    getSquad(),
   ]);
   const { goalsFor, goalsAgainst, goalDifference } = getGoalSummary(stats);
 
@@ -44,7 +47,7 @@ export default async function Home() {
                 shortName={club.shortName}
               />
             </section>
-            <section className="scroll-mt-24">
+            <section id="form" className="scroll-mt-24">
               <TeamStatsCards
                 teamStats={stats.teamStats}
                 goalsFor={goalsFor}
@@ -60,6 +63,9 @@ export default async function Home() {
             </section>
             <section id="ranking" className="scroll-mt-24">
               <PlayerStatsTable players={stats.playerStats} />
+            </section>
+            <section id="squad" className="scroll-mt-24">
+              <SquadGrid players={squad} shortName={club.shortName} />
             </section>
             <section className="scroll-mt-24">
               <MatchScheduleTimeline schedule={matchSchedule} />

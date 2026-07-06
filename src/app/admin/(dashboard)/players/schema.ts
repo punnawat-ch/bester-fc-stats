@@ -10,16 +10,34 @@ const nonNegativeInt = z
   .int("Must be a whole number")
   .min(0, "Must be 0 or more");
 
+/** Card position enum — mirrors the Prisma `Position` enum (GK/DF/MF/FW). */
+export const POSITIONS = ["GK", "DF", "MF", "FW"] as const;
+export type PlayerPosition = (typeof POSITIONS)[number];
+
 export const playerFormSchema = z.object({
   name: z
     .string()
     .trim()
     .min(1, "Name is required")
     .max(80, "Name is too long"),
+  nickname: z.string().trim().max(40, "Nickname is too long"),
+  // "" means "no position" — the server action maps it to null.
+  position: z.enum(POSITIONS).or(z.literal("")),
+  // nullable: an empty jersey field clears the value rather than storing 0.
+  jerseyNumber: z
+    .number()
+    .int("Must be a whole number")
+    .min(0, "Must be 0 or more")
+    .max(999, "Too large")
+    .nullable(),
   matchesPlayed: nonNegativeInt,
   goals: nonNegativeInt,
   assists: nonNegativeInt,
   cleanSheets: nonNegativeInt,
+  yellowCards: nonNegativeInt,
+  redCards: nonNegativeInt,
+  motm: nonNegativeInt,
+  saves: nonNegativeInt,
   sortOrder: nonNegativeInt,
 });
 
