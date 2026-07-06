@@ -11,21 +11,36 @@ const navItems = [
   { label: "Timeline", href: "#schedule" },
 ];
 
-export default function TopBar() {
+const DEFAULT_FACEBOOK_URL =
+  "https://www.facebook.com/people/Bester-Footballclub/61569445073979/";
+
+type TopBarProps = Readonly<{
+  shortName?: string;
+  crestUrl?: string | null;
+  facebookUrl?: string | null;
+}>;
+
+export default function TopBar({
+  shortName = "Bester FC",
+  crestUrl,
+  facebookUrl,
+}: TopBarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const logoSrc = crestUrl ?? "/logo.png";
+  const facebookHref = facebookUrl ?? DEFAULT_FACEBOOK_URL;
 
   return (
     <header className="relative w-full rounded-2xl border border-white/10 bg-[#0b1224]/60 px-4 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.45)] ring-1 ring-white/10 backdrop-blur-2xl sm:px-6">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-3">
           <Image
-            src="/logo.png"
-            alt="Bester FC"
+            src={logoSrc}
+            alt={shortName}
             width={36}
             height={36}
             className="h-9 w-9 rounded-lg bg-white/90 p-1"
           />
-          <div className="text-sm font-semibold text-white">Bester FC</div>
+          <div className="text-sm font-semibold text-white">{shortName}</div>
         </div>
 
         <nav className="hidden items-center gap-2 text-sm text-white/70 md:flex">
@@ -39,10 +54,10 @@ export default function TopBar() {
             </a>
           ))}
           <a
-            href="https://www.facebook.com/people/Bester-Footballclub/61569445073979/"
+            href={facebookHref}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Bester FC on Facebook"
+            aria-label={`${shortName} on Facebook`}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:border-white/30 hover:text-white"
           >
             <svg
@@ -81,7 +96,7 @@ export default function TopBar() {
               </a>
             ))}
             <a
-              href="https://www.facebook.com/people/Bester-Footballclub/61569445073979/"
+              href={facebookHref}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs uppercase tracking-[0.24em] text-white/80 transition hover:border-white/30 hover:text-white"

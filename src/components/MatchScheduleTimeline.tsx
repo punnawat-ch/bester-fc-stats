@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
-import type { ScheduleMatch } from "../data/match-schedule";
+import type { ScheduleMatch } from "../lib/types";
 
 type MatchScheduleTimelineProps = Readonly<{
   schedule: ScheduleMatch[];

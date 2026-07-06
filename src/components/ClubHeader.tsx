@@ -8,12 +8,16 @@ type ClubHeaderProps = {
   clubName: string;
   recordedAt: string;
   teamStats: TeamStats;
+  crestUrl?: string | null;
+  shortName?: string;
 };
 
 export default function ClubHeader({
   clubName,
   recordedAt,
   teamStats,
+  crestUrl,
+  shortName = "Bester FC",
 }: ClubHeaderProps) {
   const reduceMotion = useReducedMotion();
   const container = {
@@ -62,8 +66,8 @@ export default function ClubHeader({
           variants={item}
         >
           <Image
-              src="/logo.png"
-              alt="Bester FC crest"
+              src={crestUrl ?? "/logo.png"}
+              alt={`${shortName} crest`}
               width={200}
               height={200}
               className="h-28 w-28 rounded-2xl border border-white/60 bg-white/5 p-1 shadow-[0_12px_24px_rgba(0,0,0,0.35)]"

@@ -6,28 +6,42 @@ import MatchScheduleTimeline from "../components/MatchScheduleTimeline";
 import PlayerStatsTable from "../components/PlayerStatsTable";
 import TopBar from "../components/TopBar";
 import TeamStatsCards from "../components/TeamStatsCards";
-import { matchSchedule } from "../data/match-schedule";
-import { getFootballStats, getGoalSummary } from "../lib/football";
+import {
+  getClub,
+  getFootballStats,
+  getGoalSummary,
+  getMatchSchedule,
+} from "../lib/football";
 
 // Server component: all data is read on the server for fast first paint.
 export default async function Home() {
-  const stats = await getFootballStats();
+  const club = await getClub();
+  const [stats, matchSchedule] = await Promise.all([
+    getFootballStats(),
+    getMatchSchedule(club.id),
+  ]);
   const { goalsFor, goalsAgainst, goalDifference } = getGoalSummary(stats);
 
   return (
     <div className="relative min-h-screen pitch-bg">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(56,189,248,0.22),transparent_60%)]" />
       <div className="sticky top-4 z-50 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-10">
-        <TopBar />
+        <TopBar
+          shortName={club.shortName}
+          crestUrl={club.crestUrl}
+          facebookUrl={club.facebookUrl}
+        />
       </div>
       <main className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-6 sm:px-6 lg:px-10 lg:pb-12 lg:pt-10">
         <div className="rounded-[32px] border border-white/10 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.45)]  sm:p-6 lg:p-8">
           <div className="mt-6 flex flex-col gap-6">
             <section id="overview" className="scroll-mt-24">
               <ClubHeader
-                clubName={stats.club}
+                clubName={club.name}
                 recordedAt={stats.recordedAt}
                 teamStats={stats.teamStats}
+                crestUrl={club.crestUrl}
+                shortName={club.shortName}
               />
             </section>
             <section className="scroll-mt-24">

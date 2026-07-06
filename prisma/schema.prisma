@@ -1,0 +1,105 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // Supabase pooled (pgbouncer) สำหรับ runtime
+  directUrl = env("DIRECT_URL") // Supabase direct สำหรับ migrate
+}
+
+// ---------- Domain ----------
+
+model Club {
+  id             String   @id @default(cuid())
+  name           String // "Bester Football Club"
+  shortName      String   @default("Bester FC")
+  crestUrl       String? // โลโก้/ตราสโมสร
+  // social
+  facebookUrl    String?
+  instagramUrl   String?
+  // SEO / metadata
+  siteUrl        String?
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String[] @default([])
+  ogImageUrl     String?
+  themeColor     String?  @default("#0b1124")
+  recordedAt     DateTime @default(now()) // = "อัปเดตล่าสุด" ที่โชว์บนหน้าเว็บ
+  players        Player[]
+  matches        Match[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Player {
+  id            String   @id @default(cuid())
+  clubId        String
+  club          Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  name          String
+  matchesPlayed Int      @default(0)
+  goals         Int      @default(0)
+  assists       Int      @default(0)
+  cleanSheets   Int      @default(0)
+  sortOrder     Int      @default(0) // จัดลำดับแสดงผลใน admin
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([clubId, name])
+  @@index([clubId])
+}
+
+enum MatchStatus {
+  SCHEDULED // ตารางที่จะเตะ (เดิมอยู่ใน match-schedule.ts)
+  PLAYED // เตะจบแล้ว (เดิมอยู่ใน MatchHistory)
+}
+
+enum MatchResult {
+  WIN
+  DRAW
+  LOSS
+}
+
+model Match {
+  id           String       @id @default(cuid())
+  clubId       String
+  club         Club         @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  opponent     String // "No Doubt"
+  date         DateTime // วันเตะจริง (ทั้ง scheduled/played)
+  matchweek    String? // "Week 2" / label
+  venue        String? // "Playmaker"
+  field        String? // "Field 3"
+  kickoff      String? // "18:00–20:00"
+  status       MatchStatus  @default(SCHEDULED)
+  goalsFor     Int? // เฉพาะ PLAYED
+  goalsAgainst Int? // เฉพาะ PLAYED
+  result       MatchResult? // เฉพาะ PLAYED
+  notes        String?
+  seriesId     String? // group นัดที่มาจาก recurrence เดียวกัน (Google Calendar UX)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([clubId, status, date])
+  @@index([seriesId])
+}
+
+// ---------- Auth / RBAC ----------
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String?
+  passwordHash String // argon2/bcrypt — ไม่เก็บ plaintext
+  role         Role      @default(VIEWER)
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
