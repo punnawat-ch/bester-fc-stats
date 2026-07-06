@@ -7,6 +7,7 @@ import type { MatchHistory } from "../data/football-stats";
 type MatchHistoryTableProps = Readonly<{
   matchHistory: MatchHistory[];
   clubName: string;
+  embedded?: boolean;
 }>;
 
 const resultStyles: Record<string, string> = {
@@ -48,6 +49,7 @@ function getScoreLines(result: string, score: string) {
 export default function MatchHistoryTable({
   matchHistory,
   clubName,
+  embedded = false,
 }: MatchHistoryTableProps) {
   const reduceMotion = useReducedMotion();
   const container = {
@@ -63,31 +65,17 @@ export default function MatchHistoryTable({
     show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
   };
 
-  return (
-    <motion.section
-      className="glass-panel rounded-3xl border border-white/10 bg-[#0a1222]/80 px-5 py-5 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
-      variants={container}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.4 }}
-    >
-      <motion.div className="flex items-center justify-between" variants={item}>
-        <div>
-          <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">
-            Results
-          </p>
-          <h3 className="text-lg font-semibold text-white">Match History</h3>
-        </div>
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-white/70">
-          Results
-        </span>
-      </motion.div>
+  const hasResults = matchHistory.length > 0;
 
-      <motion.div
-        className="mt-4 max-h-[420px] min-h-[220px] overflow-y-auto"
-        variants={item}
-      >
-        <div className="space-y-3 md:hidden">
+  const emptyState = (
+    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-8 text-center text-sm text-white/60">
+      No results recorded yet. Match outcomes will appear here.
+    </div>
+  );
+
+  const results = (
+    <>
+      <div className="space-y-3 md:hidden">
           {matchHistory.map((match) => {
             const tone = getResultTone(match.result);
             const teamTone = getTeamTone(match.result);
@@ -175,6 +163,54 @@ export default function MatchHistoryTable({
             </tbody>
           </table>
         </div>
+    </>
+  );
+
+  const body = hasResults ? results : emptyState;
+
+  if (embedded) {
+    return (
+      <motion.div variants={container} initial="hidden" animate="show">
+        <motion.div variants={item} className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.24em] text-white/60">
+            {matchHistory.length} results
+          </span>
+        </motion.div>
+        <motion.div
+          className="mt-5 max-h-[420px] min-h-[220px] overflow-y-auto"
+          variants={item}
+        >
+          {body}
+        </motion.div>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.section
+      className="glass-panel rounded-3xl border border-white/10 bg-[#0a1222]/80 px-5 py-5 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.4 }}
+    >
+      <motion.div className="flex items-center justify-between" variants={item}>
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">
+            Results
+          </p>
+          <h3 className="text-lg font-semibold text-white">Match History</h3>
+        </div>
+        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-white/70">
+          Results
+        </span>
+      </motion.div>
+
+      <motion.div
+        className="mt-4 max-h-[420px] min-h-[220px] overflow-y-auto"
+        variants={item}
+      >
+        {body}
       </motion.div>
     </motion.section>
   );

@@ -110,6 +110,15 @@ html {
   backdrop-filter: blur(10px);
 }
 
+/* Native date/time pickers: render dark so the calendar/clock icon isn't a
+   black glyph swallowed by the dark background (and the popup goes dark too). */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"] {
+  color-scheme: dark;
+}
+
 /* Admin shell ambient background — dark stadium + sky glow (admin-ux-spec §3.1). */
 .admin-ambient {
   background-color: #08110c;

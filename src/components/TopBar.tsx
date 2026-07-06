@@ -6,10 +6,9 @@ import { useState } from "react";
 const navItems = [
   { label: "Overview", href: "#overview" },
   { label: "Form", href: "#form" },
-  { label: "Matches", href: "#matches" },
-  { label: "Ranking", href: "#ranking" },
   { label: "Squad", href: "#squad" },
-  { label: "Timeline", href: "#schedule" },
+  { label: "Ranking", href: "#ranking" },
+  { label: "Fixtures", href: "#matches" },
 ];
 
 const DEFAULT_FACEBOOK_URL =

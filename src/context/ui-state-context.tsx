@@ -20,7 +20,7 @@ export function UIStateProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [viewMode, setViewMode] = useState<ViewMode>("table");
+  const [viewMode, setViewMode] = useState<ViewMode>("compact");
   const [highlightLeaders, setHighlightLeaders] = useState(true);
 
   const value = useMemo(

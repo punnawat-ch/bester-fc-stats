@@ -24,8 +24,7 @@ import {
 import { SubmitBar } from "@/components/admin/SubmitBar";
 import { upsertPlayer } from "./action";
 import { JerseyNumberField, NumberField } from "./number-field";
-import { PlayerCardPreview } from "./player-card-preview";
-import { PlayerPhotoField } from "./player-photo-field";
+import { PlayerCardEditor } from "./player-card-editor";
 import { PositionPills } from "./position-pills";
 import { StatTileField, type StatFieldName, type StatTone } from "./stat-tile-field";
 import { playerFormSchema, type PlayerFormValues } from "./schema";
@@ -199,25 +198,13 @@ export function PlayerFormSheet({
             className="flex flex-col gap-5"
             noValidate
           >
-            <PlayerCardPreview
+            <PlayerCardEditor
               control={form.control}
-              imageUrl={photoUrl}
+              playerId={player?.id ?? null}
+              photoUrl={photoUrl}
               celebrate={celebrate}
+              onPhotoChange={handlePhotoChange}
             />
-
-            {isEditing && player ? (
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <PlayerPhotoField
-                  playerId={player.id}
-                  initialUrl={player.imageUrl}
-                  onUrlChange={handlePhotoChange}
-                />
-              </div>
-            ) : (
-              <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/50">
-                Save the player first, then reopen to add a photo.
-              </p>
-            )}
 
             <div className="flex flex-col gap-4">
               <SectionLabel>Identity</SectionLabel>

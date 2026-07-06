@@ -1,8 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import ClubHeader from "../components/ClubHeader";
-import MatchHistoryTable from "../components/MatchHistoryTable";
-import MatchScheduleTimeline from "../components/MatchScheduleTimeline";
+import FixturesSection from "../components/FixturesSection";
 import PlayerStatsTable from "../components/PlayerStatsTable";
 import SquadGrid from "../components/SquadGrid";
 import TopBar from "../components/TopBar";
@@ -47,7 +46,7 @@ export default async function Home() {
                 shortName={club.shortName}
               />
             </section>
-            <section id="form" className="scroll-mt-24">
+            <section className="scroll-mt-24">
               <TeamStatsCards
                 teamStats={stats.teamStats}
                 goalsFor={goalsFor}
@@ -55,20 +54,18 @@ export default async function Home() {
                 goalDifference={goalDifference}
               />
             </section>
-            <section id="matches" className="scroll-mt-24">
-              <MatchHistoryTable
-                matchHistory={stats.matchHistory}
-                clubName={stats.club}
-              />
+            <section id="squad" className="scroll-mt-24">
+              <SquadGrid players={squad} shortName={club.shortName} />
             </section>
             <section id="ranking" className="scroll-mt-24">
               <PlayerStatsTable players={stats.playerStats} />
             </section>
-            <section id="squad" className="scroll-mt-24">
-              <SquadGrid players={squad} shortName={club.shortName} />
-            </section>
-            <section className="scroll-mt-24">
-              <MatchScheduleTimeline schedule={matchSchedule} />
+            <section id="matches" className="scroll-mt-24">
+              <FixturesSection
+                schedule={matchSchedule}
+                matchHistory={stats.matchHistory}
+                clubName={stats.club}
+              />
             </section>
           </div>
         </div>
