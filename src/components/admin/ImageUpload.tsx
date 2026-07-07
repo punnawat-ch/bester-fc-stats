@@ -12,10 +12,7 @@ import {
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import {
-  processImage,
-  removeImageBackground,
-} from "@/components/admin/image-processing";
+import { processImage } from "@/components/admin/image-processing";
 
 /** Result contract shared with the server actions that persist the upload. */
 export type UploadResult = Readonly<{
@@ -24,8 +21,6 @@ export type UploadResult = Readonly<{
   error?: string;
 }>;
 
-type CutoutMode = "auto" | "manual";
-
 type PendingImage = Readonly<{ blob: Blob; url: string; hasAlpha: boolean }>;
 
 type ImageUploadProps = Readonly<{
@@ -33,7 +28,7 @@ type ImageUploadProps = Readonly<{
   description?: string;
   /** Current persisted public URL (or null when none). */
   currentUrl: string | null;
-  /** Enable the 2-mode background-removal toggle (players only). */
+  /** Warn when the uploaded image has no transparent background (cut-outs). */
   enableCutout: boolean;
   /** "card" = player pitch mockup, "image" = plain contained preview. */
   previewVariant: "card" | "image";
@@ -49,51 +44,6 @@ const PITCH_STYLE = {
     "linear-gradient(180deg,#0c3620 0%,#0a2a19 55%,#06160d 100%)," +
     "repeating-linear-gradient(90deg,rgba(255,255,255,0.04) 0 14px,transparent 14px 28px)",
 } as const;
-
-type ModeToggleProps = Readonly<{
-  mode: CutoutMode;
-  onChange: (mode: CutoutMode) => void;
-  disabled: boolean;
-}>;
-
-function ModeToggle({ mode, onChange, disabled }: ModeToggleProps) {
-  return (
-    <div
-      role="radiogroup"
-      aria-label="Background removal mode"
-      className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1 text-xs font-semibold"
-    >
-      <button
-        type="button"
-        role="radio"
-        aria-checked={mode === "auto"}
-        disabled={disabled}
-        onClick={() => onChange("auto")}
-        className={
-          mode === "auto"
-            ? "rounded-lg bg-sky-500/90 px-3 py-1.5 text-[#08110c]"
-            : "rounded-lg px-3 py-1.5 text-white/70"
-        }
-      >
-        Auto remove
-      </button>
-      <button
-        type="button"
-        role="radio"
-        aria-checked={mode === "manual"}
-        disabled={disabled}
-        onClick={() => onChange("manual")}
-        className={
-          mode === "manual"
-            ? "rounded-lg bg-sky-500/90 px-3 py-1.5 text-[#08110c]"
-            : "rounded-lg px-3 py-1.5 text-white/70"
-        }
-      >
-        Manual PNG
-      </button>
-    </div>
-  );
-}
 
 function PitchPreview({ src }: Readonly<{ src: string | null }>) {
   return (
@@ -155,7 +105,6 @@ export function ImageUpload({
 }: ImageUploadProps) {
   const libraryRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
-  const [mode, setMode] = useState<CutoutMode>("auto");
   const [pending, setPending] = useState<PendingImage | null>(null);
   const [busy, setBusy] = useState<null | "processing" | "uploading">(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -185,14 +134,12 @@ export function ImageUpload({
     clearPending();
     setBusy("processing");
     try {
-      const useAuto = enableCutout && mode === "auto";
-      const source = useAuto ? await removeImageBackground(file) : file;
-      const processed = await processImage(source);
+      const processed = await processImage(file);
       const url = URL.createObjectURL(processed.blob);
       setPending({ blob: processed.blob, url, hasAlpha: processed.hasAlpha });
       if (enableCutout && !processed.hasAlpha) {
         setWarning(
-          "No transparent background detected — use Auto remove or upload a cut-out PNG.",
+          "No transparent background detected — upload a cut-out PNG for the best card.",
         );
       }
     } catch {
@@ -248,10 +195,7 @@ export function ImageUpload({
 
   const displayUrl = pending?.url ?? currentUrl;
   const controlsDisabled = disabled || busy != null || isSaving;
-  const processingLabel =
-    enableCutout && mode === "auto"
-      ? "Removing background… (first run downloads the model)"
-      : "Processing image…";
+  const processingLabel = "Processing image…";
 
   return (
     <div className="flex flex-col gap-3">
@@ -262,13 +206,6 @@ export function ImageUpload({
             <span className="text-xs text-white/50">{description}</span>
           ) : null}
         </div>
-        {enableCutout ? (
-          <ModeToggle
-            mode={mode}
-            onChange={setMode}
-            disabled={controlsDisabled}
-          />
-        ) : null}
       </div>
 
       {previewVariant === "card" ? (

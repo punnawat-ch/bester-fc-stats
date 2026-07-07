@@ -6,15 +6,10 @@ import { useWatch, type Control } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import {
-  processImage,
-  removeImageBackground,
-} from "@/components/admin/image-processing";
+import { processImage } from "@/components/admin/image-processing";
 import { deletePlayerPhoto, savePlayerPhoto } from "./action";
 import { POSITION_BADGE } from "./position-pills";
 import type { PlayerFormValues } from "./schema";
-
-type CutoutMode = "auto" | "manual";
 
 type PendingImage = Readonly<{ blob: Blob; url: string; hasAlpha: boolean }>;
 
@@ -54,46 +49,6 @@ function CardFigure({ name, imageUrl }: FigureProps) {
   );
 }
 
-type ModeToggleProps = Readonly<{
-  mode: CutoutMode;
-  onChange: (mode: CutoutMode) => void;
-  disabled: boolean;
-}>;
-
-const MODE_ACTIVE = "rounded-lg bg-sky-500/90 px-4 text-[#08110c]";
-const MODE_IDLE = "rounded-lg px-4 text-white/70";
-
-function ModeToggle({ mode, onChange, disabled }: ModeToggleProps) {
-  return (
-    <div
-      role="radiogroup"
-      aria-label="Background removal mode"
-      className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1 text-xs font-semibold"
-    >
-      <button
-        type="button"
-        role="radio"
-        aria-checked={mode === "auto"}
-        disabled={disabled}
-        onClick={() => onChange("auto")}
-        className={`min-h-11 ${mode === "auto" ? MODE_ACTIVE : MODE_IDLE}`}
-      >
-        Auto remove
-      </button>
-      <button
-        type="button"
-        role="radio"
-        aria-checked={mode === "manual"}
-        disabled={disabled}
-        onClick={() => onChange("manual")}
-        className={`min-h-11 ${mode === "manual" ? MODE_ACTIVE : MODE_IDLE}`}
-      >
-        Manual PNG
-      </button>
-    </div>
-  );
-}
-
 type PlayerCardEditorProps = Readonly<{
   control: Control<PlayerFormValues>;
   /** Player id, or null in create mode (photo editing needs a persisted id). */
@@ -109,10 +64,10 @@ type PlayerCardEditorProps = Readonly<{
 /**
  * Unified "Player Card Editor": the live front-card preview (night pitch,
  * cut-out figure, name/nickname/jersey/position badge) IS the photo surface.
- * An overlaid edit button starts the 2-mode (@imgly auto / manual PNG) upload
- * flow; the processed result previews inside the card itself, with a compact
- * confirm / remove cluster below. Uses the shared `.squad-*` pitch styling and
- * the guarded `savePlayerPhoto` / `deletePlayerPhoto` actions (unchanged).
+ * An overlaid edit button starts the upload flow — pick an already cut-out
+ * transparent PNG; the processed result previews inside the card itself, with a
+ * compact confirm / remove cluster below. Uses the shared `.squad-*` pitch
+ * styling and the guarded `savePlayerPhoto` / `deletePlayerPhoto` actions.
  */
 export function PlayerCardEditor({
   control,
@@ -127,7 +82,6 @@ export function PlayerCardEditor({
   const jerseyNumber = useWatch({ control, name: "jerseyNumber" }) ?? null;
   const displayName = name.trim() === "" ? "New player" : name;
 
-  const [mode, setMode] = useState<CutoutMode>("auto");
   const [pending, setPending] = useState<PendingImage | null>(null);
   const [busy, setBusy] = useState<BusyState>(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -162,14 +116,12 @@ export function PlayerCardEditor({
     clearPending();
     setBusy("processing");
     try {
-      const useAuto = mode === "auto";
-      const source = useAuto ? await removeImageBackground(file) : file;
-      const processed = await processImage(source);
+      const processed = await processImage(file);
       const url = URL.createObjectURL(processed.blob);
       setPending({ blob: processed.blob, url, hasAlpha: processed.hasAlpha });
       if (!processed.hasAlpha) {
         setWarning(
-          "No transparent background detected — use Auto remove or upload a cut-out PNG.",
+          "No transparent background detected — upload a cut-out PNG for the best card.",
         );
       }
     } catch {
@@ -225,10 +177,7 @@ export function PlayerCardEditor({
     });
   }
 
-  const processingLabel =
-    mode === "auto"
-      ? "Removing background… (first run downloads the model)"
-      : "Processing image…";
+  const processingLabel = "Processing image…";
 
   return (
     <div className="flex flex-col gap-3">
@@ -320,8 +269,6 @@ export function PlayerCardEditor({
             </div>
           ) : (
             <PhotoControls
-              mode={mode}
-              onMode={setMode}
               disabled={controlsDisabled}
               hasPhoto={displayUrl != null}
               onRemove={handleRemove}
@@ -367,18 +314,14 @@ function EditPhotoButton({ disabled, onFile }: EditPhotoButtonProps) {
 }
 
 type PhotoControlsProps = Readonly<{
-  mode: CutoutMode;
-  onMode: (mode: CutoutMode) => void;
   disabled: boolean;
   hasPhoto: boolean;
   onRemove: () => void;
   onFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }>;
 
-/** Compact control cluster below the card: mode toggle + camera + remove. */
+/** Compact control cluster below the card: camera + remove. */
 function PhotoControls({
-  mode,
-  onMode,
   disabled,
   hasPhoto,
   onRemove,
@@ -386,7 +329,6 @@ function PhotoControls({
 }: PhotoControlsProps) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <ModeToggle mode={mode} onChange={onMode} disabled={disabled} />
       <div className="flex flex-wrap justify-center gap-2">
         <CameraButton disabled={disabled} onFile={onFile} />
         {hasPhoto ? (

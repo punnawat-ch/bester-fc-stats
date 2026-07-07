@@ -9,7 +9,7 @@ export const playerEditorHelp: HelpEntry = {
   title: "แก้ไขการ์ดผู้เล่น",
   summary: (
     <p>
-      แต่งการ์ดนักเตะ — อัปรูป (ตัดพื้นหลังอัตโนมัติ) กรอกตำแหน่ง เบอร์ และสถิติ
+      แต่งการ์ดนักเตะ — อัปรูป PNG พื้นหลังโปร่งใส กรอกตำแหน่ง เบอร์ และสถิติ
       พร้อมดูตัวอย่างการ์ดสด ๆ
     </p>
   ),
@@ -22,7 +22,7 @@ export const playerEditorHelp: HelpEntry = {
       heading: "อัปโหลดรูป",
       body: (
         <p>
-          แตะการ์ด/ปุ่มกล้อง เลือก “ตัด bg อัตโนมัติ” หรืออัป PNG โปร่งใสเอง
+          แตะการ์ด/ปุ่มกล้อง อัป PNG พื้นหลังโปร่งใส (ตัด bg มาก่อน)
           แล้วยืนยันก่อนบันทึก
         </p>
       ),
@@ -46,7 +46,7 @@ export const playerEditorHelp: HelpEntry = {
     {
       selector: '[data-tour="player-photo"]',
       title: "รูปผู้เล่น",
-      description: "แตะที่นี่เพื่ออัป/เปลี่ยนรูป ระบบตัดพื้นหลังให้",
+      description: "แตะที่นี่เพื่ออัป/เปลี่ยนรูป PNG พื้นหลังโปร่งใส",
     },
     {
       selector: '[data-tour="player-position"]',

@@ -2,9 +2,7 @@
  * Client-side image processing for admin uploads (browser only).
  *
  * - `processImage` resizes to a max dimension and re-encodes as PNG (PNG keeps
- *   the alpha channel that background removal / manual cut-outs rely on).
- * - `removeImageBackground` dynamically imports `@imgly/background-removal` so
- *   the WASM model is only pulled into the admin bundle, never the public site.
+ *   the alpha channel that manual cut-out PNGs rely on).
  */
 
 const MAX_DIMENSION = 1600;
@@ -70,10 +68,4 @@ export async function processImage(
   const hasAlpha = detectAlpha(ctx, targetW, targetH);
   const blob = await encodePng(canvas);
   return { blob, hasAlpha };
-}
-
-/** Remove the background in-browser, returning a transparent PNG blob. */
-export async function removeImageBackground(source: Blob): Promise<Blob> {
-  const { removeBackground } = await import("@imgly/background-removal");
-  return removeBackground(source);
 }
