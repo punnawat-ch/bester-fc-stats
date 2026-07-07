@@ -33,6 +33,12 @@
   --brand-hover: color-mix(in oklab, var(--brand), black 12%);
   --brand-active: color-mix(in oklab, var(--brand), black 22%);
   --brand-subtle: color-mix(in oklab, var(--brand), transparent 88%);
+
+  /* Level A — dark surfaces carry a subtle brand tint so backgrounds follow the
+     club too (still dark; text/contrast unchanged). Swapping --brand re-tints all. */
+  --surface: color-mix(in oklab, #08110c, var(--brand) 5%);
+  --panel: color-mix(in oklab, #0a1222, var(--brand) 6%);
+  --panel-2: color-mix(in oklab, #0b1224, var(--brand) 7%);
 }
 
 /*
@@ -43,11 +49,11 @@
  */
 @theme inline {
   /* --- shadcn primitives (kept; brand ones now point at the seed) --------- */
-  --color-background: #08110c;
+  --color-background: var(--surface);
   --color-foreground: rgb(255 255 255);
-  --color-card: #0a1222;
+  --color-card: var(--panel);
   --color-card-foreground: rgb(255 255 255);
-  --color-popover: #0b1224;
+  --color-popover: var(--panel-2);
   --color-popover-foreground: rgb(255 255 255);
   --color-primary: var(--brand);
   --color-primary-foreground: var(--brand-foreground);
@@ -63,10 +69,10 @@
   --color-input: rgb(255 255 255 / 0.1);
   --color-ring: var(--brand-ring);
 
-  /* --- NEUTRAL: surfaces ------------------------------------------------- */
-  --color-surface: #08110c;
-  --color-panel: #0a1222;
-  --color-panel-2: #0b1224;
+  /* --- NEUTRAL: surfaces (brand-tinted via :root, Level A) --------------- */
+  --color-surface: var(--surface);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
   --color-glass-xs: rgb(255 255 255 / 0.02); /* faintest tint (below glass) */
   --color-glass: rgb(255 255 255 / 0.05);
   --color-glass-2: rgb(255 255 255 / 0.08);
@@ -198,12 +204,13 @@ input[type="month"] {
   color-scheme: dark;
 }
 
-/* Admin shell ambient background — dark stadium + sky glow (admin-ux-spec §3.1). */
+/* Admin shell ambient background — dark stadium + brand glow (admin-ux-spec §3.1).
+   Level A: base + glow follow the club brand via the seed. */
 .admin-ambient {
-  background-color: #08110c;
+  background-color: var(--surface);
   background-image: radial-gradient(
     circle at 20% 10%,
-    rgba(56, 189, 248, 0.22),
+    color-mix(in srgb, var(--brand) 22%, transparent),
     transparent 60%
   );
   background-attachment: fixed;
