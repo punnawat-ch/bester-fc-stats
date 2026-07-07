@@ -22,6 +22,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { SubmitBar } from "@/components/admin/SubmitBar";
+import { FeatureTour } from "@/components/admin/help/FeatureTour";
+import { HelpButton } from "@/components/admin/help/HelpButton";
 import { upsertPlayer } from "./action";
 import { JerseyNumberField, NumberField } from "./number-field";
 import { PlayerCardEditor } from "./player-card-editor";
@@ -155,6 +157,7 @@ export function PlayerFormSheet({
   }
 
   const isEditing = player !== null;
+  const isCreate = player === null;
   const { isValid, isDirty } = form.formState;
   const hasChanges = isDirty || photoChanged;
 
@@ -186,11 +189,18 @@ export function PlayerFormSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="max-h-[94dvh] overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{isEditing ? "Edit player card" : "New player card"}</SheetTitle>
+          <div className="flex items-start justify-between gap-2">
+            <SheetTitle>
+              {isEditing ? "Edit player card" : "New player card"}
+            </SheetTitle>
+            <HelpButton featureKey="player-editor" />
+          </div>
           <SheetDescription>
             Customise the card — stats are entered manually.
           </SheetDescription>
         </SheetHeader>
+
+        {isCreate ? <FeatureTour featureKey="player-editor" /> : null}
 
         <Form {...form}>
           <form
@@ -274,12 +284,14 @@ export function PlayerFormSheet({
               <p className="text-center text-xs text-white/50">Unsaved changes</p>
             ) : null}
 
-            <SubmitBar
-              pending={isPending}
-              disabled={!isValid}
-              saveLabel={isEditing ? "Save changes" : "Add player"}
-              onCancel={() => onOpenChange(false)}
-            />
+            <div data-tour="player-save">
+              <SubmitBar
+                pending={isPending}
+                disabled={!isValid}
+                saveLabel={isEditing ? "Save changes" : "Add player"}
+                onCancel={() => onOpenChange(false)}
+              />
+            </div>
           </form>
         </Form>
       </SheetContent>

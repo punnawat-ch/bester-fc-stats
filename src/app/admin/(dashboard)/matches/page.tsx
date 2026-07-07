@@ -5,8 +5,6 @@ import { getClub } from "@/lib/football";
 import { prisma } from "@/lib/prisma";
 import { can } from "@/lib/rbac";
 
-import { FeatureTour } from "@/components/admin/help/FeatureTour";
-
 import { toMatchDTO } from "./lib";
 import { MatchesClient } from "./matches-client";
 
@@ -31,10 +29,5 @@ export default async function AdminMatchesPage() {
   });
   const canWrite = can(session.user.role, "match:write");
 
-  return (
-    <>
-      <MatchesClient matches={matches.map(toMatchDTO)} canWrite={canWrite} />
-      <FeatureTour featureKey="matches" />
-    </>
-  );
+  return <MatchesClient matches={matches.map(toMatchDTO)} canWrite={canWrite} />;
 }

@@ -28,7 +28,10 @@ export function RecurrenceFields() {
   const weekday = weekdayName(date);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+    <div
+      className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4"
+      data-tour="match-recurrence"
+    >
       <FormField
         control={form.control}
         name="recurrence.enabled"

@@ -104,6 +104,7 @@ export function PositionPills({ control }: PositionPillsProps) {
             <div
               role="group"
               aria-label="Position"
+              data-tour="player-position"
               className="grid grid-cols-5 gap-2"
             >
               {POSITION_OPTIONS.map((option) => (

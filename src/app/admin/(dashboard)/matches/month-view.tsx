@@ -68,7 +68,10 @@ export function MonthView({ matches, onDayClick }: MonthViewProps) {
   const buckets = buildBuckets(matches);
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-[#0a1222]/80 p-3 ring-1 ring-white/10">
+    <div
+      className="rounded-3xl border border-white/10 bg-[#0a1222]/80 p-3 ring-1 ring-white/10"
+      data-tour="matches-month-grid"
+    >
       <Calendar
         mode="single"
         defaultMonth={initialMonth}

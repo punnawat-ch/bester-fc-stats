@@ -3,7 +3,91 @@
 > ระบบคู่มือ/สอนใช้งานใน admin portal — แบบ **Layered 3 ชั้น**
 > ตัดสินใจแล้ว: **เนื้อหาภาษาไทยล้วน** · **Tour แบบ highlight-only (v1)** · **เก็บ state per-user ใน DB**
 
-**สถานะ:** ทำหลัง Wave 5/6 (เป็นฟีเจอร์เสริม ไม่กระทบ flow เดิม) — เป็น docs-only ตอนนี้
+**สถานะ:** Wave 7.1 + 7.2 implement แล้ว
+
+---
+
+## ★ Addendum: Player Editor sheet tour (แก้ gap "ไม่มี tutorial ตอนเปิด sheet")
+
+**ปัญหา:** tour `players` ปัจจุบันมี 5 step ปนกัน — `players-add`/`player-actions` อยู่บนหน้า list แต่ `player-photo`/`player-stat-tiles`/`player-card-preview` อยู่ **ใน sheet**. tour รันบนหน้า list (sheet ปิด) → `tour.ts` ข้าม step ที่ selector ไม่อยู่ใน DOM → **เปิด sheet มาไม่มี tour**
+
+**วิธีแก้:** แยกเป็น **tour ใหม่ `player-editor`** ที่ผูกกับ context ของ sheet
+
+### 1) Registry ใหม่ `player-editor`
+- เพิ่ม `"player-editor"` เข้า `FeatureKey`
+- `src/content/help/player-editor.tsx`:
+```tsx
+export const playerEditorHelp: HelpEntry = {
+  key: "player-editor",
+  title: "แก้ไขการ์ดผู้เล่น",
+  summary: <p>แต่งการ์ดนักเตะ — อัปรูป (ตัดพื้นหลังอัตโนมัติ) กรอกตำแหน่ง เบอร์ และสถิติ พร้อมดูตัวอย่างการ์ดสด ๆ</p>,
+  sections: [
+    { heading: "การ์ดตัวอย่างสด", body: <p>ด้านบนคือการ์ดจริงที่อัปเดตทันทีตามที่กรอก</p> },
+    { heading: "อัปโหลดรูป", body: <p>แตะการ์ด/ปุ่มกล้อง เลือก "ตัด bg อัตโนมัติ" หรืออัป PNG โปร่งใสเอง แล้วยืนยันก่อนบันทึก</p> },
+    { heading: "ตำแหน่งและสถิติ", body: <p>เลือกตำแหน่งด้วยปุ่มสี กรอกสถิติด้วยปุ่ม +/− (ประตู แอสซิสต์ คลีนชีต ใบเหลือง–แดง MOTM เซฟ)</p> },
+  ],
+  tour: [
+    { selector: '[data-tour="player-card-preview"]', title: "การ์ดตัวอย่าง", description: "อัปเดตสดตามที่กรอก" },
+    { selector: '[data-tour="player-photo"]', title: "รูปผู้เล่น", description: "แตะที่นี่เพื่ออัป/เปลี่ยนรูป ระบบตัดพื้นหลังให้" },
+    { selector: '[data-tour="player-position"]', title: "ตำแหน่ง", description: "เลือก GK/DF/MF/FW ด้วยปุ่มสี" },
+    { selector: '[data-tour="player-stat-tiles"]', title: "สถิติ", description: "กรอกด้วยปุ่ม +/− หรือพิมพ์ตรง ๆ" },
+    { selector: '[data-tour="player-save"]', title: "บันทึก", description: "กดบันทึกเมื่อแก้เสร็จ" },
+  ],
+};
+```
+
+### 2) Trigger ในบริบท sheet — **auto เฉพาะตอน create**
+- **ปุ่ม `?`** ใน `SheetHeader` → `helpKey="player-editor"` (replay ได้ตลอด ทั้ง create/edit)
+- **Auto เฉพาะตอน create:** mount `<FeatureTour featureKey="player-editor" />` **ข้างใน SheetContent เฉพาะเมื่อเป็นโหมดสร้างใหม่** (`player == null` / ไม่มี id). เงื่อนไข: `isCreate && tutorialEnabled && !toursSeen.has("player-editor")` → เล่นครั้งแรกที่เปิดฟอร์ม "เพิ่มผู้เล่น" (tour.ts รอ ~400ms ให้ sheet animate)
+- **ตอน edit ผู้เล่นเดิม → ไม่ auto** (มีแค่ปุ่ม `?` ให้กดเอง)
+
+### 3) แก้ tour `players` (หน้า list) ให้เหลือเฉพาะ list
+- `src/content/help/players.tsx` → เก็บแค่ 2 step: `players-add`, `player-actions` (ตัด 3 step ที่อยู่ใน sheet ออก ไปอยู่ `player-editor` แทน)
+
+### 4) `data-tour` ที่ต้องเพิ่ม
+มีอยู่แล้ว: `player-card-preview`, `player-photo`, `player-stat-tiles`
+ต้องเพิ่ม: `player-position` (ที่ `position-pills.tsx`), `player-save` (ที่ wrapper ของ `SubmitBar` ใน player-form-sheet)
+
+### ไฟล์ที่แตะ (implement)
+`src/content/help/{index.ts (+FeatureKey/registry), player-editor.tsx (ใหม่), players.tsx (trim)}` · `player-form-sheet.tsx` (`?` ใน header + `<FeatureTour>` ใน content + `data-tour="player-save"`) · `position-pills.tsx` (`data-tour="player-position"`)
+
+> หมายเหตุ: เป็น **exception** ของหลัก "highlight-only ไม่ยุ่ง sheet" — แต่ที่นี่ tour ถูก mount **ข้างใน** sheet ที่เปิดอยู่แล้ว (ผู้ใช้เปิดเอง) จึงไม่ต้อง force-open ปลอดภัยกับ highlight-only
+
+---
+
+## ★ Addendum 2: Matches — agenda/month views + event/detail sheet tours
+
+**ปัญหาปัจจุบัน:**
+- `match-item` render เฉพาะ **agenda view** (month view เป็น day-cell + จุดสี ไม่ใช่ fixture card) และต้องมีนัด SCHEDULED → ถ้าอยู่ month view หรือไม่มีนัด step นี้ถูกข้าม
+- sheet **create/edit (event-form)**, **detail + mark-as-played (event-detail)**, recurrence, scope → ไม่ถูก tour เลย (เหมือนเคส player editor)
+
+### แก้เป็น 3 tours
+
+**A) `matches` (หน้า calendar) — always-visible + คลุมทั้ง 2 mode**
+- steps: `matches-view-toggle`, `matches-fab`, + `match-item` (agenda) **และ** `matches-month-grid` (month) — mode ไหน active โชว์ step นั้น อีกอันถูก tour.ts skip อัตโนมัติ
+- เพิ่ม `data-tour="matches-month-grid"` บน month grid (`month-view.tsx`)
+- **sections อธิบาย 2 mode ชัด ๆ**: Agenda = รายการนัดจัดกลุ่มเดือน/สัปดาห์ (เหมาะมือถือ) · Month = ปฏิทิน จุดสีต่อวัน (ฟ้า=ยังไม่เตะ เขียว=ชนะ แดง=แพ้ น้ำเงิน=เสมอ) แตะวันเพื่อเพิ่ม/ดูนัด
+
+**B) `match-editor` (sheet เพิ่ม/แก้นัด — event-form)** — mount `<FeatureTour featureKey="match-editor"/>` ใน sheet + `?` ใน header
+- steps: `match-opponent` (คู่แข่ง) → `match-datetime` (วัน + ช่วงเวลา + All-day/TBD) → `match-venue` (สนาม) → `match-recurrence` (เตะซ้ำทุกสัปดาห์ + วันสิ้นสุด) → `match-save`
+- data-tour เพิ่มใน `event-form.tsx` + `recurrence-fields.tsx`
+
+**C) `match-detail` (sheet รายละเอียดนัด — event-detail)** — mount `<FeatureTour featureKey="match-detail"/>` ใน sheet + `?` ใน header
+- steps: `match-mark-played` (กด → ใส่สกอร์ → ระบบสรุปผล ชนะ/แพ้/เสมอ อัตโนมัติ + ย้ายเป็น "เตะจบ") → `match-edit` → `match-delete`
+- ถ้าเป็นนัดซ้ำ (มี seriesId): เพิ่ม step อธิบาย **scope** (this / this-and-following / all) — target `scope-sheet` (จะโชว์เมื่อเปิด scope เท่านั้น, skip ถ้าไม่ใช่นัดซ้ำ)
+- data-tour เพิ่มใน `event-detail.tsx`
+
+### Registry / trigger — **auto เฉพาะตอน create**
+- เพิ่ม `"match-editor"`, `"match-detail"` เข้า `FeatureKey` + สร้าง `src/content/help/{match-editor,match-detail}.tsx` (ไทย)
+- Trim tour `matches` (หน้า) ให้เหลือ toggle/FAB/(agenda+month) — ย้าย step ที่อยู่ใน sheet ไป B/C
+- **`match-editor`**: auto **เฉพาะตอนเปิดฟอร์มเพิ่มนัดใหม่** (create, `event == null`) + `?` replay; ตอนแก้นัดเดิม → ไม่ auto
+- **`match-detail`**: เป็นนัดที่มีอยู่แล้ว (ไม่ใช่ create) → **ไม่ auto** มีแค่ `?` replay ใน header
+- **หน้า `matches` (list/calendar)**: **ไม่ auto** (ตามนโยบาย auto=create-only ของโซนนี้) — ใช้ `?` บนหน้าแทน
+
+### data-tour ที่ต้องเพิ่ม (สรุป)
+`matches-month-grid` · `match-opponent` · `match-datetime` · `match-venue` · `match-recurrence` · `match-save` · `match-mark-played` · `match-edit` · `match-delete`
+
+> เหมือน player-editor: tour mount **ข้างใน** sheet ที่ผู้ใช้เปิดเอง → ปลอดภัยกับ highlight-only ไม่ต้อง force-open
 
 ---
 

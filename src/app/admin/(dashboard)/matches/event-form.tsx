@@ -6,6 +6,8 @@ import { Clock, Hash, MapPin } from "lucide-react";
 import { useForm, useFormContext, useWatch } from "react-hook-form";
 
 import { SubmitBar } from "@/components/admin/SubmitBar";
+import { FeatureTour } from "@/components/admin/help/FeatureTour";
+import { HelpButton } from "@/components/admin/help/HelpButton";
 import {
   Form,
   FormControl,
@@ -96,60 +98,73 @@ export function EventForm({
   });
 
   const { isDirty, isSubmitting } = form.formState;
+  const isCreate = match === null;
 
   return (
     <Form {...form}>
+      {isCreate ? <FeatureTour featureKey="match-editor" /> : null}
       <form onSubmit={submit} className="flex flex-col gap-4">
-        <FormField
-          control={form.control}
-          name="opponent"
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel htmlFor="match-opponent">Opponent</FormLabel>
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="font-mono text-sm text-white/50"
-                >
-                  vs
-                </span>
+        <div className="flex justify-end">
+          <HelpButton featureKey="match-editor" />
+        </div>
+
+        <div data-tour="match-opponent">
+          <FormField
+            control={form.control}
+            name="opponent"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel htmlFor="match-opponent">Opponent</FormLabel>
+                <div className="flex items-center gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="font-mono text-sm text-white/50"
+                  >
+                    vs
+                  </span>
+                  <FormControl>
+                    <Input
+                      id="match-opponent"
+                      placeholder="No Doubt"
+                      autoComplete="off"
+                      aria-invalid={Boolean(fieldState.error)}
+                      {...field}
+                    />
+                  </FormControl>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="flex flex-col gap-4" data-tour="match-datetime">
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel htmlFor="match-date">Date</FormLabel>
                 <FormControl>
-                  <Input
-                    id="match-opponent"
-                    placeholder="No Doubt"
-                    autoComplete="off"
-                    aria-invalid={Boolean(fieldState.error)}
-                    {...field}
+                  <DateField
+                    id="match-date"
+                    value={field.value}
+                    onChange={field.onChange}
+                    invalid={Boolean(fieldState.error)}
                   />
                 </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel htmlFor="match-date">Date</FormLabel>
-              <FormControl>
-                <DateField
-                  id="match-date"
-                  value={field.value}
-                  onChange={field.onChange}
-                  invalid={Boolean(fieldState.error)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <TimeRangeFields />
+        </div>
 
-        <TimeRangeFields />
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+          data-tour="match-venue"
+        >
           <FormField
             control={form.control}
             name="venue"
@@ -202,12 +217,14 @@ export function EventForm({
           )}
         />
 
-        <SubmitBar
-          saveLabel={submitLabel}
-          pending={isSubmitting}
-          disabled={!isDirty}
-          onCancel={onCancel}
-        />
+        <div data-tour="match-save">
+          <SubmitBar
+            saveLabel={submitLabel}
+            pending={isSubmitting}
+            disabled={!isDirty}
+            onCancel={onCancel}
+          />
+        </div>
       </form>
     </Form>
   );

@@ -3,7 +3,10 @@ import type { ReactNode } from "react";
 import { welcomeHelp } from "./welcome";
 import { dashboardHelp } from "./dashboard";
 import { playersHelp } from "./players";
+import { playerEditorHelp } from "./player-editor";
 import { matchesHelp } from "./matches";
+import { matchEditorHelp } from "./match-editor";
+import { matchDetailHelp } from "./match-detail";
 import { clubHelp } from "./club";
 import { usersHelp } from "./users";
 
@@ -12,7 +15,10 @@ export type FeatureKey =
   | "welcome"
   | "dashboard"
   | "players"
+  | "player-editor"
   | "matches"
+  | "match-editor"
+  | "match-detail"
   | "club"
   | "users";
 
@@ -50,7 +56,10 @@ export const helpRegistry: Record<FeatureKey, HelpEntry> = {
   welcome: welcomeHelp,
   dashboard: dashboardHelp,
   players: playersHelp,
+  "player-editor": playerEditorHelp,
   matches: matchesHelp,
+  "match-editor": matchEditorHelp,
+  "match-detail": matchDetailHelp,
   club: clubHelp,
   users: usersHelp,
 };

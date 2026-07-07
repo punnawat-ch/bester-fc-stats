@@ -47,6 +47,7 @@ export const playersHelp: HelpEntry = {
       ),
     },
   ],
+  // หน้า list เท่านั้น — step ที่อยู่ใน sheet ย้ายไปทัวร์ `player-editor`
   tour: [
     {
       selector: '[data-tour="players-add"]',
@@ -57,21 +58,6 @@ export const playersHelp: HelpEntry = {
       selector: '[data-tour="player-actions"]',
       title: "จัดการผู้เล่น",
       description: "เมนูแก้ไข ลบ หรือจัดลำดับผู้เล่นแต่ละคน",
-    },
-    {
-      selector: '[data-tour="player-photo"]',
-      title: "รูปผู้เล่น",
-      description: "อัปโหลดรูปนักเตะ ระบบลบพื้นหลังให้อัตโนมัติ",
-    },
-    {
-      selector: '[data-tour="player-stat-tiles"]',
-      title: "สถิติผู้เล่น",
-      description: "กรอกประตู แอสซิสต์ คลีนชีต และสถิติอื่น ๆ ตรงนี้",
-    },
-    {
-      selector: '[data-tour="player-card-preview"]',
-      title: "ตัวอย่างการ์ด",
-      description: "ดูหน้าตาการ์ดผู้เล่นแบบเรียลไทม์ก่อนบันทึก",
     },
   ],
 };

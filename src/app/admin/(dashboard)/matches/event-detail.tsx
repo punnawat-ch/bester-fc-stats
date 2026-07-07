@@ -13,6 +13,7 @@ import {
 
 import { StatusChip, matchStatusKind } from "@/components/admin/StatusChip";
 import { SubmitBar } from "@/components/admin/SubmitBar";
+import { HelpButton } from "@/components/admin/help/HelpButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -79,6 +80,9 @@ export function EventDetail({
 
   return (
     <div className="flex flex-col gap-4">
+      <div className="flex justify-end">
+        <HelpButton featureKey="match-detail" />
+      </div>
       <div className="flex flex-col gap-3">
         <StatusChip {...matchStatusKind(match.status, match.result)} />
         <p className="text-lg font-semibold text-white">vs {match.opponent}</p>
@@ -112,6 +116,7 @@ export function EventDetail({
             <Button
               type="button"
               size="lg"
+              data-tour="match-mark-played"
               onClick={() => setMarking(true)}
               className="bg-emerald-500/90 text-[#08110c] hover:bg-emerald-400"
             >
@@ -124,6 +129,7 @@ export function EventDetail({
               type="button"
               variant="secondary"
               className="flex-1"
+              data-tour="match-edit"
               onClick={() => onEdit(match)}
             >
               <Pencil aria-hidden="true" />
@@ -133,6 +139,7 @@ export function EventDetail({
               type="button"
               variant="destructive"
               className="flex-1"
+              data-tour="match-delete"
               onClick={() => onDelete(match)}
             >
               <Trash2 aria-hidden="true" />

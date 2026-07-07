@@ -59,7 +59,8 @@ export const matchesHelp: HelpEntry = {
       ),
     },
   ],
-  // highlight-only: ชี้ของที่เห็นบนจอ ไม่บังคับเปิด sheet
+  // highlight-only หน้า calendar เท่านั้น — step ใน sheet ย้ายไป `match-editor`/`match-detail`
+  // agenda โชว์ `match-item`, month โชว์ `matches-month-grid` (อีกอันถูก tour.ts skip เอง)
   tour: [
     {
       selector: '[data-tour="matches-view-toggle"]',
@@ -75,6 +76,11 @@ export const matchesHelp: HelpEntry = {
       selector: '[data-tour="match-item"]',
       title: "จัดการนัด",
       description: "แตะที่นัดเพื่อดูรายละเอียด แก้ไข ลบ หรือ “บันทึกผล” เมื่อแข่งจบ",
+    },
+    {
+      selector: '[data-tour="matches-month-grid"]',
+      title: "ปฏิทินเดือน",
+      description: "จุดสีต่อวันบอกสถานะ (ฟ้า=ยังไม่เตะ เขียว=ชนะ แดง=แพ้ น้ำเงิน=เสมอ) แตะวันเพื่อเพิ่ม/ดูนัด",
     },
   ],
 };
