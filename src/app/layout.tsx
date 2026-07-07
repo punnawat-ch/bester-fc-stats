@@ -4,6 +4,8 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { UIStateProvider } from "../context/ui-state-context";
 import { getClub } from "../lib/football";
+import { getActiveAppearance } from "../lib/appearance/service";
+import { appearanceToCssVars } from "../lib/appearance/css";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -90,13 +92,14 @@ export const viewport: Viewport = {
   themeColor: "#0b1124",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const appearance = await getActiveAppearance();
   return (
-    <html lang="en">
+    <html lang="en" style={appearanceToCssVars(appearance)}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-surface text-fg antialiased`}
       >

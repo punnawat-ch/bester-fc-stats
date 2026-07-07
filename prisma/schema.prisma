@@ -25,12 +25,40 @@ model Club {
   seoDescription String?
   seoKeywords    String[] @default([])
   ogImageUrl     String?
-  themeColor     String?  @default("#0b1124")
+  themeColor     String?  @default("#0b1124") // synced to active appearance brand (for <meta name="theme-color">)
   recordedAt     DateTime @default(now()) // = "อัปเดตล่าสุด" ที่โชว์บนหน้าเว็บ
+  // --- Appearance theming (Phase 2) ---
+  activeAppearanceId String?             @unique
+  activeAppearance   AppearanceRevision? @relation("ActiveAppearance", fields: [activeAppearanceId], references: [id])
+  appearances        AppearanceRevision[] @relation("ClubAppearances")
   players        Player[]
   matches        Match[]
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+// Append-only history of club brand/appearance seeds. See docs/theme-appearance-phase2-spec.md
+model AppearanceRevision {
+  id          String           @id @default(cuid())
+  clubId      String
+  club        Club             @relation("ClubAppearances", fields: [clubId], references: [id], onDelete: Cascade)
+  status      AppearanceStatus @default(DRAFT)
+  tokens      Json // brand seed only: { brand, brandForeground, radius? }
+  label       String?
+  note        String?
+  publishedAt DateTime?
+  createdById String?
+  createdBy   User?            @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  activeForClub Club?          @relation("ActiveAppearance")
+  createdAt   DateTime         @default(now())
+
+  @@index([clubId, status, createdAt])
+}
+
+enum AppearanceStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
 }
 
 model Player {
@@ -122,6 +150,7 @@ model User {
   // --- Help/Tutorial prefs (Wave 7) ---
   tutorialEnabled Boolean  @default(true) // เปิด auto-tour ไหม
   toursSeen       String[] @default([]) // featureKey ที่ดูจบแล้ว (กัน auto ซ้ำ)
+  appearanceRevisions AppearanceRevision[] // revisions this user created/edited
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }
