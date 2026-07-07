@@ -104,7 +104,7 @@ export function EventForm({
     <Form {...form}>
       {isCreate ? <FeatureTour featureKey="match-editor" /> : null}
       <form onSubmit={submit} className="flex flex-col gap-4">
-        <div className="flex justify-end">
+        <div className="flex justify-end pr-10">
           <HelpButton featureKey="match-editor" />
         </div>
 

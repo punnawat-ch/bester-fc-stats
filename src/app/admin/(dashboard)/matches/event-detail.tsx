@@ -80,7 +80,7 @@ export function EventDetail({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-end">
+      <div className="flex justify-end pr-10">
         <HelpButton featureKey="match-detail" />
       </div>
       <div className="flex flex-col gap-3">

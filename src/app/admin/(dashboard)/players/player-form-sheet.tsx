@@ -189,7 +189,7 @@ export function PlayerFormSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="max-h-[94dvh] overflow-y-auto">
         <SheetHeader>
-          <div className="flex items-start justify-between gap-2">
+          <div className="flex items-start justify-between gap-2 pr-10">
             <SheetTitle>
               {isEditing ? "Edit player card" : "New player card"}
             </SheetTitle>
