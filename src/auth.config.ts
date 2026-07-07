@@ -2,10 +2,10 @@ import type { NextAuthConfig } from "next-auth";
 import type { Role } from "@prisma/client";
 
 /**
- * Edge-safe Auth.js config shared between the middleware (edge runtime) and the
- * full Node config in `src/auth.ts`. It must NOT import Prisma or argon2, since
- * those cannot run in the edge middleware bundle. The Credentials provider (with
- * `authorize`) is added only in `src/auth.ts`.
+ * Auth.js config shared between the proxy (`src/proxy.ts`, Next.js 16 — Node.js
+ * runtime) and the full config in `src/auth.ts`. Kept provider-free (no
+ * Credentials/Prisma/argon2) so the proxy bundle stays lean; the Credentials
+ * provider with `authorize` is added only in `src/auth.ts`.
  */
 export const authConfig = {
   session: { strategy: "jwt" },
