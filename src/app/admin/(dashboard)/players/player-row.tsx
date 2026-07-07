@@ -39,13 +39,13 @@ export function PlayerRowCells({
 }: PlayerRowCellsProps) {
   return (
     <>
-      <td className="font-medium text-white">{player.name}</td>
-      <td className="text-right font-mono text-white/70">
+      <td className="font-medium text-fg">{player.name}</td>
+      <td className="text-right font-mono text-fg-muted">
         {player.matchesPlayed}
       </td>
-      <td className="text-right font-mono text-white/70">{player.goals}</td>
-      <td className="text-right font-mono text-white/70">{player.assists}</td>
-      <td className="text-right font-mono text-white/70">
+      <td className="text-right font-mono text-fg-muted">{player.goals}</td>
+      <td className="text-right font-mono text-fg-muted">{player.assists}</td>
+      <td className="text-right font-mono text-fg-muted">
         {player.cleanSheets}
       </td>
       {canWrite ? (

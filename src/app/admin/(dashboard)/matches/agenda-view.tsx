@@ -52,9 +52,9 @@ export function AgendaView({ matches, onSelect }: AgendaViewProps) {
     <div className="flex flex-col gap-6">
       {groups.map((month) => (
         <section key={month.key} className="flex flex-col gap-3">
-          <h2 className="flex items-center gap-2 text-sm font-semibold text-white">
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-fg">
             <span
-              className="size-2 rounded-full bg-sky-300"
+              className="size-2 rounded-full bg-primary"
               aria-hidden="true"
             />
             {month.label}
@@ -62,9 +62,9 @@ export function AgendaView({ matches, onSelect }: AgendaViewProps) {
           {month.weeks.map((week) => (
             <div
               key={week.key}
-              className="flex flex-col gap-2 border-l border-white/10 pl-3"
+              className="flex flex-col gap-2 border-l border-border pl-3"
             >
-              <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
                 {week.label}
               </p>
               {week.matches.map((match) => (

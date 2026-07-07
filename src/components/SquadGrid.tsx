@@ -16,18 +16,18 @@ export default function SquadGrid({
   }
 
   return (
-    <div className="glass-panel rounded-3xl border border-white/10 bg-[#0a1222]/80 px-5 py-5 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
+    <div className="glass-panel rounded-3xl border border-border bg-panel/80 px-5 py-5 shadow-panel-lg ring-1 ring-border">
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">
+          <p className="text-[10px] uppercase tracking-[0.32em] text-fg-subtle">
             {shortName} · Roster
           </p>
-          <h2 className="text-xl font-semibold text-white">Squad</h2>
-          <p className="text-xs text-white/60">
+          <h2 className="text-xl font-semibold text-fg">Squad</h2>
+          <p className="text-xs text-fg-muted">
             Tap a card to flip it and see the player&apos;s stats
           </p>
         </div>
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-white/70">
+        <span className="rounded-full border border-border bg-glass px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-fg-muted">
           {players.length} players
         </span>
       </div>

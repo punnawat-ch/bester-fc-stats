@@ -33,14 +33,14 @@ export default function TeamStatsCards({
 
   const statsForm = [
     { label: "Matches", value: teamStats.matchesPlayed },
-    { label: "Wins", value: teamStats.wins, tone: "text-emerald-600" },
-    { label: "Draws", value: teamStats.draws, tone: "text-amber-600" },
-    { label: "Losses", value: teamStats.losses, tone: "text-rose-600" },
+    { label: "Wins", value: teamStats.wins, tone: "text-success" },
+    { label: "Draws", value: teamStats.draws, tone: "text-warning" },
+    { label: "Losses", value: teamStats.losses, tone: "text-danger" },
   ];
   const statsGoals = [
     { label: "GF", value: goalsFor },
-    { label: "GA", value: goalsAgainst, tone: "text-amber-600" },
-    { label: "GD", value: goalDifference, tone: "text-emerald-600" },
+    { label: "GA", value: goalsAgainst, tone: "text-warning" },
+    { label: "GD", value: goalDifference, tone: "text-success" },
   ];
 
   return (
@@ -53,20 +53,20 @@ export default function TeamStatsCards({
       viewport={{ once: true, amount: 0.4 }}
     >
       <motion.div
-        className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0a1222]/80 p-5 text-white shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
+        className="relative overflow-hidden rounded-3xl border border-border bg-panel/80 p-5 text-fg shadow-panel-lg ring-1 ring-border"
         variants={item}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_60%)]" />
         <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.34em] text-white/50">
+            <p className="text-[10px] uppercase tracking-[0.34em] text-fg-subtle">
               Performance Snapshot
             </p>
-            <h3 className="text-lg font-semibold tracking-tight text-white">
+            <h3 className="text-lg font-semibold tracking-tight text-fg">
               Formline & Goal Lens
             </h3>
           </div>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-white/70">
+          <span className="rounded-full border border-border bg-glass px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-fg-muted">
             Full Breakdown
           </span>
         </div>
@@ -76,30 +76,30 @@ export default function TeamStatsCards({
             {statsForm.map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-2xl border border-white/10 bg-linear-to-br from-white/8 via-white/4 to-transparent px-3 py-3 text-center shadow-[0_12px_30px_rgba(0,0,0,0.35)]"
+                className="rounded-2xl border border-border bg-linear-to-br from-glass-2 via-glass to-transparent px-3 py-3 text-center shadow-elevate-lg"
               >
                 <div className={`text-2xl font-semibold ${stat.tone ?? ""}`}>
                   {stat.value}
                 </div>
-                <div className="mt-1 text-[10px] uppercase tracking-[0.26em] text-white/60">
+                <div className="mt-1 text-[10px] uppercase tracking-[0.26em] text-fg-muted">
                   {stat.label}
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="hidden h-10 w-px bg-white/10 lg:block" />
+          <div className="hidden h-10 w-px bg-glass-3 lg:block" />
 
           <div className="grid grid-cols-3 gap-3">
             {statsGoals.map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-2xl border border-white/10 bg-linear-to-br from-white/8 via-white/4 to-transparent px-3 py-3 text-center shadow-[0_12px_30px_rgba(0,0,0,0.35)]"
+                className="rounded-2xl border border-border bg-linear-to-br from-glass-2 via-glass to-transparent px-3 py-3 text-center shadow-elevate-lg"
               >
                 <div className={`text-2xl font-semibold ${stat.tone ?? ""}`}>
                   {stat.value}
                 </div>
-                <div className="mt-1 text-[10px] uppercase tracking-[0.26em] text-white/60">
+                <div className="mt-1 text-[10px] uppercase tracking-[0.26em] text-fg-muted">
                   {stat.label}
                 </div>
               </div>

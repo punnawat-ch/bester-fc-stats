@@ -10,13 +10,13 @@ type StatBadgeProps = {
 
 const toneStyles: Record<StatBadgeTone, string> = {
   neutral:
-    "bg-white/5 text-white ring-white/15 from-white/5 to-transparent",
+    "bg-glass text-fg ring-border-strong from-glass to-transparent",
   success:
-    "bg-emerald-500/15 text-emerald-200 ring-emerald-400/30 from-emerald-500/20 to-transparent",
+    "bg-success/15 text-success-fg ring-success/30 from-success/20 to-transparent",
   warning:
-    "bg-blue-500/15 text-blue-100 ring-blue-400/30 from-blue-500/20 to-transparent",
+    "bg-warning/15 text-warning-fg ring-warning/30 from-warning/20 to-transparent",
   danger:
-    "bg-rose-500/15 text-rose-200 ring-rose-400/30 from-rose-500/20 to-transparent",
+    "bg-danger/15 text-danger-fg ring-danger/30 from-danger/20 to-transparent",
 };
 
 const sizeStyles: Record<StatBadgeSize, string> = {
@@ -33,13 +33,13 @@ export default function StatBadge({
 }: StatBadgeProps) {
   return (
     <div
-      className={`glass-panel w-full flex flex-col gap-1 rounded-2xl border border-white/10 bg-gradient-to-br ring-1 ${toneStyles[tone]} ${sizeStyles[size]}`}
+      className={`glass-panel w-full flex flex-col gap-1 rounded-2xl border border-border bg-gradient-to-br ring-1 ${toneStyles[tone]} ${sizeStyles[size]}`}
     >
-      <span className="text-xs uppercase tracking-[0.2em] text-white/60">
+      <span className="text-xs uppercase tracking-[0.2em] text-fg-muted">
         {label}
       </span>
       <span
-        className={`${size === "sm" ? "text-lg" : "text-2xl"} font-semibold text-white`}
+        className={`${size === "sm" ? "text-lg" : "text-2xl"} font-semibold text-fg`}
       >
         {value}
       </span>

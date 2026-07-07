@@ -49,12 +49,12 @@ export function ResponsiveList<T>({
       </div>
 
       {/* md+: real table */}
-      <div className="hidden overflow-hidden rounded-2xl border border-white/10 ring-1 ring-white/10 md:block">
+      <div className="hidden overflow-hidden rounded-2xl border border-border ring-1 ring-border md:block">
         <table className="w-full border-collapse text-left text-sm">
-          <thead className="sticky top-0 bg-[#0b1224]/80 text-[10px] uppercase tracking-[0.2em] text-white/50 backdrop-blur [&_th]:px-4 [&_th]:py-3 [&_th]:font-medium">
+          <thead className="sticky top-0 bg-panel-2/80 text-[10px] uppercase tracking-[0.2em] text-fg-subtle backdrop-blur [&_th]:px-4 [&_th]:py-3 [&_th]:font-medium">
             <tr>{head}</tr>
           </thead>
-          <tbody className="[&_td]:px-4 [&_td]:py-3 [&_tr]:border-t [&_tr]:border-white/10 [&_tr:hover]:bg-white/[0.03]">
+          <tbody className="[&_td]:px-4 [&_td]:py-3 [&_tr]:border-t [&_tr]:border-border [&_tr:hover]:bg-glass-xs">
             {items.map((item) => (
               <tr key={getKey(item)}>{renderRow(item)}</tr>
             ))}

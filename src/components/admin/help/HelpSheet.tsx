@@ -46,7 +46,7 @@ export function HelpSheet({ entry, open, onOpenChange }: HelpSheetProps) {
         <SheetHeader>
           <SheetTitle>{entry.title}</SheetTitle>
           <SheetDescription asChild>
-            <div className="text-sm leading-relaxed text-white/70 [&_b]:font-semibold [&_b]:text-white">
+            <div className="text-sm leading-relaxed text-fg-muted [&_b]:font-semibold [&_b]:text-fg">
               {entry.summary}
             </div>
           </SheetDescription>

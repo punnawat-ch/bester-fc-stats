@@ -45,7 +45,7 @@ export function AdminTopBar({
   const displayName = userName ?? userEmail ?? "Account";
 
   return (
-    <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-white/10 bg-[#0a1222]/80 px-4 backdrop-blur-2xl">
+    <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-border bg-panel/80 px-4 backdrop-blur-2xl">
       <div className="flex items-center gap-2">
         <Image
           src={logoSrc}
@@ -55,8 +55,8 @@ export function AdminTopBar({
           className="h-7 w-7 rounded-lg bg-white/90 p-0.5"
         />
         <div className="flex flex-col leading-tight">
-          <span className="text-sm font-semibold text-white">{shortName}</span>
-          <span className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+          <span className="text-sm font-semibold text-fg">{shortName}</span>
+          <span className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
             Admin
           </span>
         </div>
@@ -65,10 +65,10 @@ export function AdminTopBar({
       <DropdownMenu>
         <DropdownMenuTrigger
           data-tour="topbar-signout"
-          className="flex h-11 items-center gap-2 rounded-full border border-white/10 bg-white/5 pr-3 pl-1.5 text-white outline-none transition hover:border-white/30 focus-visible:ring-2 focus-visible:ring-sky-400/70"
+          className="flex h-11 items-center gap-2 rounded-full border border-border bg-glass pr-3 pl-1.5 text-fg outline-none transition hover:border-border-hover focus-visible:ring-2 focus-visible:ring-ring/70"
           aria-label="Account menu"
         >
-          <span className="flex size-8 items-center justify-center rounded-full bg-sky-500/20 text-sm font-semibold text-sky-200">
+          <span className="flex size-8 items-center justify-center rounded-full bg-primary/20 text-sm font-semibold text-primary">
             {initialOf(userName, userEmail)}
           </span>
           <span className="hidden max-w-[10rem] truncate text-sm sm:block">
@@ -78,11 +78,11 @@ export function AdminTopBar({
         <DropdownMenuContent align="end" className="min-w-56">
           <DropdownMenuLabel>Signed in</DropdownMenuLabel>
           <div className="flex flex-col gap-1.5 px-3 pb-2">
-            <span className="truncate text-sm font-medium text-white">
+            <span className="truncate text-sm font-medium text-fg">
               {displayName}
             </span>
             {userEmail ? (
-              <span className="truncate text-xs text-white/50">
+              <span className="truncate text-xs text-fg-subtle">
                 {userEmail}
               </span>
             ) : null}

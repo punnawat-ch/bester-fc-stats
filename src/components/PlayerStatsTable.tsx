@@ -56,39 +56,39 @@ export default function PlayerStatsTable({
     const getPodiumStyles = (index: number) => {
       if (index === 0) {
         return {
-          border: "border-amber-300/60",
-          badge: "bg-amber-500/20 text-amber-100",
+          border: "border-podium-gold/60",
+          badge: "bg-podium-gold/20 text-podium-gold",
           label: "🏆 Top 1",
         };
       }
       if (index === 1) {
         return {
-          border: "border-slate-300/60",
-          badge: "bg-slate-400/20 text-slate-100",
+          border: "border-podium-silver/60",
+          badge: "bg-podium-silver/20 text-podium-silver",
           label: "Top 2",
         };
       }
       if (index === 2) {
         return {
-          border: "border-orange-300/60",
-          badge: "bg-orange-500/20 text-orange-100",
+          border: "border-podium-bronze/60",
+          badge: "bg-podium-bronze/20 text-podium-bronze",
           label: "Top 3",
         };
       }
       return {
-        border: "border-white/10",
-        badge: "bg-white/10 text-white/70",
+        border: "border-border",
+        badge: "bg-glass-3 text-fg-muted",
         label: "",
       };
     };
 
     return (
-      <div className="glass-panel rounded-2xl border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent p-4 shadow-[0_20px_50px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
+      <div className="glass-panel rounded-2xl border border-border bg-linear-to-br from-glass-3 via-glass to-transparent p-4 shadow-panel ring-1 ring-border">
         <div className="flex flex-col gap-3">
           <div>
-            <h3 className={`${titleSize} font-semibold text-white`}>{title}</h3>
+            <h3 className={`${titleSize} font-semibold text-fg`}>{title}</h3>
             {!isCompact && (
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/50">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-fg-subtle">
                 Competition Ranking
               </p>
             )}
@@ -109,7 +109,7 @@ export default function PlayerStatsTable({
             return (
               <div
                 key={`${metric}-card-${player.name}`}
-                className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-linear-to-br from-white/8 via-white/4 to-transparent px-4 py-3 shadow-[0_16px_35px_rgba(0,0,0,0.4)] ring-1 ring-white/10"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-linear-to-br from-glass-2 via-glass to-transparent px-4 py-3 shadow-panel-sm ring-1 ring-border"
               >
                 <div className="flex items-center gap-3">
                   <span
@@ -118,7 +118,7 @@ export default function PlayerStatsTable({
                     {index + 1}
                   </span>
                   <div className="flex flex-col">
-                    <span className="font-semibold text-white">
+                    <span className="font-semibold text-fg">
                       {player.name}
                     </span>
                     {podium.label ? (
@@ -131,10 +131,10 @@ export default function PlayerStatsTable({
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+                  <div className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
                     {title}
                   </div>
-                  <div className="text-lg font-semibold text-white">{player[metric]}</div>
+                  <div className="text-lg font-semibold text-fg">{player[metric]}</div>
                 </div>
               </div>
             );
@@ -144,7 +144,7 @@ export default function PlayerStatsTable({
         <div className="mt-4 hidden overflow-x-auto md:block">
           <table className="min-w-full border-separate border-spacing-y-2 text-left table-fixed">
             {!isCompact && (
-              <thead className="text-[10px] uppercase tracking-[0.28em] text-white/50">
+              <thead className="text-[10px] uppercase tracking-[0.28em] text-fg-subtle">
               <tr>
                 <th className="py-2 w-4">Rank</th>
                 <th className="px-6 w-full py-2">Player</th>
@@ -152,7 +152,7 @@ export default function PlayerStatsTable({
               </tr>
             </thead>
             )}
-            <tbody className={`text-white ${rowText}`}>
+            <tbody className={`text-fg ${rowText}`}>
               {playersRanked.slice(0, showTop).map((player, index) => {
                 const isLeader = highlightLeaders && leader?.name === player.name;
                 const total = player[metric];
@@ -165,17 +165,17 @@ export default function PlayerStatsTable({
                     isHighlighted={isLeader}
                   >
                     <td
-                      className={`rounded-l-2xl w-4 bg-white/5 ${cellPadding} font-medium text-white/70 ${
+                      className={`rounded-l-2xl w-4 bg-glass ${cellPadding} font-medium text-fg-muted ${
                         isPodium ? `border-l-2 ${podium.border}` : ""
                       }`}
                     >
                       {index + 1}
                     </td>
-                    <td className={`bg-white/5 ${cellPadding} font-medium w-full`}>
+                    <td className={`bg-glass ${cellPadding} font-medium w-full`}>
                       <div className="flex items-center gap-2">
                         <div className="flex flex-col">
                           <span>{player.name}</span>
-                          <span className="text-xs text-white/50">
+                          <span className="text-xs text-fg-subtle">
                             {player.matchesPlayed} matches
                           </span>
                         </div>
@@ -188,7 +188,7 @@ export default function PlayerStatsTable({
                         )}
                       </div>
                     </td>
-                    <td className={`rounded-r-2xl bg-white/5 ${cellPadding} text-right w-4 ${isCompact ? "text-sm" : "text-lg"} font-semibold`}>
+                    <td className={`rounded-r-2xl bg-glass ${cellPadding} text-right w-4 ${isCompact ? "text-sm" : "text-lg"} font-semibold`}>
                       {total}
                     </td>
                   </HighlightRow>
@@ -203,7 +203,7 @@ export default function PlayerStatsTable({
 
   return (
     <motion.section
-      className="glass-panel rounded-3xl border border-white/10 bg-[#0a1222]/80 px-5 py-5 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
+      className="glass-panel rounded-3xl border border-border bg-panel/80 px-5 py-5 shadow-panel-lg ring-1 ring-border"
       variants={container}
       initial="hidden"
       animate="show"
@@ -213,24 +213,24 @@ export default function PlayerStatsTable({
         variants={item}
       >
         <div>
-          <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">
+          <p className="text-[10px] uppercase tracking-[0.32em] text-fg-subtle">
             Ranking Stage
           </p>
-          <h2 className="text-xl font-semibold text-white">
+          <h2 className="text-xl font-semibold text-fg">
             Competition Rankings
           </h2>
-          <p className="text-xs text-white/60">
+          <p className="text-xs text-fg-muted">
             Goals, Assists, and Clean Sheets leaders
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <div className="flex rounded-full border border-white/10 bg-white/5 p-1">
+          <div className="flex rounded-full border border-border bg-glass p-1">
             <button
               type="button"
               className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide transition ${
                 viewMode === "table"
-                  ? "bg-white text-[#06120c]"
-                  : "text-white/60 hover:text-white"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-fg-muted hover:text-fg"
               }`}
               onClick={() => setViewMode("table")}
             >
@@ -240,18 +240,18 @@ export default function PlayerStatsTable({
               type="button"
               className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide transition ${
                 viewMode === "compact"
-                  ? "bg-white text-[#06120c]"
-                  : "text-white/60 hover:text-white"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-fg-muted hover:text-fg"
               }`}
               onClick={() => setViewMode("compact")}
             >
               Compact
             </button>
           </div>
-          <label className="flex items-center gap-2 text-xs uppercase tracking-wide text-white/70">
+          <label className="flex items-center gap-2 text-xs uppercase tracking-wide text-fg-muted">
             <input
               type="checkbox"
-              className="h-4 w-4 rounded border-white/20 bg-white/10 text-emerald-300"
+              className="h-4 w-4 rounded border-border-strong bg-glass-3 text-success"
               checked={highlightLeaders}
               onChange={(event) => setHighlightLeaders(event.target.checked)}
             />
@@ -263,13 +263,13 @@ export default function PlayerStatsTable({
       <motion.div className="mt-6 grid gap-4 lg:grid-cols-2" variants={item}>
         {renderRanking(
           "Goals",
-          "bg-emerald-500/20 text-emerald-100",
+          "bg-success/20 text-success-fg",
           rankedGoals,
           "goals",
         )}
         {renderRanking(
           "Assists",
-          "bg-blue-500/20 text-blue-100",
+          "bg-info/20 text-info-fg",
           rankedAssists,
           "assists",
         )}

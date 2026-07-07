@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 const inputClasses =
-  "min-h-[48px] w-full rounded-xl border border-white/10 bg-[#0a1222]/80 px-4 text-base text-white placeholder-white/40 ring-1 ring-white/10 outline-none transition focus:border-sky-400/60 focus:ring-sky-400/40";
+  "min-h-[48px] w-full rounded-xl border border-border bg-panel/80 px-4 text-base text-fg placeholder-fg-subtle ring-1 ring-border outline-none transition focus:border-ring/60 focus:ring-ring/40";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
       <div className="flex flex-col gap-2">
-        <label htmlFor="email" className="text-sm font-medium text-white/70">
+        <label htmlFor="email" className="text-sm font-medium text-fg-muted">
           Email
         </label>
         <input
@@ -61,7 +61,7 @@ export default function LoginForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="password" className="text-sm font-medium text-white/70">
+        <label htmlFor="password" className="text-sm font-medium text-fg-muted">
           Password
         </label>
         <input
@@ -80,7 +80,7 @@ export default function LoginForm() {
       {error ? (
         <p
           role="alert"
-          className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+          className="rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger-fg"
         >
           {error}
         </p>
@@ -89,7 +89,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="mt-2 flex min-h-[48px] w-full items-center justify-center rounded-xl bg-sky-500 px-4 text-base font-semibold text-white shadow-[0_10px_30px_rgba(14,165,233,0.35)] transition hover:bg-sky-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/70 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-2 flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-4 text-base font-semibold text-primary-foreground shadow-[0_10px_30px_rgba(14,165,233,0.35)] transition hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPending ? "Signing in…" : "Sign in"}
       </button>

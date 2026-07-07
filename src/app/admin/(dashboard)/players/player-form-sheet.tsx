@@ -95,7 +95,7 @@ type SectionLabelProps = Readonly<{ children: string }>;
 
 function SectionLabel({ children }: SectionLabelProps) {
   return (
-    <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/50">
+    <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-fg-subtle">
       {children}
     </span>
   );
@@ -281,7 +281,7 @@ export function PlayerFormSheet({
             </div>
 
             {hasChanges ? (
-              <p className="text-center text-xs text-white/50">Unsaved changes</p>
+              <p className="text-center text-xs text-fg-subtle">Unsaved changes</p>
             ) : null}
 
             <div data-tour="player-save">

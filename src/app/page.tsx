@@ -35,7 +35,7 @@ export default async function Home() {
         />
       </div>
       <main className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-6 sm:px-6 lg:px-10 lg:pb-12 lg:pt-10">
-        <div className="rounded-[32px] border border-white/10 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.45)]  sm:p-6 lg:p-8">
+        <div className="rounded-[32px] border border-border p-4 shadow-[0_30px_90px_rgba(0,0,0,0.45)]  sm:p-6 lg:p-8">
           <div className="mt-6 flex flex-col gap-6">
             <section id="overview" className="scroll-mt-24">
               <ClubHeader

@@ -17,10 +17,10 @@ import type { PlayerFormValues, PlayerPosition } from "./schema";
  * card preview so the editor and the public card read as the same colour system.
  */
 export const POSITION_BADGE: Record<PlayerPosition, string> = {
-  GK: "bg-amber-400 text-[#061018]",
-  DF: "bg-violet-400 text-[#061018]",
-  MF: "bg-sky-400 text-[#061018]",
-  FW: "bg-emerald-400 text-[#061018]",
+  GK: "bg-pos-gk text-fg-inverse",
+  DF: "bg-pos-df text-fg-inverse",
+  MF: "bg-pos-mf text-fg-inverse",
+  FW: "bg-pos-fw text-fg-inverse",
 };
 
 type PositionValue = PlayerPosition | "";
@@ -36,32 +36,32 @@ const POSITION_OPTIONS: readonly PositionOption[] = [
   {
     value: "GK",
     label: "GK",
-    active: "border-transparent bg-amber-400 text-[#061018]",
-    idle: "border-amber-400/25 bg-amber-400/5 text-amber-200 hover:border-amber-400/50",
+    active: "border-transparent bg-pos-gk text-fg-inverse",
+    idle: "border-pos-gk/25 bg-pos-gk/5 text-pos-gk hover:border-pos-gk/50",
   },
   {
     value: "DF",
     label: "DF",
-    active: "border-transparent bg-violet-400 text-[#061018]",
-    idle: "border-violet-400/25 bg-violet-400/5 text-violet-200 hover:border-violet-400/50",
+    active: "border-transparent bg-pos-df text-fg-inverse",
+    idle: "border-pos-df/25 bg-pos-df/5 text-pos-df hover:border-pos-df/50",
   },
   {
     value: "MF",
     label: "MF",
-    active: "border-transparent bg-sky-400 text-[#061018]",
-    idle: "border-sky-400/25 bg-sky-400/5 text-sky-200 hover:border-sky-400/50",
+    active: "border-transparent bg-pos-mf text-fg-inverse",
+    idle: "border-pos-mf/25 bg-pos-mf/5 text-pos-mf hover:border-pos-mf/50",
   },
   {
     value: "FW",
     label: "FW",
-    active: "border-transparent bg-emerald-400 text-[#061018]",
-    idle: "border-emerald-400/25 bg-emerald-400/5 text-emerald-200 hover:border-emerald-400/50",
+    active: "border-transparent bg-pos-fw text-fg-inverse",
+    idle: "border-pos-fw/25 bg-pos-fw/5 text-pos-fw hover:border-pos-fw/50",
   },
   {
     value: "",
     label: "None",
-    active: "border-white/20 bg-white/15 text-white",
-    idle: "border-white/10 bg-white/5 text-white/60 hover:border-white/30",
+    active: "border-border-strong bg-glass-strong text-fg",
+    idle: "border-border bg-glass text-fg-muted hover:border-border-hover",
   },
 ];
 
@@ -77,7 +77,7 @@ function PositionPill({ option, active, onSelect }: PillProps) {
       type="button"
       aria-pressed={active}
       onClick={() => onSelect(option.value)}
-      className={`min-h-11 rounded-xl border text-xs font-bold uppercase tracking-wide transition outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70 ${
+      className={`min-h-11 rounded-xl border text-xs font-bold uppercase tracking-wide transition outline-none focus-visible:ring-2 focus-visible:ring-ring ${
         active ? option.active : option.idle
       }`}
     >

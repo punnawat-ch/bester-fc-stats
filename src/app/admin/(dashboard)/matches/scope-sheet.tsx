@@ -57,13 +57,13 @@ export function ScopeSheet({
             <Label
               key={option}
               htmlFor={`scope-${option}`}
-              className="flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-3 text-white"
+              className="flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-2xl border border-border bg-glass-xs px-4 py-3 text-fg"
             >
               <span className="flex items-center gap-3">
                 <RadioGroupItem id={`scope-${option}`} value={option} />
                 {SCOPE_LABELS[option]}
               </span>
-              <span className="font-mono text-xs text-white/50">
+              <span className="font-mono text-xs text-fg-subtle">
                 {counts[option]}
               </span>
             </Label>

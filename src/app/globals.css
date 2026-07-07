@@ -14,23 +14,38 @@
 }
 
 /*
- * shadcn/ui design tokens — re-themed to the dark stadium / glassmorphism
- * language used across the admin area (see docs/admin-ux-spec.md §3).
- * Admin is dark-only; these tokens map shadcn primitives (Button, Sheet,
- * Dialog, Input, Select, Card, Badge, Sonner, …) onto the same palette as the
- * hand-written public components. Public site components do not consume these
- * utilities, so they stay visually untouched.
+ * ============================================================================
+ * DESIGN TOKENS — see docs/theme-token-refactor-spec.md
+ * ----------------------------------------------------------------------------
+ * LAYER 1 (primitives): the brand seed lives in :root so it can be overridden
+ * per-club at runtime (Phase 2 injects `[data-theme="…"]` / inline style from
+ * the DB). Only BRAND tokens use this indirection — NEUTRAL/STATUS/PODIUM are
+ * fixed literals in Phase 1.
+ * ============================================================================
+ */
+:root {
+  /* Brand seed — default = sky accent. Phase 2 overrides these from the DB. */
+  --brand: rgb(56 189 248);
+  --brand-foreground: #08110c; /* auto-contrast ink that reads on --brand */
+  --brand-ring: rgb(56 189 248 / 0.6);
+}
+
+/*
+ * LAYER 2 (semantic): the ONLY layer components may reference. `@theme inline`
+ * makes utilities emit `var(--brand)` directly, so overriding --brand at
+ * runtime re-skins the whole app. NEUTRAL/STATUS/PODIUM stay literal (fixed).
+ * Keeps the existing shadcn primitive tokens working (Button, Select, …).
  */
 @theme inline {
+  /* --- shadcn primitives (kept; brand ones now point at the seed) --------- */
   --color-background: #08110c;
   --color-foreground: rgb(255 255 255);
   --color-card: #0a1222;
   --color-card-foreground: rgb(255 255 255);
   --color-popover: #0b1224;
   --color-popover-foreground: rgb(255 255 255);
-  /* primary = sky accent, on near-black ink so labels read on the fill */
-  --color-primary: rgb(56 189 248);
-  --color-primary-foreground: #08110c;
+  --color-primary: var(--brand);
+  --color-primary-foreground: var(--brand-foreground);
   --color-secondary: rgb(255 255 255 / 0.05);
   --color-secondary-foreground: rgb(255 255 255);
   --color-muted: rgb(255 255 255 / 0.05);
@@ -41,7 +56,63 @@
   --color-destructive-foreground: rgb(255 255 255);
   --color-border: rgb(255 255 255 / 0.1);
   --color-input: rgb(255 255 255 / 0.1);
-  --color-ring: rgb(56 189 248 / 0.6);
+  --color-ring: var(--brand-ring);
+
+  /* --- NEUTRAL: surfaces ------------------------------------------------- */
+  --color-surface: #08110c;
+  --color-panel: #0a1222;
+  --color-panel-2: #0b1224;
+  --color-glass-xs: rgb(255 255 255 / 0.02); /* faintest tint (below glass) */
+  --color-glass: rgb(255 255 255 / 0.05);
+  --color-glass-2: rgb(255 255 255 / 0.08);
+  --color-glass-3: rgb(255 255 255 / 0.1);
+  --color-glass-strong: rgb(255 255 255 / 0.15); /* stronger fill/hairline (between border & border-strong) */
+
+  /* --- NEUTRAL: text ----------------------------------------------------- */
+  --color-fg: rgb(255 255 255);
+  --color-fg-muted: rgb(255 255 255 / 0.6);
+  --color-fg-subtle: rgb(255 255 255 / 0.5);
+  --color-fg-inverse: #08110c;
+
+  /* --- NEUTRAL: border --------------------------------------------------- */
+  --color-border-strong: rgb(255 255 255 / 0.2);
+  --color-border-hover: rgb(255 255 255 / 0.3);
+
+  /* --- BRAND alias (semantic name for the accent) ------------------------ */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+
+  /* --- STATUS: fixed, carry meaning — never re-skin per club ------------- */
+  --color-success: rgb(52 211 153); /* emerald-400 */
+  --color-success-fg: rgb(209 250 229); /* emerald-100 */
+  --color-info: rgb(96 165 250); /* blue-400 */
+  --color-info-fg: rgb(219 234 254); /* blue-100 */
+  --color-warning: rgb(251 191 36); /* amber-400 */
+  --color-warning-fg: rgb(254 243 199); /* amber-100 */
+  --color-danger: rgb(251 113 133); /* rose-400 */
+  --color-danger-fg: rgb(254 205 211); /* rose-200 */
+
+  /* --- PODIUM: fixed, universal ------------------------------------------ */
+  --color-podium-gold: rgb(252 211 77); /* amber-300 — also MOTM/award accent */
+  --color-podium-silver: rgb(203 213 225); /* slate-300 */
+  --color-podium-bronze: rgb(253 186 116); /* orange-300 */
+
+  /* --- POSITION: fixed categorical legend (GK/DF/MF/FW) ------------------- */
+  --color-pos-gk: rgb(251 191 36); /* amber-400 */
+  --color-pos-df: rgb(167 139 250); /* violet-400 */
+  --color-pos-mf: rgb(56 189 248); /* sky-400 */
+  --color-pos-fw: rgb(52 211 153); /* emerald-400 */
+
+  /* --- misc neutral primitives ------------------------------------------- */
+  --color-scrim: rgb(0 0 0); /* overlay scrim — use with opacity, e.g. bg-scrim/25 */
+
+  /* --- shadows ----------------------------------------------------------- */
+  --shadow-panel: 0 20px 50px rgb(0 0 0 / 0.45);
+  --shadow-panel-sm: 0 16px 35px rgb(0 0 0 / 0.4);
+  --shadow-panel-lg: 0 22px 60px rgb(0 0 0 / 0.45);
+  --shadow-elevate-sm: 0 6px 18px rgb(0 0 0 / 0.35);
+  --shadow-elevate-md: 0 12px 24px rgb(0 0 0 / 0.35);
+  --shadow-elevate-lg: 0 12px 30px rgb(0 0 0 / 0.35);
 
   --radius-sm: 0.75rem;
   --radius-md: 1rem;

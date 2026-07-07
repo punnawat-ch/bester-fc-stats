@@ -124,8 +124,8 @@ type TimelineMatchCardProps = Readonly<{
 
 function TimelineMatchCard({ match, isNext, countdown }: TimelineMatchCardProps) {
   const cardTone = isNext
-    ? "border-emerald-400/40 bg-linear-to-br from-emerald-500/12 via-white/8 to-transparent ring-emerald-400/30"
-    : "border-white/10 bg-linear-to-br from-white/8 via-white/4 to-transparent ring-white/10";
+    ? "border-primary/40 bg-linear-to-br from-primary/12 via-glass-2 to-transparent ring-primary/30"
+    : "border-border bg-linear-to-br from-glass-2 via-glass to-transparent ring-border";
   const units = countdown
     ? [
         { label: "Days", value: countdown.days },
@@ -137,47 +137,47 @@ function TimelineMatchCard({ match, isNext, countdown }: TimelineMatchCardProps)
 
   return (
     <div
-      className={`rounded-2xl border px-4 py-3 shadow-[0_16px_35px_rgba(0,0,0,0.4)] ring-1 ${cardTone}`}
+      className={`rounded-2xl border px-4 py-3 shadow-panel-sm ring-1 ${cardTone}`}
     >
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+          <p className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
             {match.week} · {match.date}
           </p>
-          <p className="mt-1 text-base font-semibold text-white">
+          <p className="mt-1 text-base font-semibold text-fg">
             vs {match.opponent}
           </p>
         </div>
-        <div className="text-left text-sm text-white/70 sm:text-right">
+        <div className="text-left text-sm text-fg-muted sm:text-right">
           <div>
             {match.venue}
             {match.field ? ` · ${match.field}` : ""}
           </div>
           <div className="text-xs">{match.time}</div>
           {isNext && (
-            <span className="mt-2 inline-flex rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-emerald-100">
+            <span className="mt-2 inline-flex rounded-full border border-primary/40 bg-primary/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-primary">
               Next Match
             </span>
           )}
         </div>
       </div>
       {countdown && !countdown.isStarted && (
-        <div className="mt-3 grid grid-cols-4 gap-2 text-center text-[10px] uppercase tracking-[0.2em] text-white/70">
+        <div className="mt-3 grid grid-cols-4 gap-2 text-center text-[10px] uppercase tracking-[0.2em] text-fg-muted">
           {units.map((unit) => (
             <div
               key={unit.label}
-              className="rounded-xl border border-white/10 bg-white/5 px-2 py-2"
+              className="rounded-xl border border-border bg-glass px-2 py-2"
             >
-              <div className="text-base font-semibold text-white">
+              <div className="text-base font-semibold text-fg">
                 {String(unit.value).padStart(2, "0")}
               </div>
-              <div className="text-[10px] text-white/50">{unit.label}</div>
+              <div className="text-[10px] text-fg-subtle">{unit.label}</div>
             </div>
           ))}
         </div>
       )}
       {match.notes && (
-        <div className="mt-2 text-xs text-emerald-100/80">{match.notes}</div>
+        <div className="mt-2 text-xs text-success-fg/80">{match.notes}</div>
       )}
     </div>
   );
@@ -234,14 +234,14 @@ export default function MatchScheduleTimeline({
   };
 
   const chips = (
-    <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.24em] text-white/60">
-      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+    <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.24em] text-fg-muted">
+      <span className="rounded-full border border-border bg-glass px-3 py-1">
         {summary.totalMatches} matches
       </span>
-      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+      <span className="rounded-full border border-border bg-glass px-3 py-1">
         {summary.uniqueOpponents} opponents
       </span>
-      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+      <span className="rounded-full border border-border bg-glass px-3 py-1">
         {summary.venues} venues
       </span>
     </div>
@@ -251,11 +251,11 @@ export default function MatchScheduleTimeline({
     grouped.length > 0 ? (
       grouped.map((group) => (
         <motion.div key={group.month} className="space-y-3" variants={item}>
-          <div className="flex items-center gap-3 text-sm font-semibold text-white">
-            <span className="h-2 w-2 rounded-full bg-sky-300" />
+          <div className="flex items-center gap-3 text-sm font-semibold text-fg">
+            <span className="h-2 w-2 rounded-full bg-primary" />
             {group.month}
           </div>
-          <div className="space-y-3 border-l border-white/10 pl-4 sm:pl-5">
+          <div className="space-y-3 border-l border-border pl-4 sm:pl-5">
             {group.matches.map((match) => {
               const matchKey = `${match.date}-${match.opponent}-${match.time}`;
               const isNext = nextMatchKey === matchKey;
@@ -279,7 +279,7 @@ export default function MatchScheduleTimeline({
     ) : (
       <motion.div
         variants={item}
-        className="rounded-2xl border border-white/10 bg-white/5 px-4 py-8 text-center text-sm text-white/60"
+        className="rounded-2xl border border-border bg-glass px-4 py-8 text-center text-sm text-fg-muted"
       >
         No upcoming fixtures right now. Check back soon.
       </motion.div>
@@ -301,7 +301,7 @@ export default function MatchScheduleTimeline({
   return (
     <motion.section
       id="schedule"
-      className="glass-panel rounded-3xl border border-white/10 bg-[#0a1222]/80 px-5 py-5 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10 scroll-mt-24"
+      className="glass-panel rounded-3xl border border-border bg-panel/80 px-5 py-5 shadow-panel-lg ring-1 ring-border scroll-mt-24"
       variants={container}
       initial="hidden"
       whileInView="show"
@@ -312,10 +312,10 @@ export default function MatchScheduleTimeline({
         variants={item}
       >
         <div>
-          <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">
+          <p className="text-[10px] uppercase tracking-[0.32em] text-fg-subtle">
             Upcoming Fixtures
           </p>
-          <h3 className="text-lg font-semibold text-white">
+          <h3 className="text-lg font-semibold text-fg">
             Match Schedule Timeline
           </h3>
         </div>

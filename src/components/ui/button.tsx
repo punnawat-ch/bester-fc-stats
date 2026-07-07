@@ -10,20 +10,20 @@ import { cn } from "@/lib/utils";
  * Sizes keep tap targets >=44px (default h-11, lg h-12) for mobile.
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-2xl text-sm font-semibold transition outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#08110c] disabled:pointer-events-none disabled:opacity-60 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-2xl text-sm font-semibold transition outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:pointer-events-none disabled:opacity-60 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-sky-500/90 text-[#08110c] shadow-[0_12px_30px_rgba(0,0,0,0.35)] hover:bg-sky-400",
+          "bg-primary/90 text-primary-foreground shadow-elevate-lg hover:bg-primary",
         secondary:
-          "border border-white/10 bg-white/5 text-white hover:border-white/30",
+          "border border-border bg-glass text-fg hover:border-border-hover",
         destructive:
-          "border border-rose-400/30 bg-rose-500/15 text-rose-200 hover:bg-rose-500/25",
+          "border border-danger/30 bg-danger/15 text-danger-fg hover:bg-danger/25",
         outline:
-          "border border-white/10 bg-transparent text-white hover:bg-white/5",
-        ghost: "text-white hover:bg-white/5",
-        link: "text-sky-300 underline-offset-4 hover:underline",
+          "border border-border bg-transparent text-fg hover:bg-glass",
+        ghost: "text-fg hover:bg-glass",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-4",

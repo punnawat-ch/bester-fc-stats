@@ -43,8 +43,8 @@ function DetailRow({
   children,
 }: Readonly<{ icon: ReactNode; children: ReactNode }>) {
   return (
-    <div className="flex items-center gap-2.5 text-sm text-white/70">
-      <span className="text-white/50 [&_svg]:size-4" aria-hidden="true">
+    <div className="flex items-center gap-2.5 text-sm text-fg-muted">
+      <span className="text-fg-subtle [&_svg]:size-4" aria-hidden="true">
         {icon}
       </span>
       {children}
@@ -85,7 +85,7 @@ export function EventDetail({
       </div>
       <div className="flex flex-col gap-3">
         <StatusChip {...matchStatusKind(match.status, match.result)} />
-        <p className="text-lg font-semibold text-white">vs {match.opponent}</p>
+        <p className="text-lg font-semibold text-fg">vs {match.opponent}</p>
         <div className="flex flex-col gap-2">
           <DetailRow icon={<CalendarDays />}>
             {longDateLabel(match.y, match.m, match.d)}
@@ -118,7 +118,7 @@ export function EventDetail({
               size="lg"
               data-tour="match-mark-played"
               onClick={() => setMarking(true)}
-              className="bg-emerald-500/90 text-[#08110c] hover:bg-emerald-400"
+              className="bg-success/90 text-fg-inverse hover:bg-success"
             >
               <CheckCircle2 aria-hidden="true" />
               Mark as played
@@ -190,7 +190,7 @@ function MarkPlayedForm({ match, onCancel, onMarkPlayed }: MarkPlayedFormProps) 
       }}
       className="flex flex-col gap-4"
     >
-      <p className="text-sm text-white/60">
+      <p className="text-sm text-fg-muted">
         Enter the final score for the match vs {match.opponent}.
       </p>
       <div className="grid grid-cols-2 gap-4">
@@ -221,7 +221,7 @@ function MarkPlayedForm({ match, onCancel, onMarkPlayed }: MarkPlayedFormProps) 
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium text-white/70">Result</span>
+        <span className="text-sm font-medium text-fg-muted">Result</span>
         <div
           role="group"
           aria-label="Result"
@@ -239,7 +239,7 @@ function MarkPlayedForm({ match, onCancel, onMarkPlayed }: MarkPlayedFormProps) 
             </Button>
           ))}
         </div>
-        <p className="text-xs text-white/50">
+        <p className="text-xs text-fg-subtle">
           Auto-derived from the score; tap to override.
         </p>
       </div>

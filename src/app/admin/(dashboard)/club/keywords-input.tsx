@@ -63,14 +63,14 @@ export function KeywordsInput({
         <ul className="flex flex-wrap gap-2" aria-label="Current keywords">
           {value.map((keyword) => (
             <li key={keyword}>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 py-1 pr-1 pl-3 text-sm text-white ring-1 ring-white/10">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-glass py-1 pr-1 pl-3 text-sm text-fg ring-1 ring-border">
                 {keyword}
                 <button
                   type="button"
                   onClick={() => removeKeyword(keyword)}
                   disabled={disabled}
                   aria-label={`Remove ${keyword}`}
-                  className="flex size-6 items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-sky-400/70 focus-visible:outline-none disabled:opacity-60"
+                  className="flex size-6 items-center justify-center rounded-full text-fg-muted transition hover:bg-glass-3 hover:text-fg focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-60"
                 >
                   <X className="size-3.5" aria-hidden="true" />
                 </button>

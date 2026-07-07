@@ -13,12 +13,12 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        neutral: "border-white/15 bg-white/5 text-white ring-white/15",
+        neutral: "border-glass-strong bg-glass text-fg ring-glass-strong",
         success:
-          "border-emerald-400/30 bg-emerald-500/15 text-emerald-200 ring-emerald-400/30",
-        info: "border-blue-400/30 bg-blue-500/15 text-blue-100 ring-blue-400/30",
+          "border-success/30 bg-success/15 text-success-fg ring-success/30",
+        info: "border-info/30 bg-info/15 text-info-fg ring-info/30",
         danger:
-          "border-rose-400/30 bg-rose-500/15 text-rose-200 ring-rose-400/30",
+          "border-danger/30 bg-danger/15 text-danger-fg ring-danger/30",
       },
     },
     defaultVariants: {

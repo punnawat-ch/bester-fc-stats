@@ -118,7 +118,7 @@ export function EventForm({
                 <div className="flex items-center gap-2">
                   <span
                     aria-hidden="true"
-                    className="font-mono text-sm text-white/50"
+                    className="font-mono text-sm text-fg-subtle"
                   >
                     vs
                   </span>
@@ -171,7 +171,7 @@ export function EventForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor="match-venue" className="gap-2">
-                  <MapPin className="size-4 text-white/60" aria-hidden="true" />
+                  <MapPin className="size-4 text-fg-muted" aria-hidden="true" />
                   Venue
                 </FormLabel>
                 <FormControl>
@@ -209,7 +209,7 @@ export function EventForm({
                   id="match-notes"
                   rows={2}
                   placeholder="Optional notes"
-                  className="rounded-2xl border-white/10 bg-[#0b1224]/60 text-white"
+                  className="rounded-2xl border-border bg-panel-2/60 text-fg"
                   {...field}
                 />
               </FormControl>
@@ -242,7 +242,7 @@ function TimeRangeFields() {
         render={({ field }) => (
           <FormItem className="flex-row items-center justify-between gap-3">
             <FormLabel className="gap-2">
-              <Clock className="size-4 text-white/60" aria-hidden="true" />
+              <Clock className="size-4 text-fg-muted" aria-hidden="true" />
               All-day / TBD time
             </FormLabel>
             <FormControl>
@@ -322,7 +322,7 @@ function MatchweekField() {
       render={({ field }) => (
         <FormItem>
           <FormLabel htmlFor="match-week" className="gap-2">
-            <Hash className="size-4 text-white/60" aria-hidden="true" />
+            <Hash className="size-4 text-fg-muted" aria-hidden="true" />
             Matchweek
           </FormLabel>
           <FormControl>

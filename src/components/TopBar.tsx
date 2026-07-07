@@ -30,7 +30,7 @@ export default function TopBar({
   const facebookHref = facebookUrl ?? DEFAULT_FACEBOOK_URL;
 
   return (
-    <header className="relative w-full rounded-2xl border border-white/10 bg-[#0b1224]/60 px-4 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.45)] ring-1 ring-white/10 backdrop-blur-2xl sm:px-6">
+    <header className="relative w-full rounded-2xl border border-border bg-panel-2/60 px-4 py-3 shadow-panel ring-1 ring-border backdrop-blur-2xl sm:px-6">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-3">
           <Image
@@ -40,15 +40,15 @@ export default function TopBar({
             height={36}
             className="h-9 w-9 rounded-lg bg-white/90 p-1"
           />
-          <div className="text-sm font-semibold text-white">{shortName}</div>
+          <div className="text-sm font-semibold text-fg">{shortName}</div>
         </div>
 
-        <nav className="hidden items-center gap-2 text-sm text-white/70 md:flex">
+        <nav className="hidden items-center gap-2 text-sm text-fg-muted md:flex">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-[0.24em] transition hover:border-white/30 hover:text-white"
+              className="rounded-full border border-border px-3 py-1 text-xs uppercase tracking-[0.24em] transition hover:border-border-hover hover:text-fg"
             >
               {item.label}
             </a>
@@ -58,7 +58,7 @@ export default function TopBar({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${shortName} on Facebook`}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:border-white/30 hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-glass text-fg-muted transition hover:border-border-hover hover:text-fg"
           >
             <svg
               viewBox="0 0 24 24"
@@ -73,7 +73,7 @@ export default function TopBar({
 
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/80 transition hover:border-white/30 hover:text-white md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-glass text-fg-muted transition hover:border-border-hover hover:text-fg md:hidden"
           onClick={() => setIsOpen((open) => !open)}
           aria-label="Toggle menu"
           aria-expanded={isOpen}
@@ -83,13 +83,13 @@ export default function TopBar({
       </div>
 
       {isOpen && (
-        <div className="mt-3 border-t border-white/10 pt-3 md:hidden">
-          <nav className="flex flex-col gap-2 text-sm text-white/70">
+        <div className="mt-3 border-t border-border pt-3 md:hidden">
+          <nav className="flex flex-col gap-2 text-sm text-fg-muted">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs uppercase tracking-[0.24em] transition hover:border-white/30 hover:text-white"
+                className="rounded-xl border border-border bg-glass px-4 py-3 text-xs uppercase tracking-[0.24em] transition hover:border-border-hover hover:text-fg"
                 onClick={() => setIsOpen(false)}
               >
                 {item.label}
@@ -99,7 +99,7 @@ export default function TopBar({
               href={facebookHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs uppercase tracking-[0.24em] text-white/80 transition hover:border-white/30 hover:text-white"
+              className="flex items-center justify-center gap-2 rounded-xl border border-border bg-glass px-4 py-3 text-xs uppercase tracking-[0.24em] text-fg-muted transition hover:border-border-hover hover:text-fg"
               onClick={() => setIsOpen(false)}
             >
               <svg

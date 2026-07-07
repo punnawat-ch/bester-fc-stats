@@ -27,11 +27,11 @@ export type StatFieldName =
 export type StatTone = "emerald" | "sky" | "amber" | "rose" | "neutral";
 
 const TONE_VALUE: Record<StatTone, string> = {
-  emerald: "text-emerald-300",
-  sky: "text-sky-300",
-  amber: "text-amber-300",
-  rose: "text-rose-300",
-  neutral: "text-white",
+  emerald: "text-success",
+  sky: "text-primary",
+  amber: "text-warning",
+  rose: "text-danger",
+  neutral: "text-fg",
 };
 
 function clampInt(value: number): number {
@@ -52,7 +52,7 @@ function StepButton({ icon, label, onClick, disabled = false }: StepButtonProps)
       aria-label={label}
       onClick={onClick}
       disabled={disabled}
-      className="grid size-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-white outline-none transition hover:border-white/30 focus-visible:ring-2 focus-visible:ring-sky-400/70 disabled:opacity-40"
+      className="grid size-11 shrink-0 place-items-center rounded-xl border border-border bg-glass text-fg outline-none transition hover:border-border-hover focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
     >
       {icon}
     </button>
@@ -79,8 +79,8 @@ export function StatTileField({ control, name, label, tone }: StatTileFieldProps
       render={({ field }) => {
         const current = clampInt(Number(field.value));
         return (
-          <FormItem className="gap-1.5 rounded-2xl border border-white/10 bg-white/5 p-3">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/50">
+          <FormItem className="gap-1.5 rounded-2xl border border-border bg-glass p-3">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-fg-subtle">
               {label}
             </span>
             <div className="flex items-center justify-between gap-2">

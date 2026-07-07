@@ -63,7 +63,7 @@ export default async function AdminDashboardPage() {
       <FeatureTour featureKey="welcome" />
 
       <section aria-label="Form" className="flex flex-col gap-3">
-        <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+        <p className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
           Form
         </p>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -79,7 +79,7 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section aria-label="Goals and squad" className="flex flex-col gap-3">
-        <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+        <p className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
           Goals &amp; squad
         </p>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5">
@@ -131,7 +131,7 @@ export default async function AdminDashboardPage() {
       </Card>
 
       <section aria-label="Quick actions" className="flex flex-col gap-3">
-        <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+        <p className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
           Quick actions
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">

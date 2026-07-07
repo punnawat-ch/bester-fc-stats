@@ -41,7 +41,7 @@ export default function ClubHeader({
 
   return (
     <motion.header
-      className="relative overflow-hidden rounded-3xl px-6 py-6 text-white "
+      className="relative overflow-hidden rounded-3xl px-6 py-6 text-fg "
       variants={container}
       initial="hidden"
       whileInView="show"
@@ -50,14 +50,14 @@ export default function ClubHeader({
       <div className="pointer-events-none absolute inset-0 " />
       <div className="relative flex flex-col gap-4">
         <motion.div
-          className="hidden flex-wrap items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-white/60 md:flex"
+          className="hidden flex-wrap items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-fg-muted md:flex"
           variants={item}
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1">
-            <span className="h-2 w-2 rounded-full bg-sky-300" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-glass px-4 py-1">
+            <span className="h-2 w-2 rounded-full bg-primary" />
             Live Ranking
           </span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1">
+          <span className="rounded-full border border-border bg-glass px-4 py-1">
             Matchday Board
           </span>
         </motion.div>
@@ -70,24 +70,24 @@ export default function ClubHeader({
               alt={`${shortName} crest`}
               width={200}
               height={200}
-              className="h-28 w-28 rounded-2xl border border-white/60 bg-white/5 p-1 shadow-[0_12px_24px_rgba(0,0,0,0.35)]"
+              className="h-28 w-28 rounded-2xl border border-primary/60 bg-glass p-1 shadow-elevate-md"
               priority
             />
             <div className="flex flex-col gap-2">
 
         <div>
-          <h1 className="text-2xl font-semibold text-center tracking-tight text-white sm:text-3xl md:text-left">
+          <h1 className="text-2xl font-semibold text-center tracking-tight text-fg sm:text-3xl md:text-left">
             {clubName}
           </h1>
-          <p className="mt-1 text-xs text-white/60 text-center md:text-left">
+          <p className="mt-1 text-xs text-fg-muted text-center md:text-left">
             Recorded on {formattedDate}
           </p>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-medium text-white/80 md:justify-start">
-          <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1">
+        <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-medium text-fg-muted md:justify-start">
+          <span className="rounded-full border border-border bg-glass-3 px-3 py-1">
             {matchSummary}
           </span>
-          <span className="hidden text-white/60 md:block">
+          <span className="hidden text-fg-muted md:block">
             Visual priority: Goals → Assists → Clean sheets
           </span>
         </div>

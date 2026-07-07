@@ -26,21 +26,21 @@ export function EmptyState({
   action,
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-10 text-center">
+    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-glass-xs px-6 py-10 text-center">
       {icon ? (
-        <div className="flex size-12 items-center justify-center rounded-full bg-white/5 text-white/50 [&_svg]:size-6">
+        <div className="flex size-12 items-center justify-center rounded-full bg-glass text-fg-subtle [&_svg]:size-6">
           {icon}
         </div>
       ) : null}
       {eyebrow ? (
-        <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+        <p className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
           {eyebrow}
         </p>
       ) : null}
       <div className="flex flex-col gap-1">
-        <p className="text-base font-semibold text-white">{title}</p>
+        <p className="text-base font-semibold text-fg">{title}</p>
         {description ? (
-          <p className="text-sm text-white/60">{description}</p>
+          <p className="text-sm text-fg-muted">{description}</p>
         ) : null}
       </div>
       {action ? <div className="mt-1">{action}</div> : null}

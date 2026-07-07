@@ -25,12 +25,12 @@ export function TutorialToggle({ initialEnabled }: TutorialToggleProps) {
   }
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+    <div className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-glass-xs p-4">
       <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="text-sm font-semibold text-white">
+        <span className="text-sm font-semibold text-fg">
           เปิด/ปิด tutorial อัตโนมัติ
         </span>
-        <span className="text-xs text-white/50">
+        <span className="text-xs text-fg-subtle">
           เมื่อเปิด ระบบจะเล่นทัวร์แนะนำให้อัตโนมัติเมื่อเข้าหน้าใหม่ครั้งแรก
         </span>
       </div>

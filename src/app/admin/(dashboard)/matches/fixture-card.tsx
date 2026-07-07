@@ -32,22 +32,22 @@ export function FixtureCard({ match, onSelect }: FixtureCardProps) {
       type="button"
       data-tour="match-item"
       onClick={() => onSelect(match)}
-      className="flex w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-linear-to-br from-white/8 via-white/4 to-transparent p-4 text-left shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition hover:border-white/25 focus-visible:ring-2 focus-visible:ring-sky-400/70 focus-visible:outline-none"
+      className="flex w-full items-center justify-between gap-3 rounded-2xl border border-border bg-linear-to-br from-glass-2 via-glass to-transparent p-4 text-left shadow-elevate-lg transition hover:border-border-hover focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     >
       <div className="flex min-w-0 flex-col gap-1">
-        <span className="flex items-center gap-2 font-mono text-xs text-white/60">
+        <span className="flex items-center gap-2 font-mono text-xs text-fg-muted">
           <CalendarDays className="size-3.5 shrink-0" aria-hidden="true" />
           {longDateLabel(match.y, match.m, match.d)}
           {match.kickoff ? ` · ${match.kickoff}` : " · TBD"}
         </span>
-        <span className="truncate text-sm font-semibold text-white">
+        <span className="truncate text-sm font-semibold text-fg">
           vs {match.opponent}
           {score ? (
-            <span className="ml-2 font-mono text-white/70">{score}</span>
+            <span className="ml-2 font-mono text-fg-muted">{score}</span>
           ) : null}
         </span>
         {location ? (
-          <span className="flex items-center gap-1.5 truncate text-xs text-white/50">
+          <span className="flex items-center gap-1.5 truncate text-xs text-fg-subtle">
             <MapPin className="size-3.5 shrink-0" aria-hidden="true" />
             {location}
           </span>

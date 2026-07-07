@@ -19,13 +19,13 @@ function Toaster(props: ToasterProps) {
       toastOptions={{
         classNames: {
           toast:
-            "group rounded-2xl border border-white/10 bg-[#0b1224]/95 text-white shadow-[0_20px_50px_rgba(0,0,0,0.45)] ring-1 ring-white/10 backdrop-blur-2xl",
-          description: "text-white/60",
-          actionButton: "rounded-xl bg-sky-500/90 text-[#08110c]",
-          cancelButton: "rounded-xl bg-white/5 text-white",
-          success: "text-emerald-200",
-          error: "text-rose-200",
-          info: "text-blue-100",
+            "group rounded-2xl border border-border bg-panel-2/95 text-fg shadow-panel ring-1 ring-border backdrop-blur-2xl",
+          description: "text-fg-muted",
+          actionButton: "rounded-xl bg-primary/90 text-primary-foreground",
+          cancelButton: "rounded-xl bg-glass text-fg",
+          success: "text-success-fg",
+          error: "text-danger-fg",
+          info: "text-info-fg",
         },
       }}
       style={

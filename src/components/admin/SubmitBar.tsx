@@ -34,8 +34,8 @@ type SubmitBarProps = Readonly<{
 
 const CONTAINER_CLASS: Record<SubmitBarVariant, string> = {
   sheet:
-    "pb-safe sticky bottom-0 -mx-5 -mb-5 border-t border-white/10 bg-[#0a1222] px-5 pt-3 pb-4 shadow-[0_-10px_28px_rgba(0,0,0,0.55)]",
-  page: "mt-4 border-t border-white/10 pt-4",
+    "pb-safe sticky bottom-0 -mx-5 -mb-5 border-t border-border bg-panel px-5 pt-3 pb-4 shadow-[0_-10px_28px_rgba(0,0,0,0.55)]",
+  page: "mt-4 border-t border-border pt-4",
 };
 
 export function SubmitBar({

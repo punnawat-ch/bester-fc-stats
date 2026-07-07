@@ -64,7 +64,7 @@ export function DateField({ id, value, onChange, min, invalid }: DateFieldProps)
           aria-invalid={invalid}
           className="h-12 w-full justify-start font-normal"
         >
-          <CalendarDays className="text-white/60" aria-hidden="true" />
+          <CalendarDays className="text-fg-muted" aria-hidden="true" />
           {selected ? (
             longDateLabel(
               selected.getFullYear(),
@@ -72,13 +72,13 @@ export function DateField({ id, value, onChange, min, invalid }: DateFieldProps)
               selected.getDate(),
             )
           ) : (
-            <span className="text-white/40">Pick a date</span>
+            <span className="text-fg-subtle">Pick a date</span>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="w-auto border-white/10 bg-[#0b1224]/95 p-2 text-white ring-1 ring-white/10 backdrop-blur-2xl"
+        className="w-auto border-border bg-panel-2/95 p-2 text-fg ring-1 ring-border backdrop-blur-2xl"
       >
         <Calendar
           mode="single"

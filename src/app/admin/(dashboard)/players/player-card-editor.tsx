@@ -42,7 +42,7 @@ function CardFigure({ name, imageUrl }: FigureProps) {
 
   return (
     <div className="absolute inset-0 grid place-items-center">
-      <span className="text-[44px] font-extrabold tracking-tight text-white/15">
+      <span className="text-[44px] font-extrabold tracking-tight text-fg/15">
         {monogram(name)}
       </span>
     </div>
@@ -183,7 +183,7 @@ export function PlayerCardEditor({
     <div className="flex flex-col gap-3">
       <div
         data-tour="player-card-preview"
-        className={`relative mx-auto aspect-[3/4] w-44 overflow-hidden rounded-2xl border border-white/10 shadow-[0_22px_60px_rgba(0,0,0,0.5)] ${
+        className={`relative mx-auto aspect-[3/4] w-44 overflow-hidden rounded-2xl border border-border shadow-panel-lg ${
           celebrate ? "squad-celebrate" : ""
         }`}
       >
@@ -207,25 +207,25 @@ export function PlayerCardEditor({
         ) : null}
 
         {overlayBusy ? (
-          <div className="absolute inset-0 grid place-items-center bg-black/45">
-            <Loader2 className="size-6 animate-spin text-sky-200" />
+          <div className="absolute inset-0 grid place-items-center bg-scrim/45">
+            <Loader2 className="size-6 animate-spin text-primary" />
           </div>
         ) : null}
 
         <div className="absolute inset-x-3 bottom-3">
           <div className="flex items-end justify-between gap-2">
             <div className="min-w-0">
-              <div className="truncate text-sm font-extrabold leading-none tracking-tight text-white">
+              <div className="truncate text-sm font-extrabold leading-none tracking-tight text-fg">
                 {displayName}
               </div>
               {nickname.trim() === "" ? null : (
-                <div className="mt-1 truncate text-[10px] tracking-wide text-white/60">
+                <div className="mt-1 truncate text-[10px] tracking-wide text-fg-muted">
                   {nickname}
                 </div>
               )}
             </div>
             {jerseyNumber === null ? null : (
-              <div className="text-[28px] font-extrabold leading-[0.8] tabular-nums text-white/90 [text-shadow:0_2px_18px_rgba(56,189,248,0.5)]">
+              <div className="text-[28px] font-extrabold leading-[0.8] tabular-nums text-fg/90 [text-shadow:0_2px_18px_rgba(56,189,248,0.5)]">
                 {jerseyNumber}
               </div>
             )}
@@ -236,16 +236,16 @@ export function PlayerCardEditor({
       {editable ? (
         <div className="flex flex-col gap-2">
           {busy === "processing" ? (
-            <p className="flex items-center justify-center gap-2 text-center text-xs text-sky-200">
+            <p className="flex items-center justify-center gap-2 text-center text-xs text-primary">
               <Loader2 className="size-4 animate-spin" />
               {processingLabel}
             </p>
           ) : null}
           {warning ? (
-            <p className="text-center text-xs text-amber-300">{warning}</p>
+            <p className="text-center text-xs text-warning">{warning}</p>
           ) : null}
           {error ? (
-            <p className="text-center text-xs text-rose-300">{error}</p>
+            <p className="text-center text-xs text-danger">{error}</p>
           ) : null}
 
           {pending ? (
@@ -277,7 +277,7 @@ export function PlayerCardEditor({
           )}
         </div>
       ) : (
-        <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center text-xs text-white/50">
+        <p className="rounded-xl border border-border bg-glass px-3 py-2 text-center text-xs text-fg-subtle">
           Save the player first, then reopen to add a photo.
         </p>
       )}
@@ -295,7 +295,7 @@ function EditPhotoButton({ disabled, onFile }: EditPhotoButtonProps) {
   return (
     <label
       data-tour="player-photo"
-      className={`absolute right-2.5 top-2.5 grid size-11 place-items-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur transition hover:bg-black/65 focus-within:ring-2 focus-within:ring-sky-400/70 ${
+      className={`absolute right-2.5 top-2.5 grid size-11 place-items-center rounded-full border border-glass-strong bg-scrim/45 text-fg backdrop-blur transition hover:bg-scrim/65 focus-within:ring-2 focus-within:ring-ring ${
         disabled ? "pointer-events-none opacity-50" : "cursor-pointer"
       }`}
     >
@@ -356,7 +356,7 @@ type CameraButtonProps = Readonly<{
 function CameraButton({ disabled, onFile }: CameraButtonProps) {
   return (
     <label
-      className={`inline-flex h-11 items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 text-sm font-semibold text-white transition hover:border-white/30 focus-within:ring-2 focus-within:ring-sky-400/70 ${
+      className={`inline-flex h-11 items-center gap-2 rounded-2xl border border-border bg-glass px-4 text-sm font-semibold text-fg transition hover:border-border-hover focus-within:ring-2 focus-within:ring-ring ${
         disabled ? "pointer-events-none opacity-60" : "cursor-pointer"
       }`}
     >

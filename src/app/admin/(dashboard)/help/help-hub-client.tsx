@@ -61,15 +61,15 @@ function HelpEntryCard({ entry }: HelpEntryCardProps) {
   return (
     <details
       id={entry.key}
-      className="scroll-mt-20 rounded-2xl border border-white/10 bg-white/[0.03]"
+      className="scroll-mt-20 rounded-2xl border border-border bg-glass"
     >
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold text-fg outline-none focus-visible:ring-2 focus-visible:ring-ring">
         {entry.title}
-        <span className="text-xs font-normal text-white/40">
+        <span className="text-xs font-normal text-fg-subtle">
           {entry.sections.length} หัวข้อ
         </span>
       </summary>
-      <div className="flex flex-col gap-4 border-t border-white/10 px-4 py-4">
+      <div className="flex flex-col gap-4 border-t border-border px-4 py-4">
         {hasTour ? (
           <Button
             type="button"
@@ -85,10 +85,10 @@ function HelpEntryCard({ entry }: HelpEntryCardProps) {
         <div className="flex flex-col gap-4">
           {entry.sections.map((section) => (
             <section key={section.heading} className="flex flex-col gap-1.5">
-              <h3 className="text-sm font-semibold text-white">
+              <h3 className="text-sm font-semibold text-fg">
                 {section.heading}
               </h3>
-              <div className="text-sm leading-relaxed text-white/70 [&_b]:font-semibold [&_b]:text-white">
+              <div className="text-sm leading-relaxed text-fg-muted [&_b]:font-semibold [&_b]:text-fg">
                 {section.body}
               </div>
             </section>
@@ -157,7 +157,7 @@ export function HelpHubClient() {
 
       <div className="relative">
         <Search
-          className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-white/40"
+          className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-fg-subtle"
           aria-hidden="true"
         />
         <Input
@@ -178,7 +178,7 @@ export function HelpHubClient() {
           ))}
         </div>
       ) : (
-        <p className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-6 text-center text-sm text-white/50">
+        <p className="rounded-2xl border border-border bg-glass px-4 py-6 text-center text-sm text-fg-subtle">
           ไม่พบผลการค้นหาสำหรับ “{query}”
         </p>
       )}

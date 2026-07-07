@@ -48,7 +48,7 @@ const PITCH_STYLE = {
 function PitchPreview({ src }: Readonly<{ src: string | null }>) {
   return (
     <div
-      className="relative mx-auto aspect-[3/4] w-44 overflow-hidden rounded-2xl border border-white/10 ring-1 ring-white/10"
+      className="relative mx-auto aspect-[3/4] w-44 overflow-hidden rounded-2xl border border-border ring-1 ring-border"
       style={PITCH_STYLE}
       role="img"
       aria-label="Card preview"
@@ -61,7 +61,7 @@ function PitchPreview({ src }: Readonly<{ src: string | null }>) {
           className="absolute inset-x-0 bottom-0 mx-auto max-h-[88%] w-auto object-contain drop-shadow-[0_18px_20px_rgba(0,0,0,0.55)]"
         />
       ) : (
-        <UserRound className="absolute inset-0 m-auto size-16 text-white/25" />
+        <UserRound className="absolute inset-0 m-auto size-16 text-fg-subtle" />
       )}
     </div>
   );
@@ -74,11 +74,11 @@ function PlainPreview({
   if (src == null) {
     return (
       <div
-        className="flex h-40 w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5 ring-1 ring-white/10"
+        className="flex h-40 w-full items-center justify-center rounded-2xl border border-border bg-glass ring-1 ring-border"
         role="img"
         aria-label={`${label} (empty)`}
       >
-        <ImageOff className="size-8 text-white/30" />
+        <ImageOff className="size-8 text-fg-subtle" />
       </div>
     );
   }
@@ -87,7 +87,7 @@ function PlainPreview({
     <img
       src={src}
       alt={label}
-      className="h-40 w-full rounded-2xl border border-white/10 bg-white/5 object-contain ring-1 ring-white/10"
+      className="h-40 w-full rounded-2xl border border-border bg-glass object-contain ring-1 ring-border"
     />
   );
 }
@@ -201,9 +201,9 @@ export function ImageUpload({
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-white">{label}</span>
+          <span className="text-sm font-medium text-fg">{label}</span>
           {description ? (
-            <span className="text-xs text-white/50">{description}</span>
+            <span className="text-xs text-fg-subtle">{description}</span>
           ) : null}
         </div>
       </div>
@@ -215,13 +215,13 @@ export function ImageUpload({
       )}
 
       {busy === "processing" ? (
-        <p className="flex items-center gap-2 text-xs text-sky-200">
+        <p className="flex items-center gap-2 text-xs text-primary">
           <Loader2 className="size-4 animate-spin" />
           {processingLabel}
         </p>
       ) : null}
-      {warning ? <p className="text-xs text-amber-300">{warning}</p> : null}
-      {error ? <p className="text-xs text-rose-300">{error}</p> : null}
+      {warning ? <p className="text-xs text-warning">{warning}</p> : null}
+      {error ? <p className="text-xs text-danger">{error}</p> : null}
 
       <div className="flex flex-wrap gap-2">
         {pending ? (

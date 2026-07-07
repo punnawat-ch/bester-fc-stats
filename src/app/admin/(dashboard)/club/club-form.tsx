@@ -62,15 +62,15 @@ function FormSection({
   return (
     <section className="flex flex-col gap-4" data-tour={tourId}>
       <div className="flex flex-col gap-1">
-        <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+        <p className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
           {eyebrow}
         </p>
-        <h2 className="text-lg font-semibold tracking-tight text-white">
+        <h2 className="text-lg font-semibold tracking-tight text-fg">
           {title}
         </h2>
-        <p className="text-sm text-white/60">{description}</p>
+        <p className="text-sm text-fg-muted">{description}</p>
       </div>
-      <Separator className="bg-white/10" />
+      <Separator className="bg-glass-3" />
       <div className="flex flex-col gap-5">{children}</div>
     </section>
   );
@@ -82,7 +82,7 @@ function SoftCounter({ current, soft }: CounterProps) {
   const over = current > soft;
   return (
     <span
-      className={over ? "font-mono text-amber-300" : "font-mono text-white/50"}
+      className={over ? "font-mono text-warning" : "font-mono text-fg-subtle"}
     >
       {current}/{soft}
     </span>
@@ -104,7 +104,7 @@ function ThemeColorField({ field }: ThemeColorFieldProps) {
         aria-label="Theme color picker"
         value={swatch}
         onChange={(event) => field.onChange(event.target.value)}
-        className="size-12 shrink-0 cursor-pointer rounded-2xl border border-white/10 bg-transparent"
+        className="size-12 shrink-0 cursor-pointer rounded-2xl border border-border bg-transparent"
       />
       <Input
         {...field}
@@ -331,7 +331,7 @@ export function ClubForm({ initialValues }: ClubFormProps) {
                   <Textarea
                     {...field}
                     rows={3}
-                    className="min-h-24 rounded-2xl border-white/10 bg-[#0b1224]/60 px-4 py-3 text-base text-white"
+                    className="min-h-24 rounded-2xl border-border bg-panel-2/60 px-4 py-3 text-base text-fg"
                     placeholder="Official Bester FC dashboard…"
                   />
                 </FormControl>

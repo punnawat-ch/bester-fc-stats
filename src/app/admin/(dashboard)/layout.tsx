@@ -39,7 +39,7 @@ export default async function AdminDashboardLayout({
       tutorialEnabled={tutorialEnabled}
       toursSeen={toursSeen}
     >
-      <div className="admin-ambient min-h-dvh text-white">
+      <div className="admin-ambient min-h-dvh text-fg">
         <AdminSidebar role={role} />
 
         <div className="flex min-h-dvh flex-col md:ml-64">

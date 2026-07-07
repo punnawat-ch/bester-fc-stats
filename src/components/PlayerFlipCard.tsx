@@ -14,10 +14,10 @@ const FIGURE_SIZES = "(min-width: 1024px) 280px, (min-width: 640px) 30vw, 45vw";
 
 // Front position badge: GK amber / DF violet / MF sky / FW emerald.
 const POSITION_BADGE: Record<PlayerPosition, string> = {
-  GK: "bg-amber-400 text-[#061018]",
-  DF: "bg-violet-400 text-[#061018]",
-  MF: "bg-sky-400 text-[#061018]",
-  FW: "bg-emerald-400 text-[#061018]",
+  GK: "bg-pos-gk text-fg-inverse",
+  DF: "bg-pos-df text-fg-inverse",
+  MF: "bg-pos-mf text-fg-inverse",
+  FW: "bg-pos-fw text-fg-inverse",
 };
 
 function monogram(name: string): string {
@@ -50,7 +50,7 @@ function PlayerFigure({ name, imageUrl }: PlayerFigureProps) {
 
   return (
     <div className="absolute inset-0 grid place-items-center">
-      <span className="text-[52px] font-extrabold tracking-tight text-white/15">
+      <span className="text-[52px] font-extrabold tracking-tight text-fg/15">
         {monogram(name)}
       </span>
     </div>
@@ -63,10 +63,10 @@ type StatTileProps = Readonly<{
   valueClass?: string;
 }>;
 
-function StatTile({ label, value, valueClass = "text-white" }: StatTileProps) {
+function StatTile({ label, value, valueClass = "text-fg" }: StatTileProps) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 px-2.5 py-2 backdrop-blur">
-      <div className="text-[9.5px] uppercase tracking-[0.14em] text-white/40">
+    <div className="rounded-xl border border-border bg-glass px-2.5 py-2 backdrop-blur">
+      <div className="text-[9.5px] uppercase tracking-[0.14em] text-fg-subtle">
         {label}
       </div>
       <div
@@ -86,15 +86,15 @@ type BackStat = Readonly<{
 
 function keeperPrimaryTiles(player: SquadPlayer): BackStat[] {
   return [
-    { label: "Clean sheets", value: player.cleanSheets, valueClass: "text-emerald-300" },
-    { label: "Saves", value: player.saves, valueClass: "text-sky-300" },
+    { label: "Clean sheets", value: player.cleanSheets, valueClass: "text-success" },
+    { label: "Saves", value: player.saves, valueClass: "text-primary" },
   ];
 }
 
 function outfieldPrimaryTiles(player: SquadPlayer): BackStat[] {
   return [
-    { label: "Goals", value: player.goals, valueClass: "text-emerald-300" },
-    { label: "Assists", value: player.assists, valueClass: "text-sky-300" },
+    { label: "Goals", value: player.goals, valueClass: "text-success" },
+    { label: "Assists", value: player.assists, valueClass: "text-primary" },
   ];
 }
 
@@ -105,7 +105,7 @@ function buildStatTiles(player: SquadPlayer): BackStat[] {
       : outfieldPrimaryTiles(player);
   const secondary: BackStat[] = [
     { label: "Apps", value: player.matchesPlayed },
-    { label: "MOTM", value: player.motm, valueClass: "text-amber-300" },
+    { label: "MOTM", value: player.motm, valueClass: "text-podium-gold" },
   ];
   return [...primary, ...secondary];
 }
@@ -147,23 +147,23 @@ export default function PlayerFlipCard({ player }: PlayerFlipCardProps) {
               {position}
             </span>
           ) : null}
-          <span className="absolute right-3 top-3 rounded-full border border-white/10 bg-black/25 px-2 py-1 text-[10px] tracking-[0.1em] text-white/40">
+          <span className="absolute right-3 top-3 rounded-full border border-border bg-scrim/25 px-2 py-1 text-[10px] tracking-[0.1em] text-fg-subtle">
             stats ›
           </span>
           <div className="absolute inset-x-3.5 bottom-3.5">
             <div className="flex items-end justify-between gap-2">
               <div>
-                <div className="text-[clamp(16px,2.4vw,21px)] font-extrabold leading-none tracking-tight text-white">
+                <div className="text-[clamp(16px,2.4vw,21px)] font-extrabold leading-none tracking-tight text-fg">
                   {name}
                 </div>
                 {nickname ? (
-                  <div className="mt-1 text-[11px] tracking-wide text-white/60">
+                  <div className="mt-1 text-[11px] tracking-wide text-fg-muted">
                     {nickname}
                   </div>
                 ) : null}
               </div>
               {jerseyNumber === null ? null : (
-                <div className="text-[clamp(30px,5.4vw,46px)] font-extrabold leading-[0.8] tabular-nums text-white/90 [text-shadow:0_2px_18px_rgba(56,189,248,0.5)]">
+                <div className="text-[clamp(30px,5.4vw,46px)] font-extrabold leading-[0.8] tabular-nums text-fg/90 [text-shadow:0_2px_18px_rgba(56,189,248,0.5)]">
                   {jerseyNumber}
                 </div>
               )}
@@ -178,15 +178,15 @@ export default function PlayerFlipCard({ player }: PlayerFlipCardProps) {
           <div className="absolute inset-0 flex flex-col p-4">
             <div className="flex items-baseline justify-between">
               <div>
-                <div className="text-base font-extrabold tracking-tight text-white">
+                <div className="text-base font-extrabold tracking-tight text-fg">
                   {name}
                 </div>
-                <div className="mt-0.5 text-[10px] uppercase tracking-[0.22em] text-white/40">
+                <div className="mt-0.5 text-[10px] uppercase tracking-[0.22em] text-fg-subtle">
                   Season 2026 · {position ?? "—"}
                 </div>
               </div>
               {jerseyNumber === null ? null : (
-                <div className="text-xl font-extrabold tabular-nums text-sky-400">
+                <div className="text-xl font-extrabold tabular-nums text-primary">
                   {jerseyNumber}
                 </div>
               )}
@@ -200,20 +200,20 @@ export default function PlayerFlipCard({ player }: PlayerFlipCardProps) {
                   valueClass={tile.valueClass}
                 />
               ))}
-              <div className="col-span-2 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-2.5 py-2 backdrop-blur">
-                <span className="text-[9.5px] uppercase tracking-[0.14em] text-white/40">
+              <div className="col-span-2 flex items-center justify-between rounded-xl border border-border bg-glass px-2.5 py-2 backdrop-blur">
+                <span className="text-[9.5px] uppercase tracking-[0.14em] text-fg-subtle">
                   Cards
                 </span>
                 <span className="flex items-center gap-3 text-[18px] font-extrabold tabular-nums">
-                  <span className="text-amber-300">
+                  <span className="text-warning">
                     {yellowCards}
-                    <span className="ml-1 text-[9px] font-semibold tracking-[0.14em] text-amber-300/70">
+                    <span className="ml-1 text-[9px] font-semibold tracking-[0.14em] text-warning/70">
                       YEL
                     </span>
                   </span>
-                  <span className="text-rose-300">
+                  <span className="text-danger">
                     {redCards}
-                    <span className="ml-1 text-[9px] font-semibold tracking-[0.14em] text-rose-300/70">
+                    <span className="ml-1 text-[9px] font-semibold tracking-[0.14em] text-danger/70">
                       RED
                     </span>
                   </span>

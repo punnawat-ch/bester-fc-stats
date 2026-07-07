@@ -36,20 +36,20 @@ export function PageHeader({
     <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div className="flex flex-col gap-1">
         {eyebrow ? (
-          <p className="text-[10px] uppercase tracking-[0.24em] text-white/50">
+          <p className="text-[10px] uppercase tracking-[0.24em] text-fg-subtle">
             {eyebrow}
           </p>
         ) : null}
         <div className="flex items-baseline gap-2">
-          <h1 className="text-xl font-semibold tracking-tight text-white">
+          <h1 className="text-xl font-semibold tracking-tight text-fg">
             {title}
           </h1>
           {typeof count === "number" ? (
-            <span className="font-mono text-sm text-white/50">· {count}</span>
+            <span className="font-mono text-sm text-fg-subtle">· {count}</span>
           ) : null}
         </div>
         {description ? (
-          <p className="text-sm text-white/60">{description}</p>
+          <p className="text-sm text-fg-muted">{description}</p>
         ) : null}
       </div>
       {hasRight ? (

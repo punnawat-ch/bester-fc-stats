@@ -51,10 +51,10 @@ const DOT_BASE =
   "after:absolute after:bottom-1 after:left-1/2 after:size-1.5 after:-translate-x-1/2 after:rounded-full after:content-['']";
 
 const MODIFIER_CLASS_NAMES: Readonly<Record<keyof DayBuckets, string>> = {
-  scheduled: `${DOT_BASE} after:bg-sky-300`,
-  win: `${DOT_BASE} after:bg-emerald-300`,
-  draw: `${DOT_BASE} after:bg-blue-300`,
-  loss: `${DOT_BASE} after:bg-rose-300`,
+  scheduled: `${DOT_BASE} after:bg-primary`,
+  win: `${DOT_BASE} after:bg-success`,
+  draw: `${DOT_BASE} after:bg-fg-muted`,
+  loss: `${DOT_BASE} after:bg-danger`,
 };
 
 const initialMonth = new Date();
@@ -69,7 +69,7 @@ export function MonthView({ matches, onDayClick }: MonthViewProps) {
 
   return (
     <div
-      className="rounded-3xl border border-white/10 bg-[#0a1222]/80 p-3 ring-1 ring-white/10"
+      className="rounded-3xl border border-border bg-panel/80 p-3 ring-1 ring-border"
       data-tour="matches-month-grid"
     >
       <Calendar

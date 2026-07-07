@@ -23,7 +23,7 @@ export function AdminBottomNav({ role }: AdminBottomNavProps) {
   return (
     <nav
       aria-label="Admin"
-      className="pb-safe fixed inset-x-0 bottom-0 z-40 flex items-stretch border-t border-white/10 bg-[#0a1222]/90 backdrop-blur-2xl md:hidden"
+      className="pb-safe fixed inset-x-0 bottom-0 z-40 flex items-stretch border-t border-border bg-panel/90 backdrop-blur-2xl md:hidden"
     >
       {items.map((item) => {
         const active = isNavItemActive(item.href, pathname);
@@ -35,14 +35,14 @@ export function AdminBottomNav({ role }: AdminBottomNavProps) {
             data-tour={item.tourId}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70",
-              active ? "text-sky-300" : "text-white/50",
+              "relative flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-ring/70",
+              active ? "text-primary" : "text-fg-subtle",
             )}
           >
             {active ? (
               <span
                 aria-hidden="true"
-                className="absolute top-0 h-0.5 w-8 rounded-full bg-sky-300 shadow-[0_0_12px_rgba(56,189,248,0.8)]"
+                className="absolute top-0 h-0.5 w-8 rounded-full bg-primary shadow-[0_0_12px_rgba(56,189,248,0.8)]"
               />
             ) : null}
             <Icon className="size-6" aria-hidden="true" />

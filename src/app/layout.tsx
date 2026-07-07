@@ -98,7 +98,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-[#08110c] text-white antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-surface text-fg antialiased`}
       >
         <UIStateProvider>{children}</UIStateProvider>
         <Analytics />

@@ -25,7 +25,7 @@ export function HelpButton({ featureKey }: HelpButtonProps) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label={`ช่วยเหลือ: ${entry.title}`}
-        className="grid size-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-white/70 backdrop-blur-xl transition outline-none hover:border-white/30 hover:text-white focus-visible:ring-2 focus-visible:ring-sky-400/70"
+        className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-glass text-fg-muted backdrop-blur-xl transition outline-none hover:border-border-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-ring/70"
       >
         <HelpCircle className="size-5" aria-hidden="true" />
       </button>

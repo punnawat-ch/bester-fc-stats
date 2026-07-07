@@ -11,25 +11,25 @@ type MatchHistoryTableProps = Readonly<{
 }>;
 
 const resultStyles: Record<string, string> = {
-  win: "border-emerald-400/60 bg-emerald-500/10 text-emerald-100",
-  loss: "border-rose-400/60 bg-rose-500/10 text-rose-100",
-  draw: "border-slate-400/60 bg-slate-500/10 text-slate-100",
+  win: "border-success/60 bg-success/10 text-success-fg",
+  loss: "border-danger/60 bg-danger/10 text-danger-fg",
+  draw: "border-border-strong bg-glass text-fg-muted",
 };
 
 function getResultTone(result: string) {
   const key = result.trim().toLowerCase();
-  return resultStyles[key] ?? "border-white/10 bg-white/5 text-white/70";
+  return resultStyles[key] ?? "border-border bg-glass text-fg-muted";
 }
 
 function getTeamTone(result: string) {
   const key = result.trim().toLowerCase();
   if (key === "win") {
-    return { club: "text-white font-semibold", opponent: "text-white/60" };
+    return { club: "text-fg font-semibold", opponent: "text-fg-muted" };
   }
   if (key === "loss") {
-    return { club: "text-white/50", opponent: "text-white font-semibold" };
+    return { club: "text-fg-subtle", opponent: "text-fg font-semibold" };
   }
-  return { club: "text-white/80", opponent: "text-white/80" };
+  return { club: "text-fg-muted", opponent: "text-fg-muted" };
 }
 
 function getScoreLines(result: string, score: string) {
@@ -68,7 +68,7 @@ export default function MatchHistoryTable({
   const hasResults = matchHistory.length > 0;
 
   const emptyState = (
-    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-8 text-center text-sm text-white/60">
+    <div className="rounded-2xl border border-border bg-glass px-4 py-8 text-center text-sm text-fg-muted">
       No results recorded yet. Match outcomes will appear here.
     </div>
   );
@@ -84,9 +84,9 @@ export default function MatchHistoryTable({
             return (
               <div
                 key={`card-${match.date}-${match.versus}-${match.score}`}
-                className="rounded-2xl border border-white/10 bg-linear-to-br from-white/8 via-white/4 to-transparent px-4 py-4 shadow-[0_16px_35px_rgba(0,0,0,0.4)] ring-1 ring-white/10"
+                className="rounded-2xl border border-border bg-linear-to-br from-glass-2 via-glass to-transparent px-4 py-4 shadow-panel-sm ring-1 ring-border"
               >
-                <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-white/50">
+                <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-fg-subtle">
                   <span>{match.date}</span>
                   <span
                     className={`rounded-full border px-3 py-1 text-[10px] font-semibold ${tone}`}
@@ -115,7 +115,7 @@ export default function MatchHistoryTable({
 
         <div className="hidden md:block">
           <table className="min-w-full border-separate border-spacing-y-2 text-left">
-            <thead className="text-[10px] uppercase tracking-[0.28em] text-white/50">
+            <thead className="text-[10px] uppercase tracking-[0.28em] text-fg-subtle">
               <tr>
                 <th className="px-4 py-2">Date</th>
                 <th className="px-4 py-2">Match</th>
@@ -123,7 +123,7 @@ export default function MatchHistoryTable({
                 <th className="px-4 py-2 text-right">Result</th>
               </tr>
             </thead>
-            <tbody className="text-white">
+            <tbody className="text-fg">
               {matchHistory.map((match) => {
                 const tone = getResultTone(match.result);
                 const teamTone = getTeamTone(match.result);
@@ -131,16 +131,16 @@ export default function MatchHistoryTable({
 
                 return (
                   <tr key={`${match.date}-${match.versus}-${match.score}`}>
-                    <td className="rounded-l-2xl bg-white/5 px-4 py-3 text-sm text-white/70">
+                    <td className="rounded-l-2xl bg-glass px-4 py-3 text-sm text-fg-muted">
                       {match.date}
                     </td>
-                    <td className="bg-white/5 px-4 py-3">
+                    <td className="bg-glass px-4 py-3">
                       <div className="flex flex-col gap-1 text-sm">
                         <span className={teamTone.club}>{clubName}</span>
                         <span className={teamTone.opponent}>{match.versus}</span>
                       </div>
                     </td>
-                    <td className="bg-white/5 px-4 py-3 text-right">
+                    <td className="bg-glass px-4 py-3 text-right">
                       <div className="flex flex-col gap-1 text-sm font-semibold">
                         <span className={teamTone.club}>{scores.clubScore}</span>
                         {scores.opponentScore && (
@@ -150,7 +150,7 @@ export default function MatchHistoryTable({
                         )}
                       </div>
                     </td>
-                    <td className="rounded-r-2xl bg-white/5 px-4 py-3 text-right">
+                    <td className="rounded-r-2xl bg-glass px-4 py-3 text-right">
                       <span
                         className={`inline-flex min-w-[80px] justify-center rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] ${tone}`}
                       >
@@ -172,7 +172,7 @@ export default function MatchHistoryTable({
     return (
       <motion.div variants={container} initial="hidden" animate="show">
         <motion.div variants={item} className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.24em] text-white/60">
+          <span className="rounded-full border border-border bg-glass px-3 py-1 text-[10px] uppercase tracking-[0.24em] text-fg-muted">
             {matchHistory.length} results
           </span>
         </motion.div>
@@ -188,7 +188,7 @@ export default function MatchHistoryTable({
 
   return (
     <motion.section
-      className="glass-panel rounded-3xl border border-white/10 bg-[#0a1222]/80 px-5 py-5 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
+      className="glass-panel rounded-3xl border border-border bg-panel/80 px-5 py-5 shadow-panel-lg ring-1 ring-border"
       variants={container}
       initial="hidden"
       whileInView="show"
@@ -196,12 +196,12 @@ export default function MatchHistoryTable({
     >
       <motion.div className="flex items-center justify-between" variants={item}>
         <div>
-          <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">
+          <p className="text-[10px] uppercase tracking-[0.32em] text-fg-subtle">
             Results
           </p>
-          <h3 className="text-lg font-semibold text-white">Match History</h3>
+          <h3 className="text-lg font-semibold text-fg">Match History</h3>
         </div>
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-white/70">
+        <span className="rounded-full border border-border bg-glass px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-fg-muted">
           Results
         </span>
       </motion.div>

@@ -15,7 +15,7 @@ export default function HighlightRow({
   return (
     <tr
       className={`transition-colors ${
-        isHighlighted ? "bg-emerald-400/10" : "bg-transparent"
+        isHighlighted ? "bg-primary/10" : "bg-transparent"
       }`}
     >
       {children}

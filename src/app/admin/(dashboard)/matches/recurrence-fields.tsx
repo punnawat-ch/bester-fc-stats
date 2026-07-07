@@ -29,7 +29,7 @@ export function RecurrenceFields() {
 
   return (
     <div
-      className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4"
+      className="flex flex-col gap-3 rounded-2xl border border-border bg-glass-xs p-4"
       data-tour="match-recurrence"
     >
       <FormField
@@ -38,7 +38,7 @@ export function RecurrenceFields() {
         render={({ field }) => (
           <FormItem className="flex-row items-center justify-between gap-3">
             <FormLabel className="gap-2">
-              <Repeat className="size-4 text-white/60" aria-hidden="true" />
+              <Repeat className="size-4 text-fg-muted" aria-hidden="true" />
               {enabled && weekday
                 ? `Repeats weekly on ${weekday}`
                 : "Repeat weekly"}

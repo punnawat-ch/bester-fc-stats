@@ -30,13 +30,13 @@ function SegmentedControl({ value, onChange }: SegmentedControlProps) {
     <div
       role="group"
       aria-label="Switch fixtures view"
-      className="flex w-auto gap-1 rounded-full border border-white/10 bg-white/5 p-0.5"
+      className="flex w-auto gap-1 rounded-full border border-border bg-glass p-0.5"
     >
       {VIEWS.map((view) => {
         const isActive = value === view.id;
         const activeClasses = isActive
-          ? "bg-white text-slate-900 shadow-[0_6px_18px_rgba(0,0,0,0.35)]"
-          : "text-white/70 hover:text-white";
+          ? "bg-primary text-primary-foreground shadow-elevate-sm"
+          : "text-fg-muted hover:text-fg";
 
         return (
           <button
@@ -62,13 +62,13 @@ export default function FixturesSection({
   const [view, setView] = useState<FixturesView>("timeline");
 
   return (
-    <div className="glass-panel rounded-3xl border border-white/10 bg-[#0a1222]/80 px-5 py-5 shadow-[0_22px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
+    <div className="glass-panel rounded-3xl border border-border bg-panel/80 px-5 py-5 shadow-panel-lg ring-1 ring-border">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">
+          <p className="text-[10px] uppercase tracking-[0.32em] text-fg-subtle">
             Fixtures & Results
           </p>
-          <h3 className="text-lg font-semibold text-white">Match Center</h3>
+          <h3 className="text-lg font-semibold text-fg">Match Center</h3>
         </div>
         <SegmentedControl value={view} onChange={setView} />
       </div>

@@ -18,7 +18,7 @@ export default async function LoginPage() {
   return (
     <main className="pitch-bg flex min-h-dvh items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm">
-        <section className="rounded-2xl border border-white/10 bg-[#0b1224]/60 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.45)] ring-1 ring-white/10 backdrop-blur-2xl sm:p-8">
+        <section className="rounded-2xl border border-border bg-panel-2/60 p-6 shadow-panel ring-1 ring-border backdrop-blur-2xl sm:p-8">
           <div className="mb-6 flex flex-col items-center gap-3 text-center">
             <Image
               src="/logo.png"
@@ -29,8 +29,8 @@ export default async function LoginPage() {
               priority
             />
             <div>
-              <h1 className="text-lg font-semibold text-white">Admin sign in</h1>
-              <p className="mt-1 text-sm text-white/60">
+              <h1 className="text-lg font-semibold text-fg">Admin sign in</h1>
+              <p className="mt-1 text-sm text-fg-muted">
                 Sign in to manage Bester FC stats.
               </p>
             </div>

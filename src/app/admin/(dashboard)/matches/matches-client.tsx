@@ -265,10 +265,10 @@ export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
             aria-pressed={filter === option.value}
             onClick={() => setFilter(option.value)}
             className={cn(
-              "rounded-full border px-3 py-1.5 text-xs font-medium transition focus-visible:ring-2 focus-visible:ring-sky-400/70 focus-visible:outline-none",
+              "rounded-full border px-3 py-1.5 text-xs font-medium transition focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
               filter === option.value
-                ? "border-sky-400/40 bg-sky-500/15 text-sky-100"
-                : "border-white/10 bg-white/5 text-white/60 hover:text-white",
+                ? "border-primary/40 bg-primary/15 text-primary"
+                : "border-border bg-glass text-fg-muted hover:text-fg",
             )}
           >
             {option.label}
@@ -294,7 +294,7 @@ export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
           aria-label="New fixture"
           data-tour="matches-fab"
           onClick={() => openCreate(toDateInputValue(new Date()))}
-          className="fixed right-4 bottom-[84px] z-40 size-14 shadow-[0_20px_50px_rgba(0,0,0,0.45)] md:right-8 md:bottom-8"
+          className="fixed right-4 bottom-[84px] z-40 size-14 shadow-panel md:right-8 md:bottom-8"
         >
           <Plus className="size-6" />
         </Button>

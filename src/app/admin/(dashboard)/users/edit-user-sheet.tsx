@@ -124,7 +124,7 @@ export function EditUserSheet({
               control={form.control}
               name="isActive"
               render={({ field }) => (
-                <FormItem className="flex-row items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <FormItem className="flex-row items-center justify-between gap-4 rounded-2xl border border-border bg-glass p-4">
                   <div className="flex flex-col gap-0.5">
                     <FormLabel>Active</FormLabel>
                     <FormDescription>
@@ -144,7 +144,7 @@ export function EditUserSheet({
             />
 
             {isSelf ? (
-              <p className="text-sm text-white/50">
+              <p className="text-sm text-fg-subtle">
                 You cannot change your own role or status — ask another admin.
               </p>
             ) : null}

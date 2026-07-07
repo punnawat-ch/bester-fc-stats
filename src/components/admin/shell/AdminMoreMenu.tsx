@@ -33,8 +33,8 @@ export function AdminMoreMenu({ role }: AdminMoreMenuProps) {
       <SheetTrigger
         data-tour="nav-more"
         className={cn(
-          "flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70",
-          active ? "text-sky-300" : "text-white/50",
+          "flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-ring/70",
+          active ? "text-primary" : "text-fg-subtle",
         )}
       >
         <MoreHorizontal className="size-6" aria-hidden="true" />
@@ -57,12 +57,12 @@ export function AdminMoreMenu({ role }: AdminMoreMenuProps) {
                 className={cn(
                   "flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm transition",
                   itemActive
-                    ? "bg-sky-500/15 text-white"
-                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                    ? "bg-primary/15 text-fg"
+                    : "text-fg-muted hover:bg-glass hover:text-fg",
                 )}
               >
                 <Icon
-                  className={cn("size-5", itemActive ? "text-sky-300" : "")}
+                  className={cn("size-5", itemActive ? "text-primary" : "")}
                   aria-hidden="true"
                 />
                 {item.label}
@@ -74,7 +74,7 @@ export function AdminMoreMenu({ role }: AdminMoreMenuProps) {
             onClick={() => {
               signOutToLogin().catch(() => {});
             }}
-            className="flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm text-rose-200 transition hover:bg-rose-500/15"
+            className="flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm text-danger-fg transition hover:bg-danger/15"
           >
             <LogOut className="size-5" aria-hidden="true" />
             Sign out
