@@ -3,6 +3,7 @@ import {
   CalendarDays,
   LayoutDashboard,
   LifeBuoy,
+  Palette,
   Settings,
   UserCog,
   Users,
@@ -58,6 +59,12 @@ export const ADMIN_NAV_ITEMS: readonly AdminNavItem[] = [
     href: "/admin/club",
     label: "Club",
     icon: Settings,
+    permission: "club:edit",
+  },
+  {
+    href: "/admin/appearance",
+    label: "Appearance",
+    icon: Palette,
     permission: "club:edit",
   },
   {
