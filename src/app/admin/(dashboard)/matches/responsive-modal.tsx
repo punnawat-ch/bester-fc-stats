@@ -16,6 +16,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
 import { useIsDesktop } from "./use-is-desktop";
 
@@ -27,6 +28,8 @@ type ResponsiveModalProps = Readonly<{
   children: ReactNode;
   /** Hide the visible title but keep it for screen readers. */
   hideTitle?: boolean;
+  /** Extra classes for the desktop DialogContent (e.g. a wider `max-w-*`). */
+  contentClassName?: string;
 }>;
 
 /**
@@ -41,13 +44,16 @@ export function ResponsiveModal({
   description,
   children,
   hideTitle = false,
+  contentClassName,
 }: ResponsiveModalProps) {
   const isDesktop = useIsDesktop();
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-h-[90dvh] overflow-y-auto">
+        <DialogContent
+          className={cn("max-h-[90dvh] overflow-y-auto", contentClassName)}
+        >
           <DialogHeader className={hideTitle ? "sr-only" : undefined}>
             <DialogTitle>{title}</DialogTitle>
             {description ? (

@@ -4,8 +4,11 @@ import { randomUUID } from "node:crypto";
 
 import { revalidatePath } from "next/cache";
 
+import { Prisma } from "@prisma/client";
+
 import { requireUser } from "@/lib/auth-guard";
 import { getClub } from "@/lib/football";
+import { recomputePlayerAggregates } from "@/lib/player-stats";
 import { prisma } from "@/lib/prisma";
 import { ForbiddenError } from "@/lib/rbac";
 
@@ -17,9 +20,11 @@ import {
   resultFromScore,
 } from "./lib";
 import {
+  LINEUP_STAT_KEYS,
   markPlayedSchema,
   matchFormSchema,
   scopeSchema,
+  type LineupEntryValues,
   type MatchFormValues,
   type SeriesScope,
 } from "./schema";
@@ -212,20 +217,98 @@ export async function deleteMatch(
         effectiveScope === "all"
           ? { seriesId: existing.seriesId }
           : { seriesId: existing.seriesId, date: { gte: existing.date } };
+      const targets = await prisma.match.findMany({ where, select: { id: true } });
+      const affected = await lineupPlayerIds(targets.map((match) => match.id));
       const result = await prisma.match.deleteMany({ where });
+      await recomputePlayerAggregates(affected);
       revalidate();
+      revalidatePath("/admin/players");
       return { ok: true, count: result.count };
     }
 
+    const affected = await lineupPlayerIds([id]);
     await prisma.match.delete({ where: { id } });
+    await recomputePlayerAggregates(affected);
     revalidate();
+    revalidatePath("/admin/players");
     return { ok: true, count: 1 };
   });
 }
 
+/** Player ids appearing in the lineups of the given matches (for stat recompute). */
+async function lineupPlayerIds(matchIds: readonly string[]): Promise<string[]> {
+  if (matchIds.length === 0) {
+    return [];
+  }
+  const rows = await prisma.matchPlayer.findMany({
+    where: { matchId: { in: [...matchIds] } },
+    select: { playerId: true },
+  });
+  return rows.map((row) => row.playerId);
+}
+
+/** A lineup entry resolved to a concrete player id + its per-match stats. */
+type ResolvedLineupRow = { playerId: string } & Record<
+  (typeof LINEUP_STAT_KEYS)[number],
+  number
+>;
+
+/** Extract just the numeric per-match stat fields from a validated entry. */
+function pickStats(
+  entry: LineupEntryValues,
+): Record<(typeof LINEUP_STAT_KEYS)[number], number> {
+  const stats = {} as Record<(typeof LINEUP_STAT_KEYS)[number], number>;
+  for (const key of LINEUP_STAT_KEYS) {
+    stats[key] = entry[key];
+  }
+  return stats;
+}
+
 /**
- * Transition a SCHEDULED fixture to PLAYED, storing the score and deriving the
- * result (WIN/DRAW/LOSS) unless an explicit override is supplied.
+ * Turn raw lineup entries into concrete player rows, creating brand-new players
+ * on the fly (upsert-by-name reuses an existing player of the same name). Entries
+ * whose `playerId` is not in this club are dropped. Duplicate players collapse to
+ * the last entry so the caller never violates the `(matchId, playerId)` unique.
+ */
+async function resolveLineup(
+  tx: Prisma.TransactionClient,
+  clubId: string,
+  entries: readonly LineupEntryValues[],
+): Promise<ResolvedLineupRow[]> {
+  const clubPlayers = await tx.player.findMany({
+    where: { clubId },
+    select: { id: true },
+  });
+  const validIds = new Set(clubPlayers.map((player) => player.id));
+  const byPlayer = new Map<string, ResolvedLineupRow>();
+
+  for (const entry of entries) {
+    let playerId: string;
+    if (entry.newPlayerName) {
+      const name = entry.newPlayerName.trim();
+      const player = await tx.player.upsert({
+        where: { clubId_name: { clubId, name } },
+        create: { clubId, name },
+        update: {},
+        select: { id: true },
+      });
+      playerId = player.id;
+    } else if (entry.playerId && validIds.has(entry.playerId)) {
+      playerId = entry.playerId;
+    } else {
+      continue;
+    }
+    byPlayer.set(playerId, { playerId, ...pickStats(entry) });
+  }
+
+  return [...byPlayer.values()];
+}
+
+/**
+ * Transition a fixture to PLAYED, storing the score and deriving the result
+ * (WIN/DRAW/LOSS) unless an explicit override is supplied. Also replaces the
+ * match's player lineup (creating new players inline) and recomputes the
+ * affected players' cached aggregate stats. Safe to re-run to edit a result.
  */
 export async function markMatchPlayed(
   id: string,
@@ -236,17 +319,45 @@ export async function markMatchPlayed(
     if (!id || !parsed.success) {
       return { ok: false, error: "VALIDATION" };
     }
-    const { goalsFor, goalsAgainst, result } = parsed.data;
-    await prisma.match.update({
-      where: { id },
-      data: {
-        status: "PLAYED",
-        goalsFor,
-        goalsAgainst,
-        result: result ?? resultFromScore(goalsFor, goalsAgainst),
-      },
+    const club = await getClub();
+    const existing = await prisma.match.findFirst({
+      where: { id, clubId: club.id },
+      select: { id: true, lineup: { select: { playerId: true } } },
     });
+    if (!existing) {
+      return { ok: false, error: "NOT_FOUND" };
+    }
+
+    const { goalsFor, goalsAgainst, result, lineup } = parsed.data;
+
+    const affected = await prisma.$transaction(async (tx) => {
+      const rows = await resolveLineup(tx, club.id, lineup);
+      await tx.matchPlayer.deleteMany({ where: { matchId: id } });
+      if (rows.length > 0) {
+        await tx.matchPlayer.createMany({
+          data: rows.map((row) => ({ matchId: id, ...row })),
+        });
+      }
+      await tx.match.update({
+        where: { id },
+        data: {
+          status: "PLAYED",
+          goalsFor,
+          goalsAgainst,
+          result: result ?? resultFromScore(goalsFor, goalsAgainst),
+        },
+      });
+      // Recompute everyone previously in this lineup (in case they were removed)
+      // plus everyone now in it.
+      return [
+        ...existing.lineup.map((row) => row.playerId),
+        ...rows.map((row) => row.playerId),
+      ];
+    });
+
+    await recomputePlayerAggregates(affected);
     revalidate();
+    revalidatePath("/admin/players");
     return { ok: true };
   });
 }

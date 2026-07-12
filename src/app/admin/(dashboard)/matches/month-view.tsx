@@ -6,7 +6,12 @@ import { dateKey, type MatchDTO } from "./lib";
 
 type MonthViewProps = Readonly<{
   matches: readonly MatchDTO[];
+  /** The month/year currently shown (controlled by the in-caption dropdowns). */
+  month: Date;
+  onMonthChange: (date: Date) => void;
   onDayClick: (date: Date) => void;
+  /** Sorted selectable years — bounds the year dropdown in the caption. */
+  years: readonly number[];
 }>;
 
 type DayBuckets = {
@@ -57,15 +62,22 @@ const MODIFIER_CLASS_NAMES: Readonly<Record<keyof DayBuckets, string>> = {
   loss: `${DOT_BASE} after:bg-danger`,
 };
 
-const initialMonth = new Date();
-
 /**
  * MonthView — react-day-picker month grid with a coloured dot on days that have
  * a fixture: sky=SCHEDULED, emerald=WIN, blue=DRAW, rose=LOSS (admin-ux-spec
- * §3.3 / §4.5.1). Tapping a day is handled by the parent.
+ * §3.3 / §4.5.1). The shown month is controlled by the parent's month/year
+ * picker; tapping a day is handled by the parent.
  */
-export function MonthView({ matches, onDayClick }: MonthViewProps) {
+export function MonthView({
+  matches,
+  month,
+  onMonthChange,
+  onDayClick,
+  years,
+}: MonthViewProps) {
   const buckets = buildBuckets(matches);
+  const firstYear = years[0] ?? month.getFullYear();
+  const lastYear = years[years.length - 1] ?? month.getFullYear();
 
   return (
     <div
@@ -74,7 +86,11 @@ export function MonthView({ matches, onDayClick }: MonthViewProps) {
     >
       <Calendar
         mode="single"
-        defaultMonth={initialMonth}
+        month={month}
+        onMonthChange={onMonthChange}
+        captionLayout="dropdown"
+        startMonth={new Date(firstYear, 0, 1)}
+        endMonth={new Date(lastYear, 11, 1)}
         onDayClick={(date) => onDayClick(date)}
         showOutsideDays
         modifiers={buckets}

@@ -2,17 +2,20 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarPlus, Plus } from "lucide-react";
+import { CalendarPlus, Plus, Search, X } from "lucide-react";
+import type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
 
 import { EmptyState } from "@/components/admin/EmptyState";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { ConfirmSheet } from "@/components/admin/ConfirmSheet";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 import { AgendaView } from "./agenda-view";
+import { DateRangeFilter } from "./date-range-filter";
 import { DaySheet } from "./day-sheet";
 import { EventDetail } from "./event-detail";
 import { EventForm } from "./event-form";
@@ -26,7 +29,13 @@ import {
   updateMatch,
   type ActionResult,
 } from "./action";
-import { toDateInputValue, type MatchDTO } from "./lib";
+import {
+  matchesQuery,
+  toDateInputValue,
+  withinDateRange,
+  type MatchDTO,
+  type RosterPlayer,
+} from "./lib";
 import type {
   MarkPlayedValues,
   MatchFormValues,
@@ -35,6 +44,7 @@ import type {
 
 type MatchesClientProps = Readonly<{
   matches: readonly MatchDTO[];
+  roster: readonly RosterPlayer[];
   canWrite: boolean;
 }>;
 
@@ -82,10 +92,17 @@ function pluralFixtures(count: number): string {
   return count === 1 ? "1 fixture" : `${count} fixtures`;
 }
 
-export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
+export function MatchesClient({
+  matches,
+  roster,
+  canWrite,
+}: MatchesClientProps) {
   const router = useRouter();
   const [view, setView] = useState<CalendarView>("agenda");
   const [filter, setFilter] = useState<MatchFilter>("scheduled");
+  const [query, setQuery] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [monthCursor, setMonthCursor] = useState<Date>(() => new Date());
 
   const [detailMatch, setDetailMatch] = useState<MatchDTO | null>(null);
   const [formOpen, setFormOpen] = useState(false);
@@ -101,11 +118,32 @@ export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
   } | null>(null);
   const [deletePending, setDeletePending] = useState(false);
 
-  const visible = useMemo(() => {
-    return matches
-      .filter((match) => matchesFilter(match, filter))
-      .toSorted((a, b) => a.dateISO.localeCompare(b.dateISO));
-  }, [matches, filter]);
+  // Status pills apply to both views (Month uses this directly — no search).
+  const statusFiltered = useMemo(
+    () => matches.filter((match) => matchesFilter(match, filter)),
+    [matches, filter],
+  );
+
+  // Agenda additionally honours the search box + date-range picker.
+  const agendaMatches = useMemo(
+    () =>
+      statusFiltered
+        .filter((match) => matchesQuery(match, query))
+        .filter((match) => withinDateRange(match, dateRange))
+        .toSorted((a, b) => a.dateISO.localeCompare(b.dateISO)),
+    [statusFiltered, query, dateRange],
+  );
+
+  // Years for the in-calendar year dropdown: every year with a fixture, the
+  // current cursor's year, plus this year and next (to schedule ahead).
+  const years = useMemo(() => {
+    const now = new Date();
+    const set = new Set<number>(matches.map((match) => match.y));
+    set.add(monthCursor.getFullYear());
+    set.add(now.getFullYear());
+    set.add(now.getFullYear() + 1);
+    return [...set].toSorted((a, b) => a - b);
+  }, [matches, monthCursor]);
 
   async function runAction(
     promise: Promise<ActionResult>,
@@ -219,7 +257,7 @@ export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
     const y = date.getFullYear();
     const m = date.getMonth();
     const d = date.getDate();
-    const dayMatches = matches.filter(
+    const dayMatches = statusFiltered.filter(
       (match) => match.y === y && match.m === m && match.d === d,
     );
     if (dayMatches.length > 0) {
@@ -276,11 +314,24 @@ export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
         ))}
       </div>
 
+      {view === "agenda" ? (
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <SearchField value={query} onChange={setQuery} />
+          <DateRangeFilter value={dateRange} onChange={setDateRange} />
+        </div>
+      ) : null}
+
       {view === "month" ? (
-        <MonthView matches={visible} onDayClick={handleDayClick} />
+        <MonthView
+          matches={statusFiltered}
+          month={monthCursor}
+          onMonthChange={setMonthCursor}
+          onDayClick={handleDayClick}
+          years={years}
+        />
       ) : (
         <AgendaContent
-          matches={visible}
+          matches={agendaMatches}
           canWrite={canWrite}
           onSelect={setDetailMatch}
           onAdd={() => openCreate(formDate)}
@@ -309,10 +360,12 @@ export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
         }}
         title="Fixture details"
         hideTitle
+        contentClassName="md:max-w-5xl"
       >
         {detailMatch ? (
           <EventDetail
             match={detailMatch}
+            roster={roster}
             canWrite={canWrite}
             onEdit={handleEdit}
             onDelete={handleDelete}
@@ -407,6 +460,41 @@ export function MatchesClient({ matches, canWrite }: MatchesClientProps) {
           }
         }}
       />
+    </div>
+  );
+}
+
+type SearchFieldProps = Readonly<{
+  value: string;
+  onChange: (value: string) => void;
+}>;
+
+/** Text search over opponent / venue / matchweek, with a clear button. */
+function SearchField({ value, onChange }: SearchFieldProps) {
+  return (
+    <div className="relative flex-1">
+      <Search
+        className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-fg-subtle"
+        aria-hidden="true"
+      />
+      <Input
+        type="text"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="Search opponent, venue…"
+        aria-label="Search fixtures"
+        className="pl-9"
+      />
+      {value ? (
+        <button
+          type="button"
+          aria-label="Clear search"
+          onClick={() => onChange("")}
+          className="absolute top-1/2 right-2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-fg-subtle outline-none transition hover:text-fg focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <X className="size-4" aria-hidden="true" />
+        </button>
+      ) : null}
     </div>
   );
 }

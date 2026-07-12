@@ -28,7 +28,6 @@ import { upsertPlayer } from "./action";
 import { JerseyNumberField, NumberField } from "./number-field";
 import { PlayerCardEditor } from "./player-card-editor";
 import { PositionPills } from "./position-pills";
-import { StatTileField, type StatFieldName, type StatTone } from "./stat-tile-field";
 import { playerFormSchema, type PlayerFormValues } from "./schema";
 import type { PlayerDTO } from "./types";
 
@@ -37,14 +36,6 @@ const EMPTY_VALUES: PlayerFormValues = {
   nickname: "",
   position: "",
   jerseyNumber: null,
-  matchesPlayed: 0,
-  goals: 0,
-  assists: 0,
-  cleanSheets: 0,
-  yellowCards: 0,
-  redCards: 0,
-  motm: 0,
-  saves: 0,
   sortOrder: 0,
 };
 
@@ -54,21 +45,18 @@ const ERROR_MESSAGES: Readonly<Record<string, string>> = {
   NOT_FOUND: "That player no longer exists.",
 };
 
-type StatTileConfig = Readonly<{
-  name: StatFieldName;
-  label: string;
-  tone: StatTone;
-}>;
+type StatSummaryItem = Readonly<{ key: keyof PlayerDTO; label: string }>;
 
-const STAT_TILES: readonly StatTileConfig[] = [
-  { name: "goals", label: "Goals", tone: "emerald" },
-  { name: "assists", label: "Assists", tone: "sky" },
-  { name: "matchesPlayed", label: "Apps", tone: "neutral" },
-  { name: "cleanSheets", label: "Clean sheets", tone: "emerald" },
-  { name: "saves", label: "Saves", tone: "sky" },
-  { name: "motm", label: "MOTM", tone: "amber" },
-  { name: "yellowCards", label: "Yellow", tone: "amber" },
-  { name: "redCards", label: "Red", tone: "rose" },
+/** Read-only rollup tiles — auto-summed from the player's per-match records. */
+const STAT_SUMMARY: readonly StatSummaryItem[] = [
+  { key: "goals", label: "Goals" },
+  { key: "assists", label: "Assists" },
+  { key: "matchesPlayed", label: "Apps" },
+  { key: "cleanSheets", label: "Clean sheets" },
+  { key: "saves", label: "Saves" },
+  { key: "motm", label: "MOTM" },
+  { key: "yellowCards", label: "Yellow" },
+  { key: "redCards", label: "Red" },
 ];
 
 const CELEBRATE_CLOSE_MS = 700;
@@ -79,16 +67,38 @@ function toFormValues(player: PlayerDTO): PlayerFormValues {
     nickname: player.nickname ?? "",
     position: player.position ?? "",
     jerseyNumber: player.jerseyNumber,
-    matchesPlayed: player.matchesPlayed,
-    goals: player.goals,
-    assists: player.assists,
-    cleanSheets: player.cleanSheets,
-    yellowCards: player.yellowCards,
-    redCards: player.redCards,
-    motm: player.motm,
-    saves: player.saves,
     sortOrder: player.sortOrder,
   };
+}
+
+type StatSummaryProps = Readonly<{ player: PlayerDTO }>;
+
+/** Static rollup grid shown when editing — totals come from match lineups. */
+function StatSummary({ player }: StatSummaryProps) {
+  return (
+    <div className="flex flex-col gap-3">
+      <SectionLabel>Match stats</SectionLabel>
+      <div className="grid grid-cols-2 gap-3">
+        {STAT_SUMMARY.map((item) => (
+          <div
+            key={item.key}
+            className="flex flex-col gap-1 rounded-2xl border border-border bg-glass p-3"
+          >
+            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-fg-subtle">
+              {item.label}
+            </span>
+            <span className="text-2xl font-extrabold tabular-nums text-fg">
+              {player[item.key] as number}
+            </span>
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-fg-subtle">
+        Auto-calculated from match lineups — edit these from a match’s “Mark as
+        played”.
+      </p>
+    </div>
+  );
 }
 
 type SectionLabelProps = Readonly<{ children: string }>;
@@ -196,7 +206,7 @@ export function PlayerFormSheet({
             <HelpButton featureKey="player-editor" />
           </div>
           <SheetDescription>
-            Customise the card — stats are entered manually.
+            Customise the card — match stats are auto-summed from lineups.
           </SheetDescription>
         </SheetHeader>
 
@@ -265,20 +275,11 @@ export function PlayerFormSheet({
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <SectionLabel>Match stats</SectionLabel>
-              <div className="grid grid-cols-2 gap-3" data-tour="player-stat-tiles">
-                {STAT_TILES.map((tile) => (
-                  <StatTileField
-                    key={tile.name}
-                    control={form.control}
-                    name={tile.name}
-                    label={tile.label}
-                    tone={tile.tone}
-                  />
-                ))}
+            {isEditing && player ? (
+              <div data-tour="player-stat-tiles">
+                <StatSummary player={player} />
               </div>
-            </div>
+            ) : null}
 
             {hasChanges ? (
               <p className="text-center text-xs text-fg-subtle">Unsaved changes</p>

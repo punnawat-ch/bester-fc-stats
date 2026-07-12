@@ -3,7 +3,11 @@ import { z } from "zod";
 /**
  * Zod schemas for the Players feature (admin-ux-spec §4.4 Validation).
  * - name: required, trimmed, unique per club (server maps P2002 → NAME_TAKEN).
- * - numeric stats: whole numbers ≥ 0.
+ *
+ * NOTE: the match-stat totals (matchesPlayed, goals, assists, …) are NO LONGER
+ * edited here — they are a cached rollup auto-summed from each player's per-match
+ * `MatchPlayer` rows (entered in the finish-match lineup). This form only edits a
+ * player's identity/presentation fields.
  */
 const nonNegativeInt = z
   .number({ message: "Enter a number" })
@@ -30,14 +34,6 @@ export const playerFormSchema = z.object({
     .min(0, "Must be 0 or more")
     .max(999, "Too large")
     .nullable(),
-  matchesPlayed: nonNegativeInt,
-  goals: nonNegativeInt,
-  assists: nonNegativeInt,
-  cleanSheets: nonNegativeInt,
-  yellowCards: nonNegativeInt,
-  redCards: nonNegativeInt,
-  motm: nonNegativeInt,
-  saves: nonNegativeInt,
   sortOrder: nonNegativeInt,
 });
 

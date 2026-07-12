@@ -12,16 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import type { PlayerFormValues } from "./schema";
 
-type NumericFieldName =
-  | "matchesPlayed"
-  | "goals"
-  | "assists"
-  | "cleanSheets"
-  | "yellowCards"
-  | "redCards"
-  | "motm"
-  | "saves"
-  | "sortOrder";
+type NumericFieldName = "sortOrder";
 
 type NumberFieldProps = Readonly<{
   control: Control<PlayerFormValues>;

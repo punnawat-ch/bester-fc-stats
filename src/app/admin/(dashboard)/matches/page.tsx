@@ -23,11 +23,33 @@ export const metadata: Metadata = {
 export default async function AdminMatchesPage() {
   const session = await requireUser();
   const club = await getClub();
-  const matches = await prisma.match.findMany({
-    where: { clubId: club.id },
-    orderBy: { date: "asc" },
-  });
+  const [matches, roster] = await Promise.all([
+    prisma.match.findMany({
+      where: { clubId: club.id },
+      orderBy: { date: "asc" },
+      include: {
+        lineup: { include: { player: { select: { name: true } } } },
+      },
+    }),
+    prisma.player.findMany({
+      where: { clubId: club.id },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+      select: {
+        id: true,
+        name: true,
+        imageUrl: true,
+        position: true,
+        jerseyNumber: true,
+      },
+    }),
+  ]);
   const canWrite = can(session.user.role, "match:write");
 
-  return <MatchesClient matches={matches.map(toMatchDTO)} canWrite={canWrite} />;
+  return (
+    <MatchesClient
+      matches={matches.map(toMatchDTO)}
+      roster={roster}
+      canWrite={canWrite}
+    />
+  );
 }
